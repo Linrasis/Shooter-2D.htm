@@ -77,7 +77,7 @@ function draw(){
             }
 
         /*if number of zombies does not match max zombies*/
-        }else if(enemies.length<level_settings[1]){
+        }else if(enemies.length < level_settings[1]){
             /*calculate new zombie location away from player starting point*/
             do{
                 i = random_number(level_settings[2] * 2) - level_settings[2];
@@ -194,7 +194,7 @@ function draw(){
     do{
         if(game_running){
             /*if level == Zombie Surround*/
-            if(mode==3){
+            if(mode === 3){
                 /*calculate enemy movement based on player location*/
                 j = m(
                     enemies[i][0],
@@ -280,8 +280,8 @@ function draw(){
                    bullets[i][1] > level_settings[3]){
                     bullets.splice(i,1)
                 }else{
-                    var temp_hit = 0;
                     j = foreground_rect.length - 1;
+                    var temp_hit = 0;
 
                     if(j >= 0){
                         do{
@@ -382,12 +382,12 @@ function draw(){
         /*draw game over message*/
         buffer.textAlign = 'center';
         buffer.fillText(
-            settings[5] + '=Restart',/*restart key*/
+            settings[5] + ' = Restart',/*restart key*/
             x,
             y / 2 + 42
         );
         buffer.fillText(
-            'ESC=Main Menu',
+            'ESC = Main Menu',
             x,
             y / 2 + 75
         );
@@ -420,7 +420,9 @@ function get(i){
 }
 
 function m(x0,y0,x1,y1){
-    var j0 = Math.abs(x0 - x1),j1 = Math.abs(y0 - y1);
+    var j0 = Math.abs(x0 - x1);
+    var j1 = Math.abs(y0 - y1);
+
     if(j0 > j1){
         return[1,j1 / j0]
     }else if(j1 > j0){
@@ -445,6 +447,7 @@ function resize(){
     if(mode > 0){
         width = get('buffer').width = get('canvas').width = window.innerWidth;
         height = get('buffer').height = get('canvas').height = window.innerHeight;
+
         x = width / 2;
         y = height / 2
     }
