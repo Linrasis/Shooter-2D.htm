@@ -463,31 +463,31 @@ function save(){
             'weapon-reload'
         ][i];
         if(isNaN(get(j).value) || get(j).value == [25,1,25,50][i] || get(j).value < [1,0,0,1][i]){
-            ls.removeItem('shooter' + i);
+            ls.removeItem('shooter-2d' + i);
             settings[i] = [25,1,25,50][i];
             get(j).value = settings[i]
         }else{
             settings[i] = parseFloat(get(j).value);
-            ls.setItem('shooter' + i,settings[i])
+            ls.setItem('shooter-2d' + i,settings[i])
         }
     }while(i--);
 
     i = 1;
     do{
         if(get(['move-keys','restart-key'][i]).value == ['WASD','H'][i]){
-            ls.removeItem('shooter' + (i + 4));
+            ls.removeItem('shooter-2d' + (i + 4));
             settings[i + 4] = ['WASD','H'][i]
         }else{
             settings[i + 4] = get(['move-keys','restart-keys'][i]).value;
-            ls.setItem('shooter' + (i + 4),settings[i + 4])
+            ls.setItem('shooter-2d' + (i + 4),settings[i + 4])
         }
     }while(i--);
 
     settings[6] = get('clear').checked;
     if(settings[6]){
-        ls.removeItem('shooter6')
+        ls.removeItem('shooter-2d6')
     }else{
-        ls.setItem('shooter6',0)
+        ls.setItem('shooter-2d6',0)
     }
 }
 
@@ -567,13 +567,13 @@ var player_dy = 0;
 var player_x = 0;
 var player_y = 0;
 var settings = [
-    ls.getItem('shooter0') === null ? 25 : parseInt(ls.getItem('shooter0')),
-    ls.getItem('shooter1') === null ? 1 : parseFloat(ls.getItem('shooter1')),
-    ls.getItem('shooter2') === null ? 25 : parseFloat(ls.getItem('shooter2')),
-    ls.getItem('shooter3') === null ? 50 : parseInt(ls.getItem('shooter3')),
-    ls.getItem('shooter4') === null ? 'WASD' : ls.getItem('shooter4'),
-    ls.getItem('shooter5') === null ? 'H' : ls.getItem('shooter5'),
-    ls.getItem('shooter6') === null
+    ls.getItem('shooter-2d0') === null ? 25 : parseInt(ls.getItem('shooter-2d0')),
+    ls.getItem('shooter-2d1') === null ? 1 : parseFloat(ls.getItem('shooter-2d1')),
+    ls.getItem('shooter-2d2') === null ? 25 : parseFloat(ls.getItem('shooter-2d2')),
+    ls.getItem('shooter-2d3') === null ? 50 : parseInt(ls.getItem('shooter-2d3')),
+    ls.getItem('shooter-2d4') === null ? 'WASD' : ls.getItem('shooter-2d4'),
+    ls.getItem('shooter-2d5') === null ? 'H' : ls.getItem('shooter-2d5'),
+    ls.getItem('shooter-2d6') === null
 ];
 var weapon_reload = 0;
 var width = 0;
