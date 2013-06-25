@@ -101,8 +101,8 @@ function draw(){
                   || player_y + player_dy - 17 > foreground_rect[i][1] + foreground_rect[i][3]
                   || player_y + player_dy + 17 < foreground_rect[i][1]
                 )){
-                    if(player_y != foreground_rect[i][1] - 18 &&
-                       player_y != foreground_rect[i][1] + foreground_rect[i][3] + 18){
+                    if(player_y != foreground_rect[i][1] - 18
+                     && player_y != foreground_rect[i][1] + foreground_rect[i][3] + 18){
                         if(key_left
                          && !key_right
                          && player_y + player_dy + 17 > foreground_rect[i][1]
@@ -259,8 +259,8 @@ function draw(){
     /* draw player */
     buffer.fillStyle = '#ddd';
     buffer.fillRect(
-        x-17,
-        y-17,
+        x - 17,
+        y - 17,
         34,
         34
     );
@@ -279,6 +279,7 @@ function draw(){
                  || bullets[i][0] > level_settings[2]
                  || bullets[i][1] > level_settings[3]){
                     bullets.splice(i, 1);
+
                 }else{
                     j = foreground_rect.length - 1;
                     var temp_hit = 0;
@@ -321,6 +322,7 @@ function draw(){
                                         hits += 1;
                                         break;
                                     }
+
                                 }else if(bullets[i][0] > player_x - 17
                                       && bullets[i][0] < player_x + 17
                                       && bullets[i][1] > player_y - 17
@@ -424,11 +426,13 @@ function m(x0,y0,x1,y1){
     var j1 = Math.abs(y0 - y1);
 
     if(j0 > j1){
-        return[1,j1 / j0];
+        return [1,j1 / j0];
+
     }else if(j1 > j0){
-        return[j0 / j1,1];
+        return [j0 / j1,1];
+
     }else{
-        return[.5,.5];
+        return [.5,.5];
     }
 }
 
@@ -647,7 +651,7 @@ window.onmousedown = function(e){
     if(mode > 0){
         e.preventDefault();
         mouse_lock_x = mouse_x;
-        mouse_lock_y = mouse_y
+        mouse_lock_y = mouse_y;
     }
 };
 
