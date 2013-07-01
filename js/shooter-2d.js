@@ -257,7 +257,7 @@ function draw(){
     }while(i--);
 
     /* draw player */
-    buffer.fillStyle = '#ddd';
+    buffer.fillStyle = '#090';
     buffer.fillRect(
         x - 17,
         y - 17,
@@ -339,7 +339,6 @@ function draw(){
         /* draw bullets */
         i = bullets.length - 1;
         if(i >= 0){
-            buffer.fillStyle = '#f00';
 
             /* get player position camera offset */
             var temp_viewoffset = [
@@ -348,6 +347,8 @@ function draw(){
             ];
 
             do{
+                buffer.fillStyle = bullets[i][4] == 0 ? '#0f0' : '#f00';
+
                 if(bullets[i][0] + 10 + x - player_x > 0
                  && bullets[i][0] + x - player_x < width
                  && bullets[i][1] + 10 + y - player_y > 0
