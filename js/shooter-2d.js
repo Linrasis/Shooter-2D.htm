@@ -7,12 +7,15 @@ function draw(){
         if(key_left && player_x - 2 > -level_settings[2]){
             player_dx -= 2;
         }
+
         if(key_right && player_x + 2 < level_settings[2]){
             player_dx += 2;
         }
+
         if(key_down && player_y + 2 < level_settings[3]){
             player_dy += 2;
         }
+
         if(key_up && player_y - 2 > -level_settings[3]){
             player_dy -= 2;
         }
@@ -46,6 +49,7 @@ function draw(){
                     enemies[0][3] = random_number(500) - 250;
                 }
             }
+
         }else{
             weapon_reload += 1;
         }
@@ -72,6 +76,7 @@ function draw(){
                     (enemies[0][1] > player_y ? -j[1] : j[1]),
                     1
                 ]);
+
             }else{
                 enemy_reload += 1;
             }
@@ -83,6 +88,7 @@ function draw(){
                 i = random_number(level_settings[2] * 2) - level_settings[2];
                 j = random_number(level_settings[3] * 2) - level_settings[3];
             }while(i > -99 && i < 99 && j > -99 && j < 99);
+
             enemies.push([
                 i,
                 j,
@@ -110,6 +116,7 @@ function draw(){
                          && player_x + player_dx - 17 < foreground_rect[i][0] + foreground_rect[i][2]){
                             player_dx = 0;
                         }
+
                         if(key_right
                          && !key_left
                          && player_y + player_dy + 17 > foreground_rect[i][1]
@@ -118,6 +125,7 @@ function draw(){
                             player_dx = 0;
                         }
                     }
+
                     if(key_down
                      && !key_up
                      && player_x + player_dx + 17 > foreground_rect[i][0]
@@ -125,6 +133,7 @@ function draw(){
                      && player_y + player_dy + 17 > foreground_rect[i][1]){
                         player_dy = 0;
                     }
+
                     if(key_up
                      && !key_down
                      && player_x + player_dx + 17 > foreground_rect[i][0]
@@ -427,13 +436,13 @@ function m(x0,y0,x1,y1){
     var j1 = Math.abs(y0 - y1);
 
     if(j0 > j1){
-        return [1,j1 / j0];
+        return [1, j1 / j0];
 
     }else if(j1 > j0){
-        return [j0 / j1,1];
+        return [j0 / j1, 1];
 
     }else{
-        return [.5,.5];
+        return [.5, .5];
     }
 }
 
@@ -450,8 +459,13 @@ function random_number(i){
 
 function resize(){
     if(mode > 0){
-        width = get('buffer').width = get('canvas').width = window.innerWidth;
-        height = get('buffer').height = get('canvas').height = window.innerHeight;
+        width = window.innerWidth;
+        get('buffer').width = width;
+        get('canvas').width = width;
+
+        height = window.innerHeight;
+        get('buffer').height = height;
+        get('canvas').height = height;
 
         x = width / 2;
         y = height / 2;
@@ -476,6 +490,7 @@ function save(){
                 50
             ][i];
             get(j).value = settings[i];
+
         }else{
             settings[i] = parseFloat(get(j).value);
             ls.setItem(
@@ -493,6 +508,7 @@ function save(){
                 'WASD',
                 'H'
             ][i];
+
         }else{
             settings[i + 4] = get(['move-keys','restart-keys'][i]).value;
             ls.setItem(
@@ -505,6 +521,7 @@ function save(){
     settings[6] = get('clear').checked;
     if(settings[6]){
         ls.removeItem('shooter-2d-6');
+
     }else{
         ls.setItem(
             'shooter-2d-6',
@@ -589,12 +606,12 @@ var player_dy = 0;
 var player_x = 0;
 var player_y = 0;
 var settings = [
-    ls.getItem('shooter-2d-0') === null ? 25 : parseInt(ls.getItem('shooter-2d-0')),
-    ls.getItem('shooter-2d-1') === null ? 1 : parseFloat(ls.getItem('shooter-2d-1')),
-    ls.getItem('shooter-2d-2') === null ? 25 : parseFloat(ls.getItem('shooter-2d-2')),
-    ls.getItem('shooter-2d-3') === null ? 50 : parseInt(ls.getItem('shooter-2d-3')),
+    ls.getItem('shooter-2d-0') === null ?     25 : parseInt(ls.getItem('shooter-2d-0')),
+    ls.getItem('shooter-2d-1') === null ?      1 : parseFloat(ls.getItem('shooter-2d-1')),
+    ls.getItem('shooter-2d-2') === null ?     25 : parseFloat(ls.getItem('shooter-2d-2')),
+    ls.getItem('shooter-2d-3') === null ?     50 : parseInt(ls.getItem('shooter-2d-3')),
     ls.getItem('shooter-2d-4') === null ? 'WASD' : ls.getItem('shooter-2d-4'),
-    ls.getItem('shooter-2d-5') === null ? 'H' : ls.getItem('shooter-2d-5'),
+    ls.getItem('shooter-2d-5') === null ?    'H' : ls.getItem('shooter-2d-5'),
     ls.getItem('shooter-2d-6') === null
 ];
 var weapon_reload = 0;
