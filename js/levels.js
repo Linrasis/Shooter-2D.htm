@@ -1,5 +1,5 @@
 function load_level(i){
-    /* level: Empty Square Arena */
+    // level: Empty Square Arena
     if(i === 1){
         background_rect = [
             [-50,   -50, 100, 100, '#000', 0],
@@ -33,7 +33,7 @@ function load_level(i){
         enemy_reload = 100;
         weapon_reload = settings[3];
 
-    /* level: Final Destination */
+    // level: Final Destination
     }else if(i === 2){
         background_rect = [
             [-250, -250, 500, 500, '#333']
@@ -62,7 +62,7 @@ function load_level(i){
         enemy_reload = 100;
         weapon_reload = settings[3];
 
-    /* level: Zombie Surround */
+    // level: Zombie Surround
     }else if(i === 3){
         background_rect = [
             [-400, -400, 800, 800, '#333']
