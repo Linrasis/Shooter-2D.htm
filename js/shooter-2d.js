@@ -110,7 +110,6 @@ function draw(){
                     if(player_y != foreground_rect[i][1] - 18
                      && player_y != foreground_rect[i][1] + foreground_rect[i][3] + 18){
                         if(key_left
-                         && !key_right
                          && player_y + player_dy + 17 > foreground_rect[i][1]
                          && player_y + player_dy - 17 < foreground_rect[i][1] + foreground_rect[i][3]
                          && player_x + player_dx - 17 < foreground_rect[i][0] + foreground_rect[i][2]){
@@ -118,7 +117,6 @@ function draw(){
                         }
 
                         if(key_right
-                         && !key_left
                          && player_y + player_dy + 17 > foreground_rect[i][1]
                          && player_y + player_dy - 17 < foreground_rect[i][1] + foreground_rect[i][3]
                          && player_x + player_dx + 17 > foreground_rect[i][0]){
@@ -127,7 +125,6 @@ function draw(){
                     }
 
                     if(key_down
-                     && !key_up
                      && player_x + player_dx + 17 > foreground_rect[i][0]
                      && player_x + player_dx - 17 < foreground_rect[i][0] + foreground_rect[i][2]
                      && player_y + player_dy + 17 > foreground_rect[i][1]){
@@ -135,7 +132,6 @@ function draw(){
                     }
 
                     if(key_up
-                     && !key_down
                      && player_x + player_dx + 17 > foreground_rect[i][0]
                      && player_x + player_dx - 17 < foreground_rect[i][0] + foreground_rect[i][2]
                      && player_y + player_dy - 17 < foreground_rect[i][1] + foreground_rect[i][3]){
@@ -337,6 +333,7 @@ function draw(){
                                       && bullets[i][1] > player_y - 17
                                       && bullets[i][1] < player_y + 17){
                                     game_running = 0;
+                                    break;
                                 }
                             }while(j--);
                         }
@@ -358,9 +355,9 @@ function draw(){
             do{
                 buffer.fillStyle = bullets[i][4] == 0 ? '#0f0' : '#f00';
 
-                if(bullets[i][0] + 10 + x - player_x > 0
+                if(bullets[i][0] + 15 + temp_viewoffset[0] > 0
                  && bullets[i][0] + x - player_x < width
-                 && bullets[i][1] + 10 + y - player_y > 0
+                 && bullets[i][1] + 15 + temp_viewoffset[1] > 0
                  && bullets[i][1] + y - player_y < height){
                     buffer.fillRect(
                         bullets[i][0] + temp_viewoffset[0],
@@ -403,8 +400,8 @@ function draw(){
             x,
             y / 2 + 75
         );
-        buffer.font = '42pt sans-serif';
         buffer.fillStyle = '#f00';
+        buffer.font = '42pt sans-serif';
         buffer.fillText(
             'YOU ARE DEAD',
             x,
