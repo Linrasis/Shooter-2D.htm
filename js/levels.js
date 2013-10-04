@@ -1,4 +1,6 @@
 function load_level(i){
+    foreground_rect.length = 0;
+
     // level: Empty Square Arena
     if(i === 1){
         background_rect = [
@@ -38,7 +40,6 @@ function load_level(i){
         background_rect = [
             [-250, -250, 500, 500, '#333']
         ];
-        foreground_rect = [];
 
         enemies = [
             [
@@ -67,9 +68,8 @@ function load_level(i){
         background_rect = [
             [-400, -400, 800, 800, '#333']
         ];
-        foreground_rect = [];
 
-        enemies = [];
+        enemies.length = 0;
 
         level_settings = [
             i - 1,

@@ -530,7 +530,7 @@ function save(){
 function setmode(newmode, newgame){
     clearInterval(interval);
 
-    bullets = [];
+    bullets.length = 0;
     game_running = 1;
     mode = newmode;
     mouse_lock_x = -1;
