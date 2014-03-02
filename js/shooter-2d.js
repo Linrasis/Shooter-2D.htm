@@ -564,13 +564,13 @@ function setmode(newmode, newgame){
         canvas = 0;
 
         get('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><b>Shooter-2D</b></div><hr><div class=c><b>Duel vs AI:</b><ul><li><a onclick=setmode(1,1)>Empty Square Arena</a><li><a onclick=setmode(2,1)>Final Destination</a></ul></div><hr><div class=c><input id=zombie-amount value='
-            + settings[2] + '><a onclick=setmode(3,1)>Zombie Surround</a></div><hr><div class=c><input id=weapon-reload value='
-            + settings[3] + '>Weapon Reload</div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input disabled style=border:0 value=ESC>Main Menu<br><input id=move-keys maxlength=4 value='
+            + settings[2] + '><a onclick=setmode(3,1)>Zombie Surround</a></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input disabled style=border:0 value=ESC>Main Menu<br><input id=move-keys maxlength=4 value='
             + settings[4] + '>Move ↑←↓→<br><input id=restart-key maxlength=1 value='
             + settings[5] + '>Restart<br><input disabled style=border:0 value=Click>Shoot</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
             + settings[1] + '>Audio<br><label><input '
             + (settings[6] ? 'checked ' : '') + 'id=clear type=checkbox>Clear</label><br><input id=ms-per-frame value='
-            + settings[0] + '>ms/Frame<br><a onclick="if(confirm(\'Reset settings?\')){get(\'clear\').checked=get(\'audio-volume\').value=1;get(\'move-keys\').value=\'WASD\';get(\'restart-key\').value=\'H\';get(\'ms-per-frame\').value=get(\'zombie-amount\').value=25;get(\'weapon-reload\').value=50;save();setmode(0,1)}">Reset Settings</a></div></div>';
+            + settings[0] + '>ms/Frame<br><input id=weapon-reload value='
+            + settings[3] + '>Weapon Reload<br><a onclick="if(confirm(\'Reset settings?\')){get(\'clear\').checked=get(\'audio-volume\').value=1;get(\'move-keys\').value=\'WASD\';get(\'restart-key\').value=\'H\';get(\'ms-per-frame\').value=get(\'zombie-amount\').value=25;get(\'weapon-reload\').value=50;save();setmode(0,1)}">Reset Settings</a></div></div>';
     }
 }
 
