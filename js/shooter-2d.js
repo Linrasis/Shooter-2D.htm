@@ -418,14 +418,10 @@ function draw(){
         );
     }
     canvas.drawImage(
-        get('buffer'),
+        document.getElementById('buffer'),
         0,
         0
     );
-}
-
-function get(i){
-    return document.getElementById(i);
 }
 
 function m(x0,y0,x1,y1){
@@ -445,8 +441,8 @@ function m(x0,y0,x1,y1){
 
 function play_audio(i){
     if(settings[1] > 0){
-        get(i).currentTime = 0;
-        get(i).play();
+        document.getElementById(i).currentTime = 0;
+        document.getElementById(i).play();
     }
 }
 
@@ -454,15 +450,28 @@ function random_number(i){
     return Math.floor(Math.random() * i);
 }
 
+function reset(){
+    if(confirm('Reset settings?')){
+        document.getElementById('audio-volume').value = 1;
+        document.getElementById('clear').checked = 1;
+        document.getElementById('move-keys').value = 'WASD';
+        document.getElementById('ms-per-frame').value = 25;
+        document.getElementById('restart-key').value = 'H';
+        document.getElementById('weapon-reload').value = 50;
+        document.getElementById('zombie-amount').value = 25;
+        save();
+    }
+}
+
 function resize(){
     if(mode > 0){
         width = window.innerWidth;
-        get('buffer').width = width;
-        get('canvas').width = width;
+        document.getElementById('buffer').width = width;
+        document.getElementById('canvas').width = width;
 
         height = window.innerHeight;
-        get('buffer').height = height;
-        get('canvas').height = height;
+        document.getElementById('buffer').height = height;
+        document.getElementById('canvas').height = height;
 
         x = width / 2;
         y = height / 2;
@@ -478,7 +487,7 @@ function save(){
             'zombie-amount',
             'weapon-reload'
         ][i];
-        if(isNaN(get(j).value) || get(j).value == [25, 1, 25, 50][i] || get(j).value < [1, 0, 0, 1][i]){
+        if(isNaN(document.getElementById(j).value) || document.getElementById(j).value == [25, 1, 25, 50][i] || document.getElementById(j).value < [1, 0, 0, 1][i]){
             ls.removeItem('shooter-2d-' + i);
             settings[i] = [
                 25,
@@ -486,10 +495,10 @@ function save(){
                 25,
                 50
             ][i];
-            get(j).value = settings[i];
+            document.getElementById(j).value = settings[i];
 
         }else{
-            settings[i] = parseFloat(get(j).value);
+            settings[i] = parseFloat(document.getElementById(j).value);
             ls.setItem(
                 'shooter-2d-' + i,
                 settings[i]
@@ -499,7 +508,7 @@ function save(){
 
     i = 1;
     do{
-        if(get(['move-keys', 'restart-key'][i]).value == ['WASD', 'H'][i]){
+        if(document.getElementById(['move-keys', 'restart-key'][i]).value == ['WASD', 'H'][i]){
             ls.removeItem('shooter-2d-' + (i + 4));
             settings[i + 4] = [
                 'WASD',
@@ -507,7 +516,7 @@ function save(){
             ][i];
 
         }else{
-            settings[i + 4] = get(['move-keys','restart-keys'][i]).value;
+            settings[i + 4] = document.getElementById(['move-keys','restart-keys'][i]).value;
             ls.setItem(
                 'shooter-2d-' + (i + 4),
                 settings[i + 4]
@@ -515,7 +524,7 @@ function save(){
         }
     }while(i--);
 
-    settings[6] = get('clear').checked;
+    settings[6] = document.getElementById('clear').checked;
     if(settings[6]){
         ls.removeItem('shooter-2d-6');
 
@@ -550,9 +559,9 @@ function setmode(newmode, newgame){
         load_level(mode);
 
         if(newgame){
-            get('page').innerHTML = '<canvas id=canvas oncontextmenu="return false"></canvas>';
-            buffer = get('buffer').getContext('2d');
-            canvas = get('canvas').getContext('2d');
+            document.getElementById('page').innerHTML = '<canvas id=canvas oncontextmenu="return false"></canvas>';
+            buffer = document.getElementById('buffer').getContext('2d');
+            canvas = document.getElementById('canvas').getContext('2d');
             resize();
         }
 
@@ -563,14 +572,14 @@ function setmode(newmode, newgame){
         buffer = 0;
         canvas = 0;
 
-        get('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><b>Shooter-2D</b></div><hr><div class=c><b>Duel vs AI:</b><ul><li><a onclick=setmode(1,1)>Empty Square Arena</a><li><a onclick=setmode(2,1)>Final Destination</a></ul></div><hr><div class=c><input id=zombie-amount value='
+        document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><b>Shooter-2D</b></div><hr><div class=c><b>Duel vs AI:</b><ul><li><a onclick=setmode(1,1)>Empty Square Arena</a><li><a onclick=setmode(2,1)>Final Destination</a></ul></div><hr><div class=c><input id=zombie-amount value='
             + settings[2] + '><a onclick=setmode(3,1)>Zombie Surround</a></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input disabled style=border:0 value=ESC>Main Menu<br><input id=move-keys maxlength=4 value='
             + settings[4] + '>Move ↑←↓→<br><input id=restart-key maxlength=1 value='
             + settings[5] + '>Restart<br><input disabled style=border:0 value=Click>Shoot</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
             + settings[1] + '>Audio<br><label><input '
             + (settings[6] ? 'checked ' : '') + 'id=clear type=checkbox>Clear</label><br><input id=ms-per-frame value='
             + settings[0] + '>ms/Frame<br><input id=weapon-reload value='
-            + settings[3] + '>Weapon Reload<br><a onclick="if(confirm(\'Reset settings?\')){get(\'clear\').checked=get(\'audio-volume\').value=1;get(\'move-keys\').value=\'WASD\';get(\'restart-key\').value=\'H\';get(\'ms-per-frame\').value=get(\'zombie-amount\').value=25;get(\'weapon-reload\').value=50;save();setmode(0,1)}">Reset Settings</a></div></div>';
+            + settings[3] + '>Weapon Reload<br><a onclick=reset()>Reset Settings</a></div></div>';
     }
 }
 
