@@ -80,21 +80,6 @@ function draw(){
             }else{
                 enemy_reload += 1;
             }
-
-        // if number of zombies does not match max zombies
-        }else if(enemies.length < level_settings[1]){
-            // calculate new zombie location away from player starting point
-            do{
-                i = random_number(level_settings[2] * 2) - level_settings[2];
-                j = random_number(level_settings[3] * 2) - level_settings[3];
-            }while(i > -99 && i < 99 && j > -99 && j < 99);
-
-            enemies.push([
-              i,
-              j,
-              i,
-              j
-            ]);
         }
 
         // check for player collision with foreground obstacles
@@ -192,72 +177,77 @@ function draw(){
     }
 
     // handle enemies
-    buffer.fillStyle = '#f66';
     i = enemies.length - 1;
-    do{
-        if(game_running){
-            // if level == Zombie Surround
-            if(mode === 3){
-                // calculate enemy movement based on player location
-                j = m(
-                  enemies[i][0],
-                  enemies[i][1],
-                  player_x,
-                  player_y
-                );
+    if(i >= 0){
+        buffer.fillStyle = '#f66';
+        do{
+            if(game_running){
+                // if level == Zombie Surround
+                if(mode === 3){
+                    // calculate enemy movement based on player location
+                    j = m(
+                      enemies[i][0],
+                      enemies[i][1],
+                      player_x,
+                      player_y
+                    );
 
-                // move enemies towards player
-                enemies[i][0] += player_x > enemies[i][0] ? j[0] : -j[0];
-                enemies[i][1] += player_y > enemies[i][1] ? j[1] : -j[1];
+                    // move enemies towards player
+                    enemies[i][0] += player_x > enemies[i][0] ? j[0] : -j[0];
+                    enemies[i][1] += player_y > enemies[i][1] ? j[1] : -j[1];
 
-            // if level != Zombie Surround
-            }else{
-                // calculate enemy movement based on destination
-                j = m(
-                  enemies[i][0],
-                  enemies[i][1],
-                  enemies[i][2],
-                  enemies[i][3]
-                );
-                j[0] *= 2;
-                j[1] *= 2;
+                // if level != Zombie Surround
+                }else{
+                    // calculate enemy movement based on destination
+                    j = m(
+                      enemies[i][0],
+                      enemies[i][1],
+                      enemies[i][2],
+                      enemies[i][3]
+                    );
+                    j[0] *= 2;
+                    j[1] *= 2;
 
-                // move enemies towards destination
-                enemies[i][0] += enemies[i][2] > enemies[i][0] ? j[0] : -j[0];
-                enemies[i][1] += enemies[i][3] > enemies[i][1] ? j[1] : -j[1];
+                    // move enemies towards destination
+                    enemies[i][0] += enemies[i][2] > enemies[i][0] ? j[0] : -j[0];
+                    enemies[i][1] += enemies[i][3] > enemies[i][1] ? j[1] : -j[1];
 
-                // check if enemy AI should pick new destination
-                if(enemies[i][2] > enemies[i][0] - 5
-                  && enemies[i][2] < enemies[i][0] + 5
-                  && enemies[i][3] > enemies[i][1] - 5
-                  && enemies[i][3] < enemies[i][1] + 5){
-                    enemies[i][2] = random_number(500) - 250;
-                    enemies[i][3] = random_number(500) - 250;
+                    // check if enemy AI should pick new destination
+                    if(enemies[i][2] > enemies[i][0] - 5
+                      && enemies[i][2] < enemies[i][0] + 5
+                      && enemies[i][3] > enemies[i][1] - 5
+                      && enemies[i][3] < enemies[i][1] + 5){
+                        enemies[i][2] = random_number(500) - 250;
+                        enemies[i][3] = random_number(500) - 250;
+                    }
+                }
+
+                // check if player collides with enemy
+                if(enemies[i][0] + 15 - player_x > -17
+                  && enemies[i][0] - 15 - player_x < 17
+                  && enemies[i][1] + 15 - player_y > -17
+                  && enemies[i][1] - 15 - player_y < 17){
+                    game_running = 0;
                 }
             }
 
-            // check if player collides with enemy
-            if(enemies[i][0] + 15 - player_x > -17
-              && enemies[i][0] - 15 - player_x < 17
-              && enemies[i][1] + 15 - player_y > -17
-              && enemies[i][1] - 15 - player_y < 17){
-                game_running = 0;
+            // draw enemies
+            if(enemies[i][0] + 15 + x - player_x > 0
+              && enemies[i][0] - 15 + x - player_x < width
+              && enemies[i][1] + 15 + y - player_y > 0
+              && enemies[i][1] - 15 + y - player_y < height){
+                buffer.fillRect(
+                  x - player_x + enemies[i][0] - 15,
+                  y - player_y + enemies[i][1] - 15,
+                  30,
+                  30
+                );
             }
-        }
+        }while(i--);
 
-        // draw enemies
-        if(enemies[i][0] + 15 + x - player_x > 0
-          && enemies[i][0] - 15 + x - player_x < width
-          && enemies[i][1] + 15 + y - player_y > 0
-          && enemies[i][1] - 15 + y - player_y < height){
-            buffer.fillRect(
-              x - player_x + enemies[i][0] - 15,
-              y - player_y + enemies[i][1] - 15,
-              30,
-              30
-            );
-        }
-    }while(i--);
+    }else{
+        game_running = 0;
+    }
 
     // draw player
     buffer.fillStyle = '#090';
@@ -312,16 +302,24 @@ function draw(){
                                       && bullets[i][1] < enemies[j][1] + 15){
                                         bullets.splice(i, 1);
 
-                                        do{
-                                            ii = random_number(level_settings[2] * 2) - level_settings[2];
-                                            jj = random_number(level_settings[2] * 2) - level_settings[2];
-                                        }while(ii > player_x - 50
-                                          && ii < player_x + 50
-                                          && jj > player_y - 50
-                                          && jj < player_y + 50);
+                                        // if mode != Zombie Surround, pick new enemy location
+                                        if(mode < 3){
+                                            do{
+                                                ii = random_number(level_settings[2] * 2) - level_settings[2];
+                                                jj = random_number(level_settings[2] * 2) - level_settings[2];
+                                            }while(ii > player_x - 50
+                                              && ii < player_x + 50
+                                              && jj > player_y - 50
+                                              && jj < player_y + 50);
 
-                                        enemies[j][0] = ii;
-                                        enemies[j][1] = jj;
+                                            enemies[j][0] = ii;
+                                            enemies[j][1] = jj;
+
+                                        // else delete enemy
+                                        }else{
+                                            enemies.splice(j, 1);
+                                        }
+
                                         hits += 1;
                                         break;
                                     }
@@ -386,7 +384,8 @@ function draw(){
     );
 
     if(!game_running){
-        // draw game over message
+        // draw game over or win message
+        // depends upon if enemies remain
         buffer.textAlign = 'center';
         buffer.fillText(
           settings[5] + ' = Restart',// restart key
@@ -398,10 +397,14 @@ function draw(){
           x,
           y / 2 + 75
         );
-        buffer.fillStyle = '#f00';
+        buffer.fillStyle = enemies.length > 0
+          ? '#f00'
+          : '#0f0';
         buffer.font = '42pt sans-serif';
         buffer.fillText(
-          'YOU ARE DEAD',
+          enemies.length > 0
+            ? 'YOU ARE DEAD'
+            : 'You Win!',
           x,
           y / 2
         );
@@ -538,6 +541,7 @@ function setmode(newmode, newgame){
     clearInterval(interval);
 
     bullets.length = 0;
+    enemies = [];
     game_running = 1;
     mode = newmode;
     mouse_lock_x = -1;
