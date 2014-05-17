@@ -1,10 +1,10 @@
-function load_level(i){
+function load_level(id){
     foreground_rect.length = 0;
 
     // level: Empty Square Arena
-    if(i === 1){
+    if(id === 1){
         level_settings = [
-          i - 1,
+          id - 1,
           1,
           250,
           250
@@ -36,9 +36,9 @@ function load_level(i){
         weapon_reload = settings[3];
 
     // level: Final Destination
-    }else if(i === 2){
+    }else if(id === 2){
         level_settings = [
-          i -1,
+          id - 1,
           1,
           250,
           250
@@ -64,9 +64,9 @@ function load_level(i){
         weapon_reload = settings[3];
 
     // level: Zombie Surround
-    }else if(i === 3){
+    }else if(id === 3){
         level_settings = [
-          i - 1,
+          id - 1,
           settings[2],
           400,
           400
@@ -80,13 +80,16 @@ function load_level(i){
         player_y = 0;
 
         // create proper number of zombies
-        i = level_settings[1] - 1;
+        var loop_counter = level_settings[1] - 1;
         do{
             // calculate new zombie location away from player starting point
             do{
                 j = random_number(level_settings[2] * 2) - level_settings[2];
                 jj = random_number(level_settings[3] * 2) - level_settings[3];
-            }while(j > -99 && j < 99 && jj > -99 && jj < 99);
+            }while(j > -99
+              && j < 99
+              && jj > -99
+              && jj < 99);
 
             enemies.push([
               j,
@@ -94,7 +97,7 @@ function load_level(i){
               j,
               jj
             ]);
-        }while(i--);
+        }while(loop_counter--);
 
         enemy_reload = 100;
         weapon_reload = settings[3];
