@@ -480,7 +480,7 @@ function random_number(i){
 function reset(){
     if(confirm('Reset settings?')){
         document.getElementById('audio-volume').value = 1;
-        document.getElementById('clear').checked = 1;
+        document.getElementById('clear').checked = true;
         document.getElementById('move-keys').value = 'WASD';
         document.getElementById('ms-per-frame').value = 25;
         document.getElementById('restart-key').value = 'H';
