@@ -133,14 +133,12 @@ function draw(){
         player_y += player_dy;
     }
 
-    if(settings[6]){// clear?
-        buffer.clearRect(
-          0,
-          0,
-          width,
-          height
-        );
-    }
+    buffer.clearRect(
+      0,
+      0,
+      width,
+      height
+    );
 
     // draw visible background stuffs
     loop_counter = background_rect.length - 1;
@@ -436,14 +434,12 @@ function draw(){
         );
     }
 
-    if(settings[6]){// clear?
-        canvas.clearRect(
-          0,
-          0,
-          width,
-          height
-        );
-    }
+    canvas.clearRect(
+      0,
+      0,
+      width,
+      height
+    );
     canvas.drawImage(
       document.getElementById('buffer'),
       0,
@@ -480,7 +476,6 @@ function random_number(i){
 function reset(){
     if(confirm('Reset settings?')){
         document.getElementById('audio-volume').value = 1;
-        document.getElementById('clear').checked = true;
         document.getElementById('move-keys').value = 'WASD';
         document.getElementById('ms-per-frame').value = 25;
         document.getElementById('restart-key').value = 'H';
@@ -551,17 +546,6 @@ function save(){
             );
         }
     }while(loop_counter--);
-
-    settings[6] = document.getElementById('clear').checked;
-    if(settings[6]){
-        window.localStorage.removeItem('shooter-2d-6');
-
-    }else{
-        window.localStorage.setItem(
-          'shooter-2d-6',
-          0
-        );
-    }
 }
 
 function setmode(newmode, newgame){
@@ -608,8 +592,7 @@ function setmode(newmode, newgame){
           + settings[2] + '><a onclick=setmode(3,1)>Zombie Surround</a></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input disabled style=border:0 value=ESC>Main Menu<br><input id=move-keys maxlength=4 value='
           + settings[4] + '>Move ↑←↓→<br><input id=restart-key maxlength=1 value='
           + settings[5] + '>Restart<br><input disabled style=border:0 value=Click>Shoot</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
-          + settings[1] + '>Audio<br><label><input '
-          + (settings[6] ? 'checked ' : '') + 'id=clear type=checkbox>Clear</label><br><input id=ms-per-frame value='
+          + settings[1] + '>Audio<br><input id=ms-per-frame value='
           + settings[0] + '>ms/Frame<br><input id=weapon-reload value='
           + settings[3] + '>Weapon Reload<br><a onclick=reset()>Reset Settings</a></div></div>';
     }
@@ -660,7 +643,6 @@ var settings = [
   window.localStorage.getItem('shooter-2d-5') === null// start key
     ? 'H'
     : window.localStorage.getItem('shooter-2d-5'),
-  window.localStorage.getItem('shooter-2d-6') === null// clear?
 ];
 var weapon_reload = 0;
 var width = 0;
