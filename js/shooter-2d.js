@@ -25,7 +25,7 @@ function draw(){
         }
 
         // check if player weapon can be fired, else update reload
-        if(weapon_reload >= settings[3]){
+        if(weapon_reload >= settings['weapon-reload']){
             // if weapon being fired
             if(mouse_lock_x > 0){
                 weapon_reload = 0;
@@ -61,7 +61,7 @@ function draw(){
         // if level != Zombie Surround
         if(mode < 3){
             // if enemy can fire weapon, fire it. else update reload
-            if(enemy_reload >= settings[3]){
+            if(enemy_reload >= settings['weapon_reload']){
                 enemy_reload = 0;
 
                 // calculate bullet destination based on player destination
@@ -397,7 +397,7 @@ function draw(){
 
     // draw reload and hits
     buffer.fillText(
-      'Reload: ' + weapon_reload + '/' + settings[3],
+      'Reload: ' + weapon_reload + '/' + settings['weapon-reload'],
       5,
       29
     );
@@ -412,7 +412,7 @@ function draw(){
         // depends upon if enemies remain
         buffer.textAlign = 'center';
         buffer.fillText(
-          settings[5] + ' = Restart',// restart key
+          settings['restart-key'] + ' = Restart',// restart key
           x,
           y / 2 + 42
         );
@@ -463,7 +463,7 @@ function m(x0,y0,x1,y1){
 }
 
 function play_audio(i){
-    if(settings[1] > 0){
+    if(settings['audio-volume'] > 0){
         document.getElementById(i).currentTime = 0;
         document.getElementById(i).play();
     }
@@ -476,7 +476,7 @@ function random_number(i){
 function reset(){
     if(confirm('Reset settings?')){
         document.getElementById('audio-volume').value = 1;
-        document.getElementById('move-keys').value = 'WASD';
+        document.getElementById('movement-keys').value = 'WASD';
         document.getElementById('ms-per-frame').value = 25;
         document.getElementById('restart-key').value = 'H';
         document.getElementById('weapon-reload').value = 50;
@@ -500,52 +500,92 @@ function resize(){
 }
 
 function save(){
-    var loop_counter = 3;
-    do{
-        j = [
-          'ms-per-frame',
-          'audio-volume',
-          'zombie-amount',
-          'weapon-reload'
-        ][loop_counter];
-        if(isNaN(document.getElementById(j).value)
-          || document.getElementById(j).value == [25, 1, 25, 50][loop_counter]
-          || document.getElementById(j).value < [1, 0, 0, 1][loop_counter]){
-            window.localStorage.removeItem('shooter-2d-' + loop_counter);
-            settings[loop_counter] = [
-              25,
-              1,
-              25,
-              50
-            ][loop_counter];
-            document.getElementById(j).value = settings[loop_counter];
+    // Save audio-volume setting.
+    if(document.getElementById('audio-volume').value === 1){
+        window.localStorage.removeItem('Shooter-2D.htm-audio-volume');
+        settings['audio-volume'] = 1;
 
-        }else{
-            settings[loop_counter] = parseFloat(document.getElementById(j).value);
-            window.localStorage.setItem(
-              'shooter-2d-' + loop_counter,
-              settings[loop_counter]
-            );
-        }
-    }while(loop_counter--);
+    }else{
+        settings['audio-volume'] = parseFloat(document.getElementById('audio-volume').value);
+        window.localStorage.setItem(
+          'Shooter-2D.htm-audio-volume',
+          settings['audio-volume']
+        );
+    }
 
-    loop_counter = 1;
-    do{
-        if(document.getElementById(['move-keys', 'restart-key'][loop_counter]).value == ['WASD', 'H'][loop_counter]){
-            window.localStorage.removeItem('shooter-2d-' + (loop_counter + 4));
-            settings[loop_counter + 4] = [
-              'WASD',
-              'H'
-            ][loop_counter];
+    // Save movement-keys setting.
+    if(document.getElementById('movement-keys').value == 'WASD'){
+        window.localStorage.removeItem('Shooter-2D.htm-movement-keys');
+        settings['movement-keys'] = 'WASD';
 
-        }else{
-            settings[loop_counter + 4] = document.getElementById(['move-keys','restart-keys'][loop_counter]).value;
-            window.localStorage.setItem(
-              'shooter-2d-' + (loop_counter + 4),
-              settings[loop_counter + 4]
-            );
-        }
-    }while(loop_counter--);
+    }else{
+        settings['movement-keys'] = document.getElementById('movement-keys').value;
+        window.localStorage.setItem(
+          'Shooter-2D.htm-movement-keys',
+          settings['movement-keys']
+        );
+    }
+
+    // Save ms-per-frame setting.
+    if(document.getElementById('ms-per-frame').value == 25
+      || isNaN(document.getElementById('ms-per-frame').value)
+      || document.getElementById('ms-per-frame').value < 1){
+        window.localStorage.removeItem('Shooter-2D.htm-ms-per-frame');
+        document.getElementById('ms-per-frame').value = 25;
+        settings['ms-per-frame'] = 25;
+
+    }else{
+        settings['ms-per-frame'] = parseInt(document.getElementById('ms-per-frame').value);
+        window.localStorage.setItem(
+          'Shooter-2D.htm-ms-per-frame',
+          settings['ms-per-frame']
+        );
+    }
+
+    // Save restart-key setting.
+    if(document.getElementById('restart-key').value == 'AD'){
+        window.localStorage.removeItem('Shooter-2D.htm-restart-key');
+        settings['restart-key'] = 'H';
+
+    }else{
+        settings['restart-key'] = document.getElementById('restart-key').value;
+        window.localStorage.setItem(
+          'Shooter-2D.htm-restart-key',
+          settings['restart-key']
+        );
+    }
+
+    // Save weapon-reload setting.
+    if(document.getElementById('weapon-reload').value == 50
+      || isNaN(document.getElementById('weapon-reload').value)
+      || document.getElementById('weapon-reload').value < 1){
+        window.localStorage.removeItem('Shooter-2D.htm-weapon-reload');
+        document.getElementById('weapon-reload').value = 50;
+        settings['weapon-reload'] = 50;
+
+    }else{
+        settings['weapon-reload'] = parseInt(document.getElementById('weapon-reload').value);
+        window.localStorage.setItem(
+          'Shooter-2D.htm-weapon-reload',
+          settings['weapon-reload']
+        );
+    }
+
+    // Save zombie-amount setting.
+    if(document.getElementById('zombie-amount').value == 25
+      || isNaN(document.getElementById('zombie-amount').value)
+      || document.getElementById('zombie-amount').value < 1){
+        window.localStorage.removeItem('Shooter-2D.htm-zombie-amount');
+        document.getElementById('zombie-amount').value = 25;
+        settings['zombie-amount'] = 25;
+
+    }else{
+        settings['zombie-amount'] = parseInt(document.getElementById('zombie-amount').value);
+        window.localStorage.setItem(
+          'Shooter-2D.htm-zombie-amount',
+          settings['zombie-amount']
+        );
+    }
 }
 
 function setmode(newmode, newgame){
@@ -580,7 +620,7 @@ function setmode(newmode, newgame){
 
         interval = setInterval(
           'draw()',
-          settings[0]// ms-per-frame
+          settings['ms-per-frame']// ms-per-frame
         );
 
     // main menu mode
@@ -589,12 +629,12 @@ function setmode(newmode, newgame){
         canvas = 0;
 
         document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><b>Shooter-2D.htm</b></div><hr><div class=c><b>Duel vs AI:</b><ul><li><a onclick=setmode(1,1)>Empty Square Arena</a><li><a onclick=setmode(2,1)>Final Destination</a></ul></div><hr><div class=c><input id=zombie-amount value='
-          + settings[2] + '><a onclick=setmode(3,1)>Zombie Surround</a></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input disabled style=border:0 value=ESC>Main Menu<br><input id=move-keys maxlength=4 value='
-          + settings[4] + '>Move ↑←↓→<br><input id=restart-key maxlength=1 value='
-          + settings[5] + '>Restart<br><input disabled style=border:0 value=Click>Shoot</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
-          + settings[1] + '>Audio<br><input id=ms-per-frame value='
-          + settings[0] + '>ms/Frame<br><input id=weapon-reload value='
-          + settings[3] + '>Weapon Reload<br><a onclick=reset()>Reset Settings</a></div></div>';
+          + settings['zombie-amount'] + '><a onclick=setmode(3,1)>Zombie Surround</a></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input disabled style=border:0 value=ESC>Main Menu<br><input id=movement-keys maxlength=4 value='
+          + settings['movement-keys'] + '>Move ↑←↓→<br><input id=restart-key maxlength=1 value='
+          + settings['restart-key'] + '>Restart<br><input disabled style=border:0 value=Click>Shoot</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
+          + settings['audio-volume'] + '>Audio<br><input id=ms-per-frame value='
+          + settings['ms-per-frame'] + '>ms/Frame<br><input id=weapon-reload value='
+          + settings['weapon-reload'] + '>Weapon Reload<br><a onclick=reset()>Reset Settings</a></div></div>';
     }
 }
 
@@ -624,26 +664,26 @@ var player_dx = 0;
 var player_dy = 0;
 var player_x = 0;
 var player_y = 0;
-var settings = [
-  window.localStorage.getItem('shooter-2d-0') === null// ms-per-frame
-    ? 25
-    : parseInt(window.localStorage.getItem('shooter-2d-0')),
-  window.localStorage.getItem('shooter-2d-1') === null// audio volume
+var settings = {
+  'audio-volume': window.localStorage.getItem('Shooter-2D.htm-audio-volume') === null
     ? 1
-    : parseFloat(window.localStorage.getItem('shooter-2d-1')),
-  window.localStorage.getItem('shooter-2d-2') === null// number of zombies
-    ? 25
-    : parseFloat(window.localStorage.getItem('shooter-2d-2')),
-  window.localStorage.getItem('shooter-2d-3') === null// weapon reload
-    ? 50
-    : parseInt(window.localStorage.getItem('shooter-2d-3')),
-  window.localStorage.getItem('shooter-2d-4') === null// movement keys
+    : parseFloat(window.localStorage.getItem('Shooter-2D.htm-audio-volume')),
+  'movement-keys': window.localStorage.getItem('Shooter-2D.htm-movement-keys') === null
     ? 'WASD'
-    : window.localStorage.getItem('shooter-2d-4'),
-  window.localStorage.getItem('shooter-2d-5') === null// start key
+    : window.localStorage.getItem('Shooter-2D.htm-movement-keys'),
+  'ms-per-frame': window.localStorage.getItem('Shooter-2D.htm-ms-per-frame') === null
+    ? 25
+    : parseInt(window.localStorage.getItem('Shooter-2D.htm-ms-per-frame')),
+  'restart-key': window.localStorage.getItem('Shooter-2D.htm-restart-key') === null
     ? 'H'
-    : window.localStorage.getItem('shooter-2d-5'),
-];
+    : window.localStorage.getItem('Shooter-2D.htm-restart-key'),
+  'weapon-reload': window.localStorage.getItem('Shooter-2D.htm-weapon-reload') === null
+    ? 50
+    : parseInt(window.localStorage.getItem('Shooter-2D.htm-weapon-reload')),
+  'zombie-amount': window.localStorage.getItem('Shooter-2D.htm-zombie-amount') === null
+    ? 25
+    : parseFloat(window.localStorage.getItem('Shooter-2D.htm-zombie-amount')),
+};
 var weapon_reload = 0;
 var width = 0;
 var x = 0;
@@ -662,19 +702,19 @@ window.onkeydown = function(e){
         }else{
             key = String.fromCharCode(key);
 
-            if(key === settings[4][1]){
+            if(key === settings['movement-keys'][1]){
                 key_left = 1;
 
-            }else if(key === settings[4][3]){
+            }else if(key === settings['movement-keys'][3]){
                 key_right = 1;
 
-            }else if(key === settings[4][2]){
+            }else if(key === settings['movement-keys'][2]){
                 key_down = 1;
 
-            }else if(key === settings[4][0]){
+            }else if(key === settings['movement-keys'][0]){
                 key_up = 1;
 
-            }else if(key === settings[5]){// restart key
+            }else if(key === settings['restart-key']){
                 setmode(mode, 0);
             }
         }
@@ -685,16 +725,16 @@ window.onkeyup = function(e){
     var key = window.event ? event : e;
     key = String.fromCharCode(key.charCode ? key.charCode : key.keyCode);
 
-    if(key === settings[4][1]){
+    if(key === settings['movement-keys'][1]){
         key_left = 0;
 
-    }else if(key === settings[4][3]){
+    }else if(key === settings['movement-keys'][3]){
         key_right = 0;
 
-    }else if(key === settings[4][2]){
+    }else if(key === settings['movement-keys'][2]){
         key_down = 0;
 
-    }else if(key === settings[4][0]){
+    }else if(key === settings['movement-keys'][0]){
         key_up = 0;
     }
 };
