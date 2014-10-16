@@ -33,7 +33,7 @@ function load_level(id){
         ];
 
         enemy_reload = 100;
-        weapon_reload = settings[3];
+        weapon_reload = settings['weapon-reload'];
 
     // level: Final Destination
     }else if(id === 2){
@@ -61,13 +61,13 @@ function load_level(id){
         ];
 
         enemy_reload = 100;
-        weapon_reload = settings[3];
+        weapon_reload = settings['weapon-reload'];
 
     // level: Zombie Surround
     }else if(id === 3){
         level_settings = [
           id - 1,
-          settings[2],
+          settings['zombie-amount'],
           400,
           400
         ];
@@ -100,6 +100,6 @@ function load_level(id){
         }while(loop_counter--);
 
         enemy_reload = 100;
-        weapon_reload = settings[3];
+        weapon_reload = settings['weapon-reload'];
     }
 }
