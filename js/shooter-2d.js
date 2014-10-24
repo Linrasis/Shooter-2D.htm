@@ -3,7 +3,7 @@ function draw(){
         player_dx = 0;
         player_dy = 0;
 
-        // add player key movments to dx and dy, if still within level boundaries
+        // Add player key movments to dx and dy, if still within level boundaries.
         if(key_left
           && player_x - 2 > -level_settings[2]){
             player_dx -= 2;
@@ -24,13 +24,13 @@ function draw(){
             player_dy -= 2;
         }
 
-        // check if player weapon can be fired, else update reload
+        // Check if player weapon can be fired, else update reload.
         if(weapon_reload >= settings['weapon-reload']){
-            // if weapon being fired
+            // If weapon being fired...
             if(mouse_lock_x > 0){
                 weapon_reload = 0;
 
-                // calculate bullet movement
+                // ...calculate bullet movement...
                 j = m(
                   player_x,
                   player_y,
@@ -38,16 +38,16 @@ function draw(){
                   player_y + mouse_y - y
                 );
 
-                // add bullet with movement pattern, tied to player
+                // ...and add bullet with movement pattern, tied to player.
                 bullets.push([
                   player_x,
                   player_y,
                   (mouse_x > x ? j[0] : -j[0]),
                   (mouse_y > y ? j[1] : -j[1]),
-                  0
+                  0,
                 ]);
 
-                // if level != Zombie Surround, update AI destinations
+                // If level != Zombie Surround, update AI destinations.
                 if(mode < 3){
                   enemies[0][2] = random_number(500) - 250;
                   enemies[0][3] = random_number(500) - 250;
@@ -58,13 +58,13 @@ function draw(){
             weapon_reload += 1;
         }
 
-        // if level != Zombie Surround
+        // If level != Zombie Surround.
         if(mode < 3){
-            // if enemy can fire weapon, fire it. else update reload
-            if(enemy_reload >= settings['weapon_reload']){
+            // If enemy can fire weapon, fire it. else update reload.
+            if(enemy_reload >= settings['weapon-reload']){
                 enemy_reload = 0;
 
-                // calculate bullet destination based on player destination
+                // Calculate bullet destination based on player destination...
                 j = m(
                   enemies[0][0],
                   enemies[0][1],
@@ -72,13 +72,13 @@ function draw(){
                   player_y + player_dy
                 );
 
-                // add bullet with movement pattern, tied to enemy
+                // ...and add bullet with movement pattern, tied to enemy.
                 bullets.push([
                   enemies[0][0],
                   enemies[0][1],
                   (enemies[0][0] > player_x ? -j[0] : j[0]),
                   (enemies[0][1] > player_y ? -j[1] : j[1]),
-                  1
+                  1,
                 ]);
 
             }else{
@@ -86,7 +86,7 @@ function draw(){
             }
         }
 
-        // check for player collision with foreground obstacles
+        // Check for player collision with foreground obstacles.
         var loop_counter = foreground_rect.length - 1;
         if(loop_counter >= 0){
             do{
@@ -128,7 +128,7 @@ function draw(){
             }while(loop_counter--);
         }
 
-        // update actual player position
+        // Update actual player position.
         player_x += player_dx;
         player_y += player_dy;
     }
@@ -140,7 +140,7 @@ function draw(){
       height
     );
 
-    // draw visible background stuffs
+    // Draw visible background stuffs.
     loop_counter = background_rect.length - 1;
     if(loop_counter >= 0){
         do{
@@ -159,7 +159,7 @@ function draw(){
         }while(loop_counter--);
     }
 
-    // draw visible foreground environment stuffs
+    // Draw visible foreground environment stuffs.
     loop_counter = foreground_rect.length - 1;
     if(loop_counter >= 0){
         do{
@@ -178,15 +178,15 @@ function draw(){
         }while(loop_counter--);
     }
 
-    // handle enemies
+    // Handle enemies.
     loop_counter = enemies.length - 1;
     if(loop_counter >= 0){
         buffer.fillStyle = '#f66';
         do{
             if(game_running){
-                // if level == Zombie Surround
+                // If level == Zombie Surround...
                 if(mode === 3){
-                    // calculate enemy movement based on player location
+                    // ...calculate zombie movement based on player location...
                     j = m(
                       enemies[loop_counter][0],
                       enemies[loop_counter][1],
@@ -194,7 +194,7 @@ function draw(){
                       player_y
                     );
 
-                    // move enemies towards player
+                    // ...and move zombies towards player.
                     enemies[loop_counter][0] += player_x > enemies[loop_counter][0]
                       ? j[0]
                       : -j[0];
@@ -202,9 +202,9 @@ function draw(){
                       ? j[1]
                       : -j[1];
 
-                // if level != Zombie Surround
+                // If level != Zombie Surround
                 }else{
-                    // calculate enemy movement based on destination
+                    // Calculate enemy movement based on destination...
                     j = m(
                       enemies[loop_counter][0],
                       enemies[loop_counter][1],
@@ -214,7 +214,7 @@ function draw(){
                     j[0] *= 2;
                     j[1] *= 2;
 
-                    // move enemies towards destination
+                    // ... and move enemies towards destination.
                     enemies[loop_counter][0] += enemies[loop_counter][2] > enemies[loop_counter][0]
                       ? j[0]
                       : -j[0];
@@ -222,7 +222,7 @@ function draw(){
                       ? j[1]
                       : -j[1];
 
-                    // check if enemy AI should pick new destination
+                    // Check if enemy AI should pick new destination.
                     if(enemies[loop_counter][2] > enemies[loop_counter][0] - 5
                       && enemies[loop_counter][2] < enemies[loop_counter][0] + 5
                       && enemies[loop_counter][3] > enemies[loop_counter][1] - 5
@@ -232,7 +232,7 @@ function draw(){
                     }
                 }
 
-                // check if player collides with enemy
+                // Check if player collides with enemy.
                 if(enemies[loop_counter][0] + 15 - player_x > -17
                   && enemies[loop_counter][0] - 15 - player_x < 17
                   && enemies[loop_counter][1] + 15 - player_y > -17
@@ -241,7 +241,7 @@ function draw(){
                 }
             }
 
-            // draw enemies
+            // Draw enemies.
             if(enemies[loop_counter][0] + 15 + x - player_x > 0
               && enemies[loop_counter][0] - 15 + x - player_x < width
               && enemies[loop_counter][1] + 15 + y - player_y > 0
@@ -259,7 +259,7 @@ function draw(){
         game_running = 0;
     }
 
-    // draw player
+    // Draw player.
     buffer.fillStyle = '#090';
     buffer.fillRect(
       x - 17,
@@ -268,11 +268,11 @@ function draw(){
       34
     );
 
-    // handle bullets
+    // Handle bullets.
     loop_counter = bullets.length - 1;
     if(loop_counter >= 0){
         if(game_running){
-            // check if bullets collide with player or enemies
+            // Check if bullets collide with player or enemies.
             do{
                 bullets[loop_counter][0] += 5 * bullets[loop_counter][2];
                 bullets[loop_counter][1] += 5 * bullets[loop_counter][3];
@@ -321,7 +321,7 @@ function draw(){
                                           1
                                         );
 
-                                        // if mode != Zombie Surround, pick new enemy location
+                                        // If mode != Zombie Surround, pick new enemy location...
                                         if(mode < 3){
                                             do{
                                                 ii = random_number(level_settings[2] * 2) - level_settings[2];
@@ -334,7 +334,7 @@ function draw(){
                                             enemies[j][0] = ii;
                                             enemies[j][1] = jj;
 
-                                        // else delete enemy
+                                        // ...else delete enemy.
                                         }else{
                                             enemies.splice(
                                               j,
@@ -360,14 +360,14 @@ function draw(){
             }while(loop_counter--);
         }
 
-        // draw bullets
+        // Draw bullets.
         loop_counter = bullets.length - 1;
         if(loop_counter >= 0){
 
-            // get player position camera offset
+            // Get player position camera offset.
             var temp_viewoffset = [
               x - player_x - 5,
-              y - player_y - 5
+              y - player_y - 5,
             ];
 
             do{
@@ -390,12 +390,12 @@ function draw(){
         }
     }
 
-    // setup text display
+    // Setup text display.
     buffer.fillStyle = '#fff';
     buffer.font = '23pt sans-serif';
     buffer.textAlign = 'left';
 
-    // draw reload and hits
+    // Draw reload and hits.
     buffer.fillText(
       'Reload: ' + weapon_reload + '/' + settings['weapon-reload'],
       5,
@@ -408,8 +408,8 @@ function draw(){
     );
 
     if(!game_running){
-        // draw game over or win message
-        // depends upon if enemies remain
+        // Daw game over or win message,
+        //   depending upon if enemies remain.
         buffer.textAlign = 'center';
         buffer.fillText(
           settings['restart-key'] + ' = Restart',// restart key
@@ -447,6 +447,7 @@ function draw(){
     );
 }
 
+// TODO: Improve clarity.
 function m(x0,y0,x1,y1){
     var j0 = Math.abs(x0 - x1);
     var j1 = Math.abs(y0 - y1);
@@ -474,29 +475,33 @@ function random_number(i){
 }
 
 function reset(){
-    if(confirm('Reset settings?')){
-        document.getElementById('audio-volume').value = 1;
-        document.getElementById('movement-keys').value = 'WASD';
-        document.getElementById('ms-per-frame').value = 25;
-        document.getElementById('restart-key').value = 'H';
-        document.getElementById('weapon-reload').value = 50;
-        document.getElementById('zombie-amount').value = 25;
-        save();
+    if(!confirm('Reset settings?')){
+        return;
     }
+
+    document.getElementById('audio-volume').value = 1;
+    document.getElementById('movement-keys').value = 'WASD';
+    document.getElementById('ms-per-frame').value = 25;
+    document.getElementById('restart-key').value = 'H';
+    document.getElementById('weapon-reload').value = 50;
+    document.getElementById('zombie-amount').value = 25;
+    save();
 }
 
 function resize(){
-    if(mode > 0){
-        height = window.innerHeight;
-        document.getElementById('buffer').height = height;
-        document.getElementById('canvas').height = height;
-        y = height / 2;
-
-        width = window.innerWidth;
-        document.getElementById('buffer').width = width;
-        document.getElementById('canvas').width = width;
-        x = width / 2;
+    if(mode <= 0){
+        return;
     }
+
+    height = window.innerHeight;
+    document.getElementById('buffer').height = height;
+    document.getElementById('canvas').height = height;
+    y = height / 2;
+
+    width = window.innerWidth;
+    document.getElementById('buffer').width = width;
+    document.getElementById('canvas').width = width;
+    x = width / 2;
 }
 
 function save(){
@@ -597,7 +602,7 @@ function setmode(newmode, newgame){
     mode = newmode;
     mouse_lock_x = -1;
 
-    // game mode
+    // Game mode.
     if(mode > 0){
         if(newgame){
             save();
@@ -620,10 +625,10 @@ function setmode(newmode, newgame){
 
         interval = setInterval(
           'draw()',
-          settings['ms-per-frame']// ms-per-frame
+          settings['ms-per-frame']
         );
 
-    // main menu mode
+    // Main menu mode.
     }else{
         buffer = 0;
         canvas = 0;
@@ -692,31 +697,34 @@ var y = 0;
 setmode(0, 1);
 
 window.onkeydown = function(e){
-    if(mode > 0){
-        var key = window.event ? event : e;
-        key = key.charCode ? key.charCode : key.keyCode;
+    if(mode <= 0){
+        return;
+    }
 
-        if(key === 27){// ESC
-            setmode(0, 1);
+    var key = window.event ? event : e;
+    key = key.charCode ? key.charCode : key.keyCode;
 
-        }else{
-            key = String.fromCharCode(key);
+    // ESC: return to main menu.
+    if(key === 27){
+        setmode(0, 1);
 
-            if(key === settings['movement-keys'][1]){
-                key_left = 1;
+    }else{
+        key = String.fromCharCode(key);
 
-            }else if(key === settings['movement-keys'][3]){
-                key_right = 1;
+        if(key === settings['movement-keys'][1]){
+            key_left = 1;
 
-            }else if(key === settings['movement-keys'][2]){
-                key_down = 1;
+        }else if(key === settings['movement-keys'][3]){
+            key_right = 1;
 
-            }else if(key === settings['movement-keys'][0]){
-                key_up = 1;
+        }else if(key === settings['movement-keys'][2]){
+            key_down = 1;
 
-            }else if(key === settings['restart-key']){
-                setmode(mode, 0);
-            }
+        }else if(key === settings['movement-keys'][0]){
+            key_up = 1;
+
+        }else if(key === settings['restart-key']){
+            setmode(mode, 0);
         }
     }
 };
@@ -740,28 +748,32 @@ window.onkeyup = function(e){
 };
 
 window.onmousedown = function(e){
-    if(mode > 0){
-        e.preventDefault();
-        mouse_lock_x = mouse_x;
-        mouse_lock_y = mouse_y;
+    if(mode <= 0){
+        return;
     }
+
+    e.preventDefault();
+    mouse_lock_x = mouse_x;
+    mouse_lock_y = mouse_y;
 };
 
 window.onmousemove = function(e){
-    if(mode > 0){
-        mouse_x = e.pageX;
-        if(mouse_x < 0){
-            mouse_x = 0;
-        }else if(mouse_x > width){
-            mouse_x = width;
-        }
+    if(mode <= 0){
+        return;
+    }
 
-        mouse_y = e.pageY;
-        if(mouse_y < 0){
-            mouse_y = 0;
-        }else if(mouse_y > height){
-            mouse_y = height;
-        }
+    mouse_x = e.pageX;
+    if(mouse_x < 0){
+        mouse_x = 0;
+    }else if(mouse_x > width){
+        mouse_x = width;
+    }
+
+    mouse_y = e.pageY;
+    if(mouse_y < 0){
+        mouse_y = 0;
+    }else if(mouse_y > height){
+        mouse_y = height;
     }
 };
 
