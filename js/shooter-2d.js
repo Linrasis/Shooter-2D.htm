@@ -141,7 +141,7 @@ function draw(){
     );
 
     // Draw visible background stuffs.
-    loop_counter = background_rect.length - 1;
+    var loop_counter = background_rect.length - 1;
     if(loop_counter >= 0){
         do{
             if(background_rect[loop_counter][0] + background_rect[loop_counter][2] + x - player_x > 0
@@ -520,9 +520,9 @@ function save(){
         );
     }
 
-    loop_counter = 2;
+    var loop_counter = 2;
     do{
-        id = [
+        var id = [
           'color',
           'movement-keys',
           'restart-key',
