@@ -260,7 +260,7 @@ function draw(){
     }
 
     // Draw player.
-    buffer.fillStyle = '#090';
+    buffer.fillStyle = settings['color'];
     buffer.fillRect(
       x - 17,
       y - 17,
@@ -372,8 +372,8 @@ function draw(){
 
             do{
                 buffer.fillStyle = bullets[loop_counter][4] == 0
-                  ? '#0f0'
-                  : '#f00';
+                  ? settings['color']
+                  : '#f66';
 
                 if(bullets[loop_counter][0] + 15 + temp_viewoffset[0] > 0
                   && bullets[loop_counter][0] + x - player_x < width
@@ -480,11 +480,13 @@ function reset(){
     }
 
     document.getElementById('audio-volume').value = 1;
+    document.getElementById('color').value = '#009900';
     document.getElementById('movement-keys').value = 'WASD';
     document.getElementById('ms-per-frame').value = 25;
     document.getElementById('restart-key').value = 'H';
     document.getElementById('weapon-reload').value = 50;
     document.getElementById('zombie-amount').value = 25;
+
     save();
 }
 
@@ -518,18 +520,30 @@ function save(){
         );
     }
 
-    // Save movement-keys setting.
-    if(document.getElementById('movement-keys').value == 'WASD'){
-        window.localStorage.removeItem('Shooter-2D.htm-movement-keys');
-        settings['movement-keys'] = 'WASD';
+    loop_counter = 2;
+    do{
+        id = [
+          'color',
+          'movement-keys',
+          'restart-key',
+        ][loop_counter];
 
-    }else{
-        settings['movement-keys'] = document.getElementById('movement-keys').value;
-        window.localStorage.setItem(
-          'Shooter-2D.htm-movement-keys',
-          settings['movement-keys']
-        );
-    }
+        if(document.getElementById(id).value === ['#009900', 'WASD', 'H',][loop_counter]){
+            window.localStorage.removeItem('Shooter-2D.htm-' + id);
+            settings[id] = [
+              '#009900',
+              'WASD',
+              'H',
+            ][loop_counter];
+
+        }else{
+            settings[id] = document.getElementById(id).value;
+            window.localStorage.setItem(
+              'Shooter-2D.htm-' + id,
+              settings[id]
+            );
+        }
+    }while(loop_counter--);
 
     // Save ms-per-frame setting.
     if(document.getElementById('ms-per-frame').value == 25
@@ -544,19 +558,6 @@ function save(){
         window.localStorage.setItem(
           'Shooter-2D.htm-ms-per-frame',
           settings['ms-per-frame']
-        );
-    }
-
-    // Save restart-key setting.
-    if(document.getElementById('restart-key').value == 'AD'){
-        window.localStorage.removeItem('Shooter-2D.htm-restart-key');
-        settings['restart-key'] = 'H';
-
-    }else{
-        settings['restart-key'] = document.getElementById('restart-key').value;
-        window.localStorage.setItem(
-          'Shooter-2D.htm-restart-key',
-          settings['restart-key']
         );
     }
 
@@ -637,7 +638,8 @@ function setmode(newmode, newgame){
           + settings['zombie-amount'] + '><a onclick=setmode(3,1)>Zombie Surround</a></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input disabled style=border:0 value=ESC>Main Menu<br><input id=movement-keys maxlength=4 value='
           + settings['movement-keys'] + '>Move ↑←↓→<br><input id=restart-key maxlength=1 value='
           + settings['restart-key'] + '>Restart<br><input disabled style=border:0 value=Click>Shoot</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
-          + settings['audio-volume'] + '>Audio<br><input id=ms-per-frame value='
+          + settings['audio-volume'] + '>Audio<br><input id=color type=color value='
+          + settings['color'] + '>Color<br><input id=ms-per-frame value='
           + settings['ms-per-frame'] + '>ms/Frame<br><input id=weapon-reload value='
           + settings['weapon-reload'] + '>Weapon Reload<br><a onclick=reset()>Reset Settings</a></div></div>';
     }
@@ -673,6 +675,9 @@ var settings = {
   'audio-volume': window.localStorage.getItem('Shooter-2D.htm-audio-volume') === null
     ? 1
     : parseFloat(window.localStorage.getItem('Shooter-2D.htm-audio-volume')),
+  'color': window.localStorage.getItem('Shooter-2D.htm-color') === null
+    ? '#009900'
+    : window.localStorage.getItem('Shooter-2D.htm-color'),
   'movement-keys': window.localStorage.getItem('Shooter-2D.htm-movement-keys') === null
     ? 'WASD'
     : window.localStorage.getItem('Shooter-2D.htm-movement-keys'),
