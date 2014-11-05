@@ -31,7 +31,7 @@ function draw(){
                 weapon_reload = 0;
 
                 // ...calculate bullet movement...
-                j = m(
+                var j = m(
                   player_x,
                   player_y,
                   player_x + mouse_x - x,
@@ -65,7 +65,7 @@ function draw(){
                 enemy_reload = 0;
 
                 // Calculate bullet destination based on player destination...
-                j = m(
+                var j = m(
                   enemies[0][0],
                   enemies[0][1],
                   player_x + player_dx,
@@ -144,18 +144,20 @@ function draw(){
     var loop_counter = background_rect.length - 1;
     if(loop_counter >= 0){
         do{
-            if(background_rect[loop_counter][0] + background_rect[loop_counter][2] + x - player_x > 0
-              && background_rect[loop_counter][0] + x - player_x < width
-              && background_rect[loop_counter][1] + background_rect[loop_counter][3] + y - player_y > 0
-              && background_rect[loop_counter][1] + y - player_y < height){
-                buffer.fillStyle = background_rect[loop_counter][4];
-                buffer.fillRect(
-                  x - player_x + background_rect[loop_counter][0],
-                  y - player_y + background_rect[loop_counter][1],
-                  background_rect[loop_counter][2],
-                  background_rect[loop_counter][3]
-                );
+            if(background_rect[loop_counter][0] + background_rect[loop_counter][2] + x - player_x <= 0
+              || background_rect[loop_counter][0] + x - player_x >= width
+              || background_rect[loop_counter][1] + background_rect[loop_counter][3] + y - player_y <= 0
+              || background_rect[loop_counter][1] + y - player_y >= height){
+                continue;
             }
+
+            buffer.fillStyle = background_rect[loop_counter][4];
+            buffer.fillRect(
+              x - player_x + background_rect[loop_counter][0],
+              y - player_y + background_rect[loop_counter][1],
+              background_rect[loop_counter][2],
+              background_rect[loop_counter][3]
+            );
         }while(loop_counter--);
     }
 
@@ -163,18 +165,20 @@ function draw(){
     loop_counter = foreground_rect.length - 1;
     if(loop_counter >= 0){
         do{
-            if(foreground_rect[loop_counter][0] + foreground_rect[loop_counter][2] + x - player_x > 0
-              && foreground_rect[loop_counter][0] + x - player_x < width
-              && foreground_rect[loop_counter][1] + foreground_rect[loop_counter][3] + y - player_y > 0
-              && foreground_rect[loop_counter][1] + y - player_y < height){
-                buffer.fillStyle = foreground_rect[loop_counter][4];
-                buffer.fillRect(
-                  x - player_x + foreground_rect[loop_counter][0],
-                  y - player_y + foreground_rect[loop_counter][1],
-                  foreground_rect[loop_counter][2],
-                  foreground_rect[loop_counter][3]
-                );
+            if(foreground_rect[loop_counter][0] + foreground_rect[loop_counter][2] + x - player_x <= 0
+              || foreground_rect[loop_counter][0] + x - player_x >= width
+              || foreground_rect[loop_counter][1] + foreground_rect[loop_counter][3] + y - player_y <= 0
+              || foreground_rect[loop_counter][1] + y - player_y >= height){
+                continue;
             }
+
+            buffer.fillStyle = foreground_rect[loop_counter][4];
+            buffer.fillRect(
+              x - player_x + foreground_rect[loop_counter][0],
+              y - player_y + foreground_rect[loop_counter][1],
+              foreground_rect[loop_counter][2],
+              foreground_rect[loop_counter][3]
+            );
         }while(loop_counter--);
     }
 
@@ -187,7 +191,7 @@ function draw(){
                 // If level == Zombie Surround...
                 if(mode === 3){
                     // ...calculate zombie movement based on player location...
-                    j = m(
+                    var j = m(
                       enemies[loop_counter][0],
                       enemies[loop_counter][1],
                       player_x,
@@ -205,7 +209,7 @@ function draw(){
                 // If level != Zombie Surround
                 }else{
                     // Calculate enemy movement based on destination...
-                    j = m(
+                    var j = m(
                       enemies[loop_counter][0],
                       enemies[loop_counter][1],
                       enemies[loop_counter][2],
@@ -287,23 +291,25 @@ function draw(){
                     );
 
                 }else{
-                    j = foreground_rect.length - 1;
+                    var j = foreground_rect.length - 1;
                     var temp_hit = 0;
 
                     if(j >= 0){
                         do{
-                            if(foreground_rect[j][5]
-                              && bullets[loop_counter][0] > foreground_rect[j][0]
-                              && bullets[loop_counter][0] < foreground_rect[j][0] + foreground_rect[j][2]
-                              && bullets[loop_counter][1] > foreground_rect[j][1]
-                              && bullets[loop_counter][1] < foreground_rect[j][1] + foreground_rect[j][3]){
-                                bullets.splice(
-                                  loop_counter,
-                                  1
-                                );
-                                temp_hit = 1;
-                                break;
+                            if(!foreground_rect[j][5]
+                              || bullets[loop_counter][0] <= foreground_rect[j][0]
+                              || bullets[loop_counter][0] >= foreground_rect[j][0] + foreground_rect[j][2]
+                              || bullets[loop_counter][1] <= foreground_rect[j][1]
+                              || bullets[loop_counter][1] >= foreground_rect[j][1] + foreground_rect[j][3]){
+                                continue;
                             }
+
+                            bullets.splice(
+                              loop_counter,
+                              1
+                            );
+                            temp_hit = 1;
+                            break;
                         }while(j--);
                     }
 
@@ -312,39 +318,44 @@ function draw(){
                         if(j >= 0){
                             do{
                                 if(!bullets[loop_counter][4]){
-                                    if(bullets[loop_counter][0] > enemies[j][0] - 15
-                                      && bullets[loop_counter][0] < enemies[j][0] + 15
-                                      && bullets[loop_counter][1] > enemies[j][1] - 15
-                                      && bullets[loop_counter][1] < enemies[j][1] + 15){
-                                        bullets.splice(
-                                          loop_counter,
+                                    if(bullets[loop_counter][0] <= enemies[j][0] - 15
+                                      || bullets[loop_counter][0] >= enemies[j][0] + 15
+                                      || bullets[loop_counter][1] <= enemies[j][1] - 15
+                                      || bullets[loop_counter][1] >= enemies[j][1] + 15){
+                                        continue;
+                                    }
+
+                                    bullets.splice(
+                                      loop_counter,
+                                      1
+                                    );
+
+                                    var enemy_x = 0;
+                                    var enemy_y = 0;
+
+                                    // If mode != Zombie Surround, pick new enemy location...
+                                    if(mode < 3){
+                                        do{
+                                            enemy_x = random_number(level_settings[2] * 2) - level_settings[2];
+                                            enemy_y = random_number(level_settings[2] * 2) - level_settings[2];
+                                        }while(enemy_x > player_x - 50
+                                          && enemy_x < player_x + 50
+                                          && enemy_y > player_y - 50
+                                          && enemy_y < player_y + 50);
+
+                                        enemies[j][0] = enemy_x;
+                                        enemies[j][1] = enemy_y;
+
+                                    // ...else delete enemy.
+                                    }else{
+                                        enemies.splice(
+                                          j,
                                           1
                                         );
-
-                                        // If mode != Zombie Surround, pick new enemy location...
-                                        if(mode < 3){
-                                            do{
-                                                ii = random_number(level_settings[2] * 2) - level_settings[2];
-                                                jj = random_number(level_settings[2] * 2) - level_settings[2];
-                                            }while(ii > player_x - 50
-                                              && ii < player_x + 50
-                                              && jj > player_y - 50
-                                              && jj < player_y + 50);
-
-                                            enemies[j][0] = ii;
-                                            enemies[j][1] = jj;
-
-                                        // ...else delete enemy.
-                                        }else{
-                                            enemies.splice(
-                                              j,
-                                              1
-                                            );
-                                        }
-
-                                        hits += 1;
-                                        break;
                                     }
+
+                                    hits += 1;
+                                    break;
 
                                 }else if(bullets[loop_counter][0] > player_x - 17
                                   && bullets[loop_counter][0] < player_x + 17
@@ -375,17 +386,19 @@ function draw(){
                   ? settings['color']
                   : '#f66';
 
-                if(bullets[loop_counter][0] + 15 + temp_viewoffset[0] > 0
-                  && bullets[loop_counter][0] + x - player_x < width
-                  && bullets[loop_counter][1] + 15 + temp_viewoffset[1] > 0
-                  && bullets[loop_counter][1] + y - player_y < height){
-                    buffer.fillRect(
-                      bullets[loop_counter][0] + temp_viewoffset[0],
-                      bullets[loop_counter][1] + temp_viewoffset[1],
-                      10,
-                      10
-                    );
+                if(bullets[loop_counter][0] + 15 + temp_viewoffset[0] <= 0
+                  || bullets[loop_counter][0] + x - player_x >= width
+                  || bullets[loop_counter][1] + 15 + temp_viewoffset[1] <= 0
+                  || bullets[loop_counter][1] + y - player_y >= height){
+                    continue;
                 }
+
+                buffer.fillRect(
+                  bullets[loop_counter][0] + temp_viewoffset[0],
+                  bullets[loop_counter][1] + temp_viewoffset[1],
+                  10,
+                  10
+                );
             }while(loop_counter--);
         }
     }
@@ -658,7 +671,6 @@ var game_running = 1;
 var height = 0;
 var hits = 0;
 var interval = 0;
-var j = 0;
 var key_down = 0;
 var key_left = 0;
 var key_right = 0;
