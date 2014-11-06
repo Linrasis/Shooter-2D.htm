@@ -64,12 +64,12 @@ function draw(){
             if(enemy_reload >= settings['weapon-reload']){
                 enemy_reload = 0;
 
-                // Calculate bullet destination based on player destination...
+                // Calculate bullet destination based on player position...
                 var j = m(
                   enemies[0][0],
                   enemies[0][1],
-                  player_x + player_dx,
-                  player_y + player_dy
+                  player_x,
+                  player_y
                 );
 
                 // ...and add bullet with movement pattern, tied to enemy.
