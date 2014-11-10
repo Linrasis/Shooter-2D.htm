@@ -241,7 +241,7 @@ function draw(){
                   && enemies[loop_counter][0] - 15 - player_x < 17
                   && enemies[loop_counter][1] + 15 - player_y > -17
                   && enemies[loop_counter][1] - 15 - player_y < 17){
-                    game_running = 0;
+                    game_running = false;
                 }
             }
 
@@ -260,7 +260,7 @@ function draw(){
         }while(loop_counter--);
 
     }else{
-        game_running = 0;
+        game_running = false;
     }
 
     // Draw player.
@@ -292,7 +292,7 @@ function draw(){
 
                 }else{
                     var j = foreground_rect.length - 1;
-                    var temp_hit = 0;
+                    var hit_foreground = false;
 
                     if(j >= 0){
                         do{
@@ -308,12 +308,12 @@ function draw(){
                               loop_counter,
                               1
                             );
-                            temp_hit = 1;
+                            hit_foreground = true;
                             break;
                         }while(j--);
                     }
 
-                    if(!temp_hit){
+                    if(!hit_foreground){
                         j = enemies.length - 1;
                         if(j >= 0){
                             do{
@@ -361,7 +361,7 @@ function draw(){
                                   && bullets[loop_counter][0] < player_x + 17
                                   && bullets[loop_counter][1] > player_y - 17
                                   && bullets[loop_counter][1] < player_y + 17){
-                                    game_running = 0;
+                                    game_running = false;
                                     break;
                                 }
                             }while(j--);
@@ -612,7 +612,7 @@ function setmode(newmode, newgame){
 
     bullets.length = 0;
     enemies = [];
-    game_running = 1;
+    game_running = true;
     mode = newmode;
     mouse_lock_x = -1;
 
@@ -623,10 +623,10 @@ function setmode(newmode, newgame){
         }
 
         hits = 0;
-        key_down = 0;
-        key_left = 0;
-        key_right = 0;
-        key_up = 0;
+        key_down = false;
+        key_left = false;
+        key_right = false;
+        key_up = false;
 
         load_level(mode);
 
@@ -667,14 +667,14 @@ var canvas = 0;
 var enemies = [];
 var enemy_reload = 0;
 var foreground_rect = [];
-var game_running = 1;
+var game_running = true;
 var height = 0;
 var hits = 0;
 var interval = 0;
-var key_down = 0;
-var key_left = 0;
-var key_right = 0;
-var key_up = 0;
+var key_down = false;
+var key_left = false;
+var key_right = false;
+var key_up = false;
 var level_settings = [];
 var mode = 0;
 var mouse_lock_x = 0;
@@ -731,16 +731,16 @@ window.onkeydown = function(e){
         key = String.fromCharCode(key);
 
         if(key === settings['movement-keys'][1]){
-            key_left = 1;
+            key_left = true;
 
         }else if(key === settings['movement-keys'][3]){
-            key_right = 1;
+            key_right = true;
 
         }else if(key === settings['movement-keys'][2]){
-            key_down = 1;
+            key_down = true;
 
         }else if(key === settings['movement-keys'][0]){
-            key_up = 1;
+            key_up = true;
 
         }else if(key === settings['restart-key']){
             setmode(mode, 0);
@@ -753,16 +753,16 @@ window.onkeyup = function(e){
     key = String.fromCharCode(key.charCode ? key.charCode : key.keyCode);
 
     if(key === settings['movement-keys'][1]){
-        key_left = 0;
+        key_left = false;
 
     }else if(key === settings['movement-keys'][3]){
-        key_right = 0;
+        key_right = false;
 
     }else if(key === settings['movement-keys'][2]){
-        key_down = 0;
+        key_down = false;
 
     }else if(key === settings['movement-keys'][0]){
-        key_up = 0;
+        key_up = false;
     }
 };
 
