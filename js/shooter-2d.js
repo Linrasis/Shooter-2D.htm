@@ -1,4 +1,176 @@
 function draw(){
+    buffer.clearRect(
+      0,
+      0,
+      width,
+      height
+    );
+
+    // Draw visible background stuffs.
+    var loop_counter = background_rect.length - 1;
+    if(loop_counter >= 0){
+        do{
+            if(background_rect[loop_counter][0] + background_rect[loop_counter][2] + x - player_x <= 0
+              || background_rect[loop_counter][0] + x - player_x >= width
+              || background_rect[loop_counter][1] + background_rect[loop_counter][3] + y - player_y <= 0
+              || background_rect[loop_counter][1] + y - player_y >= height){
+                continue;
+            }
+
+            buffer.fillStyle = background_rect[loop_counter][4];
+            buffer.fillRect(
+              x - player_x + background_rect[loop_counter][0],
+              y - player_y + background_rect[loop_counter][1],
+              background_rect[loop_counter][2],
+              background_rect[loop_counter][3]
+            );
+        }while(loop_counter--);
+    }
+
+    // Draw visible foreground environment stuffs.
+    loop_counter = foreground_rect.length - 1;
+    if(loop_counter >= 0){
+        do{
+            if(foreground_rect[loop_counter][0] + foreground_rect[loop_counter][2] + x - player_x <= 0
+              || foreground_rect[loop_counter][0] + x - player_x >= width
+              || foreground_rect[loop_counter][1] + foreground_rect[loop_counter][3] + y - player_y <= 0
+              || foreground_rect[loop_counter][1] + y - player_y >= height){
+                continue;
+            }
+
+            buffer.fillStyle = foreground_rect[loop_counter][4];
+            buffer.fillRect(
+              x - player_x + foreground_rect[loop_counter][0],
+              y - player_y + foreground_rect[loop_counter][1],
+              foreground_rect[loop_counter][2],
+              foreground_rect[loop_counter][3]
+            );
+        }while(loop_counter--);
+    }
+
+    // Handle enemies.
+    loop_counter = enemies.length - 1;
+    if(loop_counter >= 0){
+        buffer.fillStyle = '#f66';
+        do{
+            // Draw enemies.
+            if(enemies[loop_counter][0] + 15 + x - player_x > 0
+              && enemies[loop_counter][0] - 15 + x - player_x < width
+              && enemies[loop_counter][1] + 15 + y - player_y > 0
+              && enemies[loop_counter][1] - 15 + y - player_y < height){
+                buffer.fillRect(
+                  x - player_x + enemies[loop_counter][0] - 15,
+                  y - player_y + enemies[loop_counter][1] - 15,
+                  30,
+                  30
+                );
+            }
+        }while(loop_counter--);
+
+    }else{
+        game_running = false;
+    }
+
+    // Draw player.
+    buffer.fillStyle = settings['color'];
+    buffer.fillRect(
+      x - 17,
+      y - 17,
+      34,
+      34
+    );
+
+    // Handle bullets.
+    loop_counter = bullets.length - 1;
+    if(loop_counter >= 0){
+        // Get player position camera offset.
+        var temp_viewoffset = [
+          x - player_x - 5,
+          y - player_y - 5,
+        ];
+
+        // Draw bullets.
+        do{
+            buffer.fillStyle = bullets[loop_counter][4] == 0
+              ? settings['color']
+              : '#f66';
+
+            if(bullets[loop_counter][0] + 15 + temp_viewoffset[0] <= 0
+              || bullets[loop_counter][0] + x - player_x >= width
+              || bullets[loop_counter][1] + 15 + temp_viewoffset[1] <= 0
+              || bullets[loop_counter][1] + y - player_y >= height){
+                continue;
+            }
+
+            buffer.fillRect(
+              bullets[loop_counter][0] + temp_viewoffset[0],
+              bullets[loop_counter][1] + temp_viewoffset[1],
+              10,
+              10
+            );
+        }while(loop_counter--);
+    }
+
+    // Setup text display.
+    buffer.fillStyle = '#fff';
+    buffer.font = '23pt sans-serif';
+    buffer.textAlign = 'left';
+
+    // Draw reload and hits.
+    buffer.fillText(
+      'Reload: ' + weapon_reload + '/' + settings['weapon-reload'],
+      5,
+      29
+    );
+    buffer.fillText(
+      'Hits: ' + hits,
+      5,
+      64
+    );
+
+    if(!game_running){
+        // Daw game over or win message,
+        //   depending upon if enemies remain.
+        buffer.textAlign = 'center';
+        buffer.fillText(
+          settings['restart-key'] + ' = Restart',// restart key
+          x,
+          y / 2 + 42
+        );
+        buffer.fillText(
+          'ESC = Main Menu',
+          x,
+          y / 2 + 75
+        );
+        buffer.fillStyle = enemies.length > 0
+          ? '#f00'
+          : '#0f0';
+        buffer.font = '42pt sans-serif';
+        buffer.fillText(
+          enemies.length > 0
+            ? 'YOU ARE DEAD'
+            : 'You Win!',
+          x,
+          y / 2
+        );
+    }
+
+    canvas.clearRect(
+      0,
+      0,
+      width,
+      height
+    );
+    canvas.drawImage(
+      document.getElementById('buffer'),
+      0,
+      0
+    );
+
+    window.requestAnimationFrame(draw);
+}
+
+function logic(){
     if(game_running){
         player_dx = 0;
         player_dy = 0;
@@ -133,59 +305,9 @@ function draw(){
         player_y += player_dy;
     }
 
-    buffer.clearRect(
-      0,
-      0,
-      width,
-      height
-    );
-
-    // Draw visible background stuffs.
-    var loop_counter = background_rect.length - 1;
-    if(loop_counter >= 0){
-        do{
-            if(background_rect[loop_counter][0] + background_rect[loop_counter][2] + x - player_x <= 0
-              || background_rect[loop_counter][0] + x - player_x >= width
-              || background_rect[loop_counter][1] + background_rect[loop_counter][3] + y - player_y <= 0
-              || background_rect[loop_counter][1] + y - player_y >= height){
-                continue;
-            }
-
-            buffer.fillStyle = background_rect[loop_counter][4];
-            buffer.fillRect(
-              x - player_x + background_rect[loop_counter][0],
-              y - player_y + background_rect[loop_counter][1],
-              background_rect[loop_counter][2],
-              background_rect[loop_counter][3]
-            );
-        }while(loop_counter--);
-    }
-
-    // Draw visible foreground environment stuffs.
-    loop_counter = foreground_rect.length - 1;
-    if(loop_counter >= 0){
-        do{
-            if(foreground_rect[loop_counter][0] + foreground_rect[loop_counter][2] + x - player_x <= 0
-              || foreground_rect[loop_counter][0] + x - player_x >= width
-              || foreground_rect[loop_counter][1] + foreground_rect[loop_counter][3] + y - player_y <= 0
-              || foreground_rect[loop_counter][1] + y - player_y >= height){
-                continue;
-            }
-
-            buffer.fillStyle = foreground_rect[loop_counter][4];
-            buffer.fillRect(
-              x - player_x + foreground_rect[loop_counter][0],
-              y - player_y + foreground_rect[loop_counter][1],
-              foreground_rect[loop_counter][2],
-              foreground_rect[loop_counter][3]
-            );
-        }while(loop_counter--);
-    }
-
     // Handle enemies.
     loop_counter = enemies.length - 1;
     if(loop_counter >= 0){
-        buffer.fillStyle = '#f66';
         do{
             if(game_running){
                 // If level == Zombie Surround...
@@ -244,38 +366,16 @@ function draw(){
                     game_running = false;
                 }
             }
-
-            // Draw enemies.
-            if(enemies[loop_counter][0] + 15 + x - player_x > 0
-              && enemies[loop_counter][0] - 15 + x - player_x < width
-              && enemies[loop_counter][1] + 15 + y - player_y > 0
-              && enemies[loop_counter][1] - 15 + y - player_y < height){
-                buffer.fillRect(
-                  x - player_x + enemies[loop_counter][0] - 15,
-                  y - player_y + enemies[loop_counter][1] - 15,
-                  30,
-                  30
-                );
-            }
         }while(loop_counter--);
 
     }else{
         game_running = false;
     }
 
-    // Draw player.
-    buffer.fillStyle = settings['color'];
-    buffer.fillRect(
-      x - 17,
-      y - 17,
-      34,
-      34
-    );
-
-    // Handle bullets.
-    loop_counter = bullets.length - 1;
-    if(loop_counter >= 0){
-        if(game_running){
+    if(game_running){
+        // Handle bullets.
+        loop_counter = bullets.length - 1;
+        if(loop_counter >= 0){
             // Check if bullets collide with player or enemies.
             do{
                 bullets[loop_counter][0] += 5 * bullets[loop_counter][2];
@@ -370,94 +470,7 @@ function draw(){
                 }
             }while(loop_counter--);
         }
-
-        // Draw bullets.
-        loop_counter = bullets.length - 1;
-        if(loop_counter >= 0){
-
-            // Get player position camera offset.
-            var temp_viewoffset = [
-              x - player_x - 5,
-              y - player_y - 5,
-            ];
-
-            do{
-                buffer.fillStyle = bullets[loop_counter][4] == 0
-                  ? settings['color']
-                  : '#f66';
-
-                if(bullets[loop_counter][0] + 15 + temp_viewoffset[0] <= 0
-                  || bullets[loop_counter][0] + x - player_x >= width
-                  || bullets[loop_counter][1] + 15 + temp_viewoffset[1] <= 0
-                  || bullets[loop_counter][1] + y - player_y >= height){
-                    continue;
-                }
-
-                buffer.fillRect(
-                  bullets[loop_counter][0] + temp_viewoffset[0],
-                  bullets[loop_counter][1] + temp_viewoffset[1],
-                  10,
-                  10
-                );
-            }while(loop_counter--);
-        }
     }
-
-    // Setup text display.
-    buffer.fillStyle = '#fff';
-    buffer.font = '23pt sans-serif';
-    buffer.textAlign = 'left';
-
-    // Draw reload and hits.
-    buffer.fillText(
-      'Reload: ' + weapon_reload + '/' + settings['weapon-reload'],
-      5,
-      29
-    );
-    buffer.fillText(
-      'Hits: ' + hits,
-      5,
-      64
-    );
-
-    if(!game_running){
-        // Daw game over or win message,
-        //   depending upon if enemies remain.
-        buffer.textAlign = 'center';
-        buffer.fillText(
-          settings['restart-key'] + ' = Restart',// restart key
-          x,
-          y / 2 + 42
-        );
-        buffer.fillText(
-          'ESC = Main Menu',
-          x,
-          y / 2 + 75
-        );
-        buffer.fillStyle = enemies.length > 0
-          ? '#f00'
-          : '#0f0';
-        buffer.font = '42pt sans-serif';
-        buffer.fillText(
-          enemies.length > 0
-            ? 'YOU ARE DEAD'
-            : 'You Win!',
-          x,
-          y / 2
-        );
-    }
-
-    canvas.clearRect(
-      0,
-      0,
-      width,
-      height
-    );
-    canvas.drawImage(
-      document.getElementById('buffer'),
-      0,
-      0
-    );
 }
 
 // TODO: Improve clarity.
@@ -639,8 +652,9 @@ function setmode(newmode, newgame){
             resize();
         }
 
+        window.requestAnimationFrame(draw);
         interval = setInterval(
-          'draw()',
+          'logic()',
           settings['ms-per-frame']
         );
 
