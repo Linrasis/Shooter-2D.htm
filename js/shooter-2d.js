@@ -433,8 +433,10 @@ function logic(){
                                     var enemy_x = 0;
                                     var enemy_y = 0;
 
-                                    // If mode != Zombie Surround, pick new enemy location...
-                                    if(mode < 3){
+                                    // If mode != Zombie Surround or zombies should respawn,
+                                    //   pick new enemy location...
+                                    if(mode < 3
+                                      || settings['zombie-respawn']){
                                         do{
                                             enemy_x = random_number(level_settings[2] * 2) - level_settings[2];
                                             enemy_y = random_number(level_settings[2] * 2) - level_settings[2];
@@ -512,6 +514,7 @@ function reset(){
     document.getElementById('restart-key').value = 'H';
     document.getElementById('weapon-reload').value = 50;
     document.getElementById('zombie-amount').value = 25;
+    document.getElementById('zombie-respawn').checked = false;
 
     save();
 }
@@ -618,6 +621,19 @@ function save(){
           settings['zombie-amount']
         );
     }
+
+    // Save zombie-respawn setting.
+    if(!document.getElementById('zombie-respawn').checked){
+        window.localStorage.removeItem('Shooter-2D.htm-zombie-respawn');
+        settings['zombie-respawn'] = false;
+
+    }else{
+        settings['zombie-respawn'] = true;
+        window.localStorage.setItem(
+          'Shooter-2D.htm-zombie-respawn',
+          1
+        );
+    }
 }
 
 function setmode(newmode, newgame){
@@ -665,7 +681,8 @@ function setmode(newmode, newgame){
         canvas = 0;
 
         document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><b>Shooter-2D.htm</b></div><hr><div class=c><b>Duel vs AI:</b><ul><li><a onclick=setmode(1,1)>Empty Square Arena</a><li><a onclick=setmode(2,1)>Final Destination</a></ul></div><hr><div class=c><input id=zombie-amount value='
-          + settings['zombie-amount'] + '><a onclick=setmode(3,1)>Zombie Surround</a></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input disabled style=border:0 value=ESC>Main Menu<br><input id=movement-keys maxlength=4 value='
+          + settings['zombie-amount'] + '><a onclick=setmode(3,1)>Zombie Surround</a><br><input '
+          + (settings['zombie-respawn'] ? 'checked ' : '') + 'id=zombie-respawn type=checkbox>Respawn</div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input disabled style=border:0 value=ESC>Main Menu<br><input id=movement-keys maxlength=4 value='
           + settings['movement-keys'] + '>Move ↑←↓→<br><input id=restart-key maxlength=1 value='
           + settings['restart-key'] + '>Restart<br><input disabled style=border:0 value=Click>Shoot</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
           + settings['audio-volume'] + '>Audio<br><input id=color type=color value='
@@ -723,6 +740,7 @@ var settings = {
   'zombie-amount': window.localStorage.getItem('Shooter-2D.htm-zombie-amount') === null
     ? 25
     : parseFloat(window.localStorage.getItem('Shooter-2D.htm-zombie-amount')),
+  'zombie-respawn': window.localStorage.getItem('Shooter-2D.htm-zombie-respawn') !== null,
 };
 var weapon_reload = 0;
 var width = 0;
