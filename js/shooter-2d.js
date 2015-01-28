@@ -265,40 +265,42 @@ function logic(){
     var loop_counter = foreground_rect.length - 1;
     if(loop_counter >= 0){
         do{
-            if(!(player_x + player_dx - 17 > foreground_rect[loop_counter][0] + foreground_rect[loop_counter][2]
+            if(player_x + player_dx - 17 > foreground_rect[loop_counter][0] + foreground_rect[loop_counter][2]
               || player_x + player_dx + 17 < foreground_rect[loop_counter][0]
               || player_y + player_dy - 17 > foreground_rect[loop_counter][1] + foreground_rect[loop_counter][3]
-              || player_y + player_dy + 17 < foreground_rect[loop_counter][1])){
-                if(player_y != foreground_rect[loop_counter][1] - 18
-                  && player_y != foreground_rect[loop_counter][1] + foreground_rect[loop_counter][3] + 18){
-                    if(key_left
-                      && player_y + player_dy + 17 > foreground_rect[loop_counter][1]
-                      && player_y + player_dy - 17 < foreground_rect[loop_counter][1] + foreground_rect[loop_counter][3]
-                      && player_x + player_dx - 17 < foreground_rect[loop_counter][0] + foreground_rect[loop_counter][2]){
-                        player_dx = 0;
-                    }
+              || player_y + player_dy + 17 < foreground_rect[loop_counter][1]){
+                continue;
+            }
 
-                    if(key_right
-                      && player_y + player_dy + 17 > foreground_rect[loop_counter][1]
-                      && player_y + player_dy - 17 < foreground_rect[loop_counter][1] + foreground_rect[loop_counter][3]
-                      && player_x + player_dx + 17 > foreground_rect[loop_counter][0]){
-                        player_dx = 0;
-                    }
+            if(player_y != foreground_rect[loop_counter][1] - 18
+              && player_y != foreground_rect[loop_counter][1] + foreground_rect[loop_counter][3] + 18){
+                if(key_left
+                  && player_y + player_dy + 17 > foreground_rect[loop_counter][1]
+                  && player_y + player_dy - 17 < foreground_rect[loop_counter][1] + foreground_rect[loop_counter][3]
+                  && player_x + player_dx - 17 < foreground_rect[loop_counter][0] + foreground_rect[loop_counter][2]){
+                    player_dx = 0;
                 }
 
-                if(key_down
-                  && player_x + player_dx + 17 > foreground_rect[loop_counter][0]
-                  && player_x + player_dx - 17 < foreground_rect[loop_counter][0] + foreground_rect[loop_counter][2]
-                  && player_y + player_dy + 17 > foreground_rect[loop_counter][1]){
-                    player_dy = 0;
+                if(key_right
+                  && player_y + player_dy + 17 > foreground_rect[loop_counter][1]
+                  && player_y + player_dy - 17 < foreground_rect[loop_counter][1] + foreground_rect[loop_counter][3]
+                  && player_x + player_dx + 17 > foreground_rect[loop_counter][0]){
+                    player_dx = 0;
                 }
+            }
 
-                if(key_up
-                  && player_x + player_dx + 17 > foreground_rect[loop_counter][0]
-                  && player_x + player_dx - 17 < foreground_rect[loop_counter][0] + foreground_rect[loop_counter][2]
-                  && player_y + player_dy - 17 < foreground_rect[loop_counter][1] + foreground_rect[loop_counter][3]){
-                    player_dy = 0;
-                }
+            if(key_down
+              && player_x + player_dx + 17 > foreground_rect[loop_counter][0]
+              && player_x + player_dx - 17 < foreground_rect[loop_counter][0] + foreground_rect[loop_counter][2]
+              && player_y + player_dy + 17 > foreground_rect[loop_counter][1]){
+                player_dy = 0;
+            }
+
+            if(key_up
+              && player_x + player_dx + 17 > foreground_rect[loop_counter][0]
+              && player_x + player_dx - 17 < foreground_rect[loop_counter][0] + foreground_rect[loop_counter][2]
+              && player_y + player_dy - 17 < foreground_rect[loop_counter][1] + foreground_rect[loop_counter][3]){
+                player_dy = 0;
             }
         }while(loop_counter--);
     }
@@ -389,85 +391,85 @@ function logic(){
                   loop_counter,
                   1
                 );
+                continue;
+            }
 
-            }else{
-                var j = foreground_rect.length - 1;
-                var hit_foreground = false;
+            var j = foreground_rect.length - 1;
+            var hit_foreground = false;
 
+            if(j >= 0){
+                do{
+                    if(!foreground_rect[j][5]
+                      || bullets[loop_counter][0] <= foreground_rect[j][0]
+                      || bullets[loop_counter][0] >= foreground_rect[j][0] + foreground_rect[j][2]
+                      || bullets[loop_counter][1] <= foreground_rect[j][1]
+                      || bullets[loop_counter][1] >= foreground_rect[j][1] + foreground_rect[j][3]){
+                        continue;
+                    }
+
+                    bullets.splice(
+                      loop_counter,
+                      1
+                    );
+                    hit_foreground = true;
+                    break;
+                }while(j--);
+            }
+
+            if(!hit_foreground){
+                j = enemies.length - 1;
                 if(j >= 0){
                     do{
-                        if(!foreground_rect[j][5]
-                          || bullets[loop_counter][0] <= foreground_rect[j][0]
-                          || bullets[loop_counter][0] >= foreground_rect[j][0] + foreground_rect[j][2]
-                          || bullets[loop_counter][1] <= foreground_rect[j][1]
-                          || bullets[loop_counter][1] >= foreground_rect[j][1] + foreground_rect[j][3]){
-                            continue;
-                        }
+                        if(!bullets[loop_counter][4]){
+                            if(bullets[loop_counter][0] <= enemies[j][0] - 15
+                              || bullets[loop_counter][0] >= enemies[j][0] + 15
+                              || bullets[loop_counter][1] <= enemies[j][1] - 15
+                              || bullets[loop_counter][1] >= enemies[j][1] + 15){
+                                continue;
+                            }
 
-                        bullets.splice(
-                          loop_counter,
-                          1
-                        );
-                        hit_foreground = true;
-                        break;
-                    }while(j--);
-                }
+                            bullets.splice(
+                              loop_counter,
+                              1
+                            );
 
-                if(!hit_foreground){
-                    j = enemies.length - 1;
-                    if(j >= 0){
-                        do{
-                            if(!bullets[loop_counter][4]){
-                                if(bullets[loop_counter][0] <= enemies[j][0] - 15
-                                  || bullets[loop_counter][0] >= enemies[j][0] + 15
-                                  || bullets[loop_counter][1] <= enemies[j][1] - 15
-                                  || bullets[loop_counter][1] >= enemies[j][1] + 15){
-                                    continue;
-                                }
+                            var enemy_x = 0;
+                            var enemy_y = 0;
 
-                                bullets.splice(
-                                  loop_counter,
+                            // If mode != Zombie Surround or zombies should respawn,
+                            //   pick new enemy location...
+                            if(mode < 3
+                              || settings['zombie-respawn']){
+                                do{
+                                    enemy_x = random_number(level_settings[2] * 2) - level_settings[2];
+                                    enemy_y = random_number(level_settings[2] * 2) - level_settings[2];
+                                }while(enemy_x > player_x - 50
+                                  && enemy_x < player_x + 50
+                                  && enemy_y > player_y - 50
+                                  && enemy_y < player_y + 50);
+
+                                enemies[j][0] = enemy_x;
+                                enemies[j][1] = enemy_y;
+
+                            // ...else delete enemy.
+                            }else{
+                                enemies.splice(
+                                  j,
                                   1
                                 );
-
-                                var enemy_x = 0;
-                                var enemy_y = 0;
-
-                                // If mode != Zombie Surround or zombies should respawn,
-                                //   pick new enemy location...
-                                if(mode < 3
-                                  || settings['zombie-respawn']){
-                                    do{
-                                        enemy_x = random_number(level_settings[2] * 2) - level_settings[2];
-                                        enemy_y = random_number(level_settings[2] * 2) - level_settings[2];
-                                    }while(enemy_x > player_x - 50
-                                      && enemy_x < player_x + 50
-                                      && enemy_y > player_y - 50
-                                      && enemy_y < player_y + 50);
-
-                                    enemies[j][0] = enemy_x;
-                                    enemies[j][1] = enemy_y;
-
-                                // ...else delete enemy.
-                                }else{
-                                    enemies.splice(
-                                      j,
-                                      1
-                                    );
-                                }
-
-                                hits += 1;
-                                break;
-
-                            }else if(bullets[loop_counter][0] > player_x - 17
-                              && bullets[loop_counter][0] < player_x + 17
-                              && bullets[loop_counter][1] > player_y - 17
-                              && bullets[loop_counter][1] < player_y + 17){
-                                game_running = false;
-                                break;
                             }
-                        }while(j--);
-                    }
+
+                            hits += 1;
+                            break;
+
+                        }else if(bullets[loop_counter][0] > player_x - 17
+                          && bullets[loop_counter][0] < player_x + 17
+                          && bullets[loop_counter][1] > player_y - 17
+                          && bullets[loop_counter][1] < player_y + 17){
+                            game_running = false;
+                            break;
+                        }
+                    }while(j--);
                 }
             }
         }while(loop_counter--);
@@ -490,11 +492,13 @@ function m(x0,y0,x1,y1){
     }
 }
 
-function play_audio(i){
-    if(settings['audio-volume'] > 0){
-        document.getElementById(i).currentTime = 0;
-        document.getElementById(i).play();
+function play_audio(id){
+    if(settings['audio-volume'] <= 0){
+        return;
     }
+
+    document.getElementById(id).currentTime = 0;
+    document.getElementById(id).play();
 }
 
 function random_number(i){
