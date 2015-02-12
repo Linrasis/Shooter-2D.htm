@@ -66,9 +66,6 @@ function draw(){
                 );
             }
         }while(loop_counter--);
-
-    }else{
-        game_running = false;
     }
 
     // Draw player.
@@ -224,8 +221,8 @@ function logic(){
 
             // If level != Zombie Surround, update AI destinations.
             if(mode < 3){
-              enemies[0][2] = random_number(500) - 250;
-              enemies[0][3] = random_number(500) - 250;
+                enemies[0][2] = random_number(500) - 250;
+                enemies[0][3] = random_number(500) - 250;
             }
         }
 
@@ -235,8 +232,9 @@ function logic(){
 
     // If level != Zombie Surround.
     if(mode < 3){
-        // If enemy can fire weapon, fire it. else update reload.
-        if(enemy_reload >= settings['weapon-reload']){
+        // Update reload and fire weapon if possible.
+        enemy_reload += 1;
+        if(enemy_reload > settings['weapon-reload']){
             enemy_reload = 0;
 
             // Calculate bullet destination based on player position...
@@ -255,9 +253,6 @@ function logic(){
               (enemies[0][1] > player_y ? -j[1] : j[1]),
               1,
             ]);
-
-        }else{
-            enemy_reload += 1;
         }
     }
 
@@ -367,6 +362,7 @@ function logic(){
               && enemies[loop_counter][1] + 15 - player_y > -17
               && enemies[loop_counter][1] - 15 - player_y < 17){
                 game_running = false;
+                return;
             }
         }while(loop_counter--);
 
@@ -416,61 +412,59 @@ function logic(){
                 }while(j--);
             }
 
-            if(!hit_foreground){
-                j = enemies.length - 1;
-                if(j >= 0){
-                    do{
-                        if(!bullets[loop_counter][4]){
-                            if(bullets[loop_counter][0] <= enemies[j][0] - 15
-                              || bullets[loop_counter][0] >= enemies[j][0] + 15
-                              || bullets[loop_counter][1] <= enemies[j][1] - 15
-                              || bullets[loop_counter][1] >= enemies[j][1] + 15){
-                                continue;
-                            }
+            j = enemies.length - 1;
+            if(j >= 0){
+                do{
+                    if(!bullets[loop_counter][4]){
+                        if(bullets[loop_counter][0] <= enemies[j][0] - 15
+                          || bullets[loop_counter][0] >= enemies[j][0] + 15
+                          || bullets[loop_counter][1] <= enemies[j][1] - 15
+                          || bullets[loop_counter][1] >= enemies[j][1] + 15){
+                            continue;
+                        }
 
-                            bullets.splice(
-                              loop_counter,
+                        bullets.splice(
+                          loop_counter,
+                          1
+                        );
+
+                        var enemy_x = 0;
+                        var enemy_y = 0;
+
+                        // If mode != Zombie Surround or zombies should respawn,
+                        //   pick new enemy location...
+                        if(mode < 3
+                          || settings['zombie-respawn']){
+                            do{
+                                enemy_x = random_number(level_settings[2] * 2) - level_settings[2];
+                                enemy_y = random_number(level_settings[2] * 2) - level_settings[2];
+                            }while(enemy_x > player_x - 50
+                              && enemy_x < player_x + 50
+                              && enemy_y > player_y - 50
+                              && enemy_y < player_y + 50);
+
+                            enemies[j][0] = enemy_x;
+                            enemies[j][1] = enemy_y;
+
+                        // ...else delete enemy.
+                        }else{
+                            enemies.splice(
+                              j,
                               1
                             );
-
-                            var enemy_x = 0;
-                            var enemy_y = 0;
-
-                            // If mode != Zombie Surround or zombies should respawn,
-                            //   pick new enemy location...
-                            if(mode < 3
-                              || settings['zombie-respawn']){
-                                do{
-                                    enemy_x = random_number(level_settings[2] * 2) - level_settings[2];
-                                    enemy_y = random_number(level_settings[2] * 2) - level_settings[2];
-                                }while(enemy_x > player_x - 50
-                                  && enemy_x < player_x + 50
-                                  && enemy_y > player_y - 50
-                                  && enemy_y < player_y + 50);
-
-                                enemies[j][0] = enemy_x;
-                                enemies[j][1] = enemy_y;
-
-                            // ...else delete enemy.
-                            }else{
-                                enemies.splice(
-                                  j,
-                                  1
-                                );
-                            }
-
-                            hits += 1;
-                            break;
-
-                        }else if(bullets[loop_counter][0] > player_x - 17
-                          && bullets[loop_counter][0] < player_x + 17
-                          && bullets[loop_counter][1] > player_y - 17
-                          && bullets[loop_counter][1] < player_y + 17){
-                            game_running = false;
-                            break;
                         }
-                    }while(j--);
-                }
+
+                        hits += 1;
+                        break;
+
+                    }else if(bullets[loop_counter][0] > player_x - 17
+                      && bullets[loop_counter][0] < player_x + 17
+                      && bullets[loop_counter][1] > player_y - 17
+                      && bullets[loop_counter][1] < player_y + 17){
+                        game_running = false;
+                        break;
+                    }
+                }while(j--);
             }
         }while(loop_counter--);
     }
