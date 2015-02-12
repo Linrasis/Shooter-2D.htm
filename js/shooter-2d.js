@@ -476,7 +476,6 @@ function logic(){
     }
 }
 
-// TODO: Improve clarity.
 function m(x0,y0,x1,y1){
     var j0 = Math.abs(x0 - x1);
     var j1 = Math.abs(y0 - y1);
