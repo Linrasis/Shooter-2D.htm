@@ -100,8 +100,8 @@ function draw(){
             }
 
             buffer.fillRect(
-              bullets[loop_counter][0] + temp_viewoffset[0],
-              bullets[loop_counter][1] + temp_viewoffset[1],
+              Math.round(bullets[loop_counter][0] + temp_viewoffset[0]),
+              Math.round(bullets[loop_counter][1] + temp_viewoffset[1]),
               10,
               10
             );
