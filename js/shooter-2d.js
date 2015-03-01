@@ -7,65 +7,55 @@ function draw(){
     );
 
     // Draw visible background stuffs.
-    var loop_counter = background_rect.length - 1;
-    if(loop_counter >= 0){
-        do{
-            if(background_rect[loop_counter][0] + background_rect[loop_counter][2] + x - player_x <= 0
-              || background_rect[loop_counter][0] + x - player_x >= width
-              || background_rect[loop_counter][1] + background_rect[loop_counter][3] + y - player_y <= 0
-              || background_rect[loop_counter][1] + y - player_y >= height){
-                continue;
-            }
+    for(var rect in background_rect){
+        if(background_rect[rect][0] + background_rect[rect][2] + x - player_x <= 0
+          || background_rect[rect][0] + x - player_x >= width
+          || background_rect[rect][1] + background_rect[rect][3] + y - player_y <= 0
+          || background_rect[rect][1] + y - player_y >= height){
+            continue;
+        }
 
-            buffer.fillStyle = background_rect[loop_counter][4];
-            buffer.fillRect(
-              x - player_x + background_rect[loop_counter][0],
-              y - player_y + background_rect[loop_counter][1],
-              background_rect[loop_counter][2],
-              background_rect[loop_counter][3]
-            );
-        }while(loop_counter--);
+        buffer.fillStyle = background_rect[rect][4];
+        buffer.fillRect(
+          x - player_x + background_rect[rect][0],
+          y - player_y + background_rect[rect][1],
+          background_rect[rect][2],
+          background_rect[rect][3]
+        );
     }
 
     // Draw visible foreground environment stuffs.
-    loop_counter = foreground_rect.length - 1;
-    if(loop_counter >= 0){
-        do{
-            if(foreground_rect[loop_counter][0] + foreground_rect[loop_counter][2] + x - player_x <= 0
-              || foreground_rect[loop_counter][0] + x - player_x >= width
-              || foreground_rect[loop_counter][1] + foreground_rect[loop_counter][3] + y - player_y <= 0
-              || foreground_rect[loop_counter][1] + y - player_y >= height){
-                continue;
-            }
+    for(rect in foreground_rect){
+        if(foreground_rect[rect][0] + foreground_rect[rect][2] + x - player_x <= 0
+          || foreground_rect[rect][0] + x - player_x >= width
+          || foreground_rect[rect][1] + foreground_rect[rect][3] + y - player_y <= 0
+          || foreground_rect[rect][1] + y - player_y >= height){
+            continue;
+        }
 
-            buffer.fillStyle = foreground_rect[loop_counter][4];
-            buffer.fillRect(
-              x - player_x + foreground_rect[loop_counter][0],
-              y - player_y + foreground_rect[loop_counter][1],
-              foreground_rect[loop_counter][2],
-              foreground_rect[loop_counter][3]
-            );
-        }while(loop_counter--);
+        buffer.fillStyle = foreground_rect[rect][4];
+        buffer.fillRect(
+          x - player_x + foreground_rect[rect][0],
+          y - player_y + foreground_rect[rect][1],
+          foreground_rect[rect][2],
+          foreground_rect[rect][3]
+        );
     }
 
-    // Handle enemies.
-    loop_counter = enemies.length - 1;
-    if(loop_counter >= 0){
-        buffer.fillStyle = '#f66';
-        do{
-            // Draw enemies.
-            if(enemies[loop_counter][0] + 15 + x - player_x > 0
-              && enemies[loop_counter][0] - 15 + x - player_x < width
-              && enemies[loop_counter][1] + 15 + y - player_y > 0
-              && enemies[loop_counter][1] - 15 + y - player_y < height){
-                buffer.fillRect(
-                  x - player_x + enemies[loop_counter][0] - 15,
-                  y - player_y + enemies[loop_counter][1] - 15,
-                  30,
-                  30
-                );
-            }
-        }while(loop_counter--);
+    // Draw enemies.
+    buffer.fillStyle = '#f66';
+    for(var enemy in enemies){
+        if(enemies[enemy][0] + 15 + x - player_x > 0
+          && enemies[enemy][0] - 15 + x - player_x < width
+          && enemies[enemy][1] + 15 + y - player_y > 0
+          && enemies[enemy][1] - 15 + y - player_y < height){
+            buffer.fillRect(
+              x - player_x + enemies[enemy][0] - 15,
+              y - player_y + enemies[enemy][1] - 15,
+              30,
+              30
+            );
+        }
     }
 
     // Draw player.
@@ -77,35 +67,30 @@ function draw(){
       34
     );
 
-    // Handle bullets.
-    loop_counter = bullets.length - 1;
-    if(loop_counter >= 0){
-        // Get player position camera offset.
-        var temp_viewoffset = [
-          x - player_x - 5,
-          y - player_y - 5,
-        ];
+    // Get player position camera offset.
+    var temp_viewoffset = [
+      x - player_x - 5,
+      y - player_y - 5,
+    ];
+    // Draw bullets.
+    for(var bullet in bullets){
+        buffer.fillStyle = bullets[bullet][4] == 0
+          ? settings['color']
+          : '#f66';
 
-        // Draw bullets.
-        do{
-            buffer.fillStyle = bullets[loop_counter][4] == 0
-              ? settings['color']
-              : '#f66';
+        if(bullets[bullet][0] + 15 + temp_viewoffset[0] <= 0
+          || bullets[bullet][0] + x - player_x >= width
+          || bullets[bullet][1] + 15 + temp_viewoffset[1] <= 0
+          || bullets[bullet][1] + y - player_y >= height){
+            continue;
+        }
 
-            if(bullets[loop_counter][0] + 15 + temp_viewoffset[0] <= 0
-              || bullets[loop_counter][0] + x - player_x >= width
-              || bullets[loop_counter][1] + 15 + temp_viewoffset[1] <= 0
-              || bullets[loop_counter][1] + y - player_y >= height){
-                continue;
-            }
-
-            buffer.fillRect(
-              Math.round(bullets[loop_counter][0] + temp_viewoffset[0]),
-              Math.round(bullets[loop_counter][1] + temp_viewoffset[1]),
-              10,
-              10
-            );
-        }while(loop_counter--);
+        buffer.fillRect(
+          Math.round(bullets[bullet][0] + temp_viewoffset[0]),
+          Math.round(bullets[bullet][1] + temp_viewoffset[1]),
+          10,
+          10
+        );
     }
 
     // Setup text display.
@@ -168,6 +153,10 @@ function draw(){
 }
 
 function logic(){
+    if(enemies.length <= 0){
+        game_running = false;
+    }
+
     if(!game_running){
         return;
     }
@@ -257,47 +246,44 @@ function logic(){
     }
 
     // Check for player collision with foreground obstacles.
-    var loop_counter = foreground_rect.length - 1;
-    if(loop_counter >= 0){
-        do{
-            if(player_x + player_dx - 17 > foreground_rect[loop_counter][0] + foreground_rect[loop_counter][2]
-              || player_x + player_dx + 17 < foreground_rect[loop_counter][0]
-              || player_y + player_dy - 17 > foreground_rect[loop_counter][1] + foreground_rect[loop_counter][3]
-              || player_y + player_dy + 17 < foreground_rect[loop_counter][1]){
-                continue;
+    for(var rect in foreground_rect){
+        if(player_x + player_dx - 17 > foreground_rect[rect][0] + foreground_rect[rect][2]
+          || player_x + player_dx + 17 < foreground_rect[rect][0]
+          || player_y + player_dy - 17 > foreground_rect[rect][1] + foreground_rect[rect][3]
+          || player_y + player_dy + 17 < foreground_rect[rect][1]){
+            continue;
+        }
+
+        if(player_y != foreground_rect[rect][1] - 18
+          && player_y != foreground_rect[rect][1] + foreground_rect[rect][3] + 18){
+            if(key_left
+              && player_y + player_dy + 17 > foreground_rect[rect][1]
+              && player_y + player_dy - 17 < foreground_rect[rect][1] + foreground_rect[rect][3]
+              && player_x + player_dx - 17 < foreground_rect[rect][0] + foreground_rect[rect][2]){
+                player_dx = 0;
             }
 
-            if(player_y != foreground_rect[loop_counter][1] - 18
-              && player_y != foreground_rect[loop_counter][1] + foreground_rect[loop_counter][3] + 18){
-                if(key_left
-                  && player_y + player_dy + 17 > foreground_rect[loop_counter][1]
-                  && player_y + player_dy - 17 < foreground_rect[loop_counter][1] + foreground_rect[loop_counter][3]
-                  && player_x + player_dx - 17 < foreground_rect[loop_counter][0] + foreground_rect[loop_counter][2]){
-                    player_dx = 0;
-                }
-
-                if(key_right
-                  && player_y + player_dy + 17 > foreground_rect[loop_counter][1]
-                  && player_y + player_dy - 17 < foreground_rect[loop_counter][1] + foreground_rect[loop_counter][3]
-                  && player_x + player_dx + 17 > foreground_rect[loop_counter][0]){
-                    player_dx = 0;
-                }
+            if(key_right
+              && player_y + player_dy + 17 > foreground_rect[rect][1]
+              && player_y + player_dy - 17 < foreground_rect[rect][1] + foreground_rect[rect][3]
+              && player_x + player_dx + 17 > foreground_rect[rect][0]){
+                player_dx = 0;
             }
+        }
 
-            if(key_down
-              && player_x + player_dx + 17 > foreground_rect[loop_counter][0]
-              && player_x + player_dx - 17 < foreground_rect[loop_counter][0] + foreground_rect[loop_counter][2]
-              && player_y + player_dy + 17 > foreground_rect[loop_counter][1]){
-                player_dy = 0;
-            }
+        if(key_down
+          && player_x + player_dx + 17 > foreground_rect[rect][0]
+          && player_x + player_dx - 17 < foreground_rect[rect][0] + foreground_rect[rect][2]
+          && player_y + player_dy + 17 > foreground_rect[rect][1]){
+            player_dy = 0;
+        }
 
-            if(key_up
-              && player_x + player_dx + 17 > foreground_rect[loop_counter][0]
-              && player_x + player_dx - 17 < foreground_rect[loop_counter][0] + foreground_rect[loop_counter][2]
-              && player_y + player_dy - 17 < foreground_rect[loop_counter][1] + foreground_rect[loop_counter][3]){
-                player_dy = 0;
-            }
-        }while(loop_counter--);
+        if(key_up
+          && player_x + player_dx + 17 > foreground_rect[rect][0]
+          && player_x + player_dx - 17 < foreground_rect[rect][0] + foreground_rect[rect][2]
+          && player_y + player_dy - 17 < foreground_rect[rect][1] + foreground_rect[rect][3]){
+            player_dy = 0;
+        }
     }
 
     // Update actual player position.
@@ -305,168 +291,142 @@ function logic(){
     player_y += player_dy;
 
     // Handle enemies.
-    loop_counter = enemies.length - 1;
-    if(loop_counter >= 0){
-        do{
-            // If level == Zombie Surround...
-            if(mode === 3){
-                // ...calculate zombie movement based on player location...
-                var j = m(
-                  enemies[loop_counter][0],
-                  enemies[loop_counter][1],
-                  player_x,
-                  player_y
-                );
+    for(var enemy in enemies){
+        // If level == Zombie Surround...
+        if(mode === 3){
+            // ...calculate zombie movement based on player location...
+            var j = m(
+              enemies[enemy][0],
+              enemies[enemy][1],
+              player_x,
+              player_y
+            );
 
-                // ...and move zombies towards player.
-                enemies[loop_counter][0] += player_x > enemies[loop_counter][0]
-                  ? j[0]
-                  : -j[0];
-                enemies[loop_counter][1] += player_y > enemies[loop_counter][1]
-                  ? j[1]
-                  : -j[1];
+            // ...and move zombies towards player.
+            enemies[enemy][0] += player_x > enemies[enemy][0]
+              ? j[0]
+              : -j[0];
+            enemies[enemy][1] += player_y > enemies[enemy][1]
+              ? j[1]
+              : -j[1];
 
-            // If level != Zombie Surround
-            }else{
-                // Calculate enemy movement based on destination...
-                var j = m(
-                  enemies[loop_counter][0],
-                  enemies[loop_counter][1],
-                  enemies[loop_counter][2],
-                  enemies[loop_counter][3]
-                );
-                j[0] *= 2;
-                j[1] *= 2;
+        // If level != Zombie Surround
+        }else{
+            // Calculate enemy movement based on destination...
+            var j = m(
+              enemies[enemy][0],
+              enemies[enemy][1],
+              enemies[enemy][2],
+              enemies[enemy][3]
+            );
+            j[0] *= 2;
+            j[1] *= 2;
 
-                // ... and move enemies towards destination.
-                enemies[loop_counter][0] += enemies[loop_counter][2] > enemies[loop_counter][0]
-                  ? j[0]
-                  : -j[0];
-                enemies[loop_counter][1] += enemies[loop_counter][3] > enemies[loop_counter][1]
-                  ? j[1]
-                  : -j[1];
+            // ... and move enemies towards destination.
+            enemies[enemy][0] += enemies[enemy][2] > enemies[enemy][0]
+              ? j[0]
+              : -j[0];
+            enemies[enemy][1] += enemies[enemy][3] > enemies[enemy][1]
+              ? j[1]
+              : -j[1];
 
-                // Check if enemy AI should pick new destination.
-                if(enemies[loop_counter][2] > enemies[loop_counter][0] - 5
-                  && enemies[loop_counter][2] < enemies[loop_counter][0] + 5
-                  && enemies[loop_counter][3] > enemies[loop_counter][1] - 5
-                  && enemies[loop_counter][3] < enemies[loop_counter][1] + 5){
-                    enemies[loop_counter][2] = random_number(500) - 250;
-                    enemies[loop_counter][3] = random_number(500) - 250;
-                }
+            // Check if enemy AI should pick new destination.
+            if(enemies[enemy][2] > enemies[enemy][0] - 5
+              && enemies[enemy][2] < enemies[enemy][0] + 5
+              && enemies[enemy][3] > enemies[enemy][1] - 5
+              && enemies[enemy][3] < enemies[enemy][1] + 5){
+                enemies[enemy][2] = random_number(500) - 250;
+                enemies[enemy][3] = random_number(500) - 250;
             }
+        }
 
-            // Check if player collides with enemy.
-            if(enemies[loop_counter][0] + 15 - player_x > -17
-              && enemies[loop_counter][0] - 15 - player_x < 17
-              && enemies[loop_counter][1] + 15 - player_y > -17
-              && enemies[loop_counter][1] - 15 - player_y < 17){
-                game_running = false;
-                return;
-            }
-        }while(loop_counter--);
-
-    }else{
-        game_running = false;
-        return;
+        // Check if player collides with enemy.
+        if(enemies[enemy][0] + 15 - player_x > -17
+          && enemies[enemy][0] - 15 - player_x < 17
+          && enemies[enemy][1] + 15 - player_y > -17
+          && enemies[enemy][1] - 15 - player_y < 17){
+            game_running = false;
+            return;
+        }
     }
 
     // Handle bullets.
-    loop_counter = bullets.length - 1;
-    if(loop_counter >= 0){
-        // Check if bullets collide with player or enemies.
-        do{
-            bullets[loop_counter][0] += 5 * bullets[loop_counter][2];
-            bullets[loop_counter][1] += 5 * bullets[loop_counter][3];
+    for(var bullet in bullets){
+        bullets[bullet][0] += 5 * bullets[bullet][2];
+        bullets[bullet][1] += 5 * bullets[bullet][3];
 
-            if(bullets[loop_counter][0] < -level_settings[2]
-              || bullets[loop_counter][1] < -level_settings[3]
-              || bullets[loop_counter][0] > level_settings[2]
-              || bullets[loop_counter][1] > level_settings[3]){
-                bullets.splice(
-                  loop_counter,
-                  1
-                );
+        if(bullets[bullet][0] < -level_settings[2]
+          || bullets[bullet][1] < -level_settings[3]
+          || bullets[bullet][0] > level_settings[2]
+          || bullets[bullet][1] > level_settings[3]){
+            delete bullets[bullet];
+            continue;
+        }
+
+        var hit_foreground = false;
+
+        for(var rect in foreground_rect){
+            if(!foreground_rect[rect][5]
+              || bullets[bullet][0] <= foreground_rect[rect][0]
+              || bullets[bullet][0] >= foreground_rect[rect][0] + foreground_rect[rect][2]
+              || bullets[bullet][1] <= foreground_rect[rect][1]
+              || bullets[bullet][1] >= foreground_rect[rect][1] + foreground_rect[rect][3]){
                 continue;
             }
 
-            var j = foreground_rect.length - 1;
-            var hit_foreground = false;
+            delete bullets[bullet];
+            hit_foreground = true;
+            break;
+        }
 
-            if(j >= 0){
-                do{
-                    if(!foreground_rect[j][5]
-                      || bullets[loop_counter][0] <= foreground_rect[j][0]
-                      || bullets[loop_counter][0] >= foreground_rect[j][0] + foreground_rect[j][2]
-                      || bullets[loop_counter][1] <= foreground_rect[j][1]
-                      || bullets[loop_counter][1] >= foreground_rect[j][1] + foreground_rect[j][3]){
-                        continue;
-                    }
+        if(hit_foreground){
+            continue;
+        }
 
-                    bullets.splice(
-                      loop_counter,
-                      1
-                    );
-                    hit_foreground = true;
-                    break;
-                }while(j--);
+        for(var enemy in enemies){
+            if(!bullets[bullet][4]){
+                if(bullets[bullet][0] <= enemies[enemy][0] - 15
+                  || bullets[bullet][0] >= enemies[enemy][0] + 15
+                  || bullets[bullet][1] <= enemies[enemy][1] - 15
+                  || bullets[bullet][1] >= enemies[enemy][1] + 15){
+                    continue;
+                }
+
+                delete bullets[bullet];
+
+                var enemy_x = 0;
+                var enemy_y = 0;
+
+                // If mode != Zombie Surround or zombies should respawn,
+                //   pick new enemy location...
+                if(mode < 3
+                  || settings['zombie-respawn']){
+                    do{
+                        enemy_x = random_number(level_settings[2] * 2) - level_settings[2];
+                        enemy_y = random_number(level_settings[2] * 2) - level_settings[2];
+                    }while(enemy_x > player_x - 50
+                      && enemy_x < player_x + 50
+                      && enemy_y > player_y - 50
+                      && enemy_y < player_y + 50);
+
+                    enemies[enemy][0] = enemy_x;
+                    enemies[enemy][1] = enemy_y;
+
+                }else{
+                    delete enemies[enemy];
+                }
+
+                hits += 1;
+                break;
+
+            }else if(bullets[bullet][0] > player_x - 17
+              && bullets[bullet][0] < player_x + 17
+              && bullets[bullet][1] > player_y - 17
+              && bullets[bullet][1] < player_y + 17){
+                game_running = false;
+                break;
             }
-
-            j = enemies.length - 1;
-            if(j >= 0){
-                do{
-                    if(!bullets[loop_counter][4]){
-                        if(bullets[loop_counter][0] <= enemies[j][0] - 15
-                          || bullets[loop_counter][0] >= enemies[j][0] + 15
-                          || bullets[loop_counter][1] <= enemies[j][1] - 15
-                          || bullets[loop_counter][1] >= enemies[j][1] + 15){
-                            continue;
-                        }
-
-                        bullets.splice(
-                          loop_counter,
-                          1
-                        );
-
-                        var enemy_x = 0;
-                        var enemy_y = 0;
-
-                        // If mode != Zombie Surround or zombies should respawn,
-                        //   pick new enemy location...
-                        if(mode < 3
-                          || settings['zombie-respawn']){
-                            do{
-                                enemy_x = random_number(level_settings[2] * 2) - level_settings[2];
-                                enemy_y = random_number(level_settings[2] * 2) - level_settings[2];
-                            }while(enemy_x > player_x - 50
-                              && enemy_x < player_x + 50
-                              && enemy_y > player_y - 50
-                              && enemy_y < player_y + 50);
-
-                            enemies[j][0] = enemy_x;
-                            enemies[j][1] = enemy_y;
-
-                        // ...else delete enemy.
-                        }else{
-                            enemies.splice(
-                              j,
-                              1
-                            );
-                        }
-
-                        hits += 1;
-                        break;
-
-                    }else if(bullets[loop_counter][0] > player_x - 17
-                      && bullets[loop_counter][0] < player_x + 17
-                      && bullets[loop_counter][1] > player_y - 17
-                      && bullets[loop_counter][1] < player_y + 17){
-                        game_running = false;
-                        break;
-                    }
-                }while(j--);
-            }
-        }while(loop_counter--);
+        }
     }
 }
 
