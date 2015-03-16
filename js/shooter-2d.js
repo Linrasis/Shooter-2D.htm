@@ -491,8 +491,8 @@ function resize(){
     x = width / 2;
 }
 
+// Save settings into window.localStorage if they differ from default.
 function save(){
-    // Save audio-volume setting.
     if(document.getElementById('audio-volume').value === 1){
         window.localStorage.removeItem('Shooter-2D.htm-audio-volume');
         settings['audio-volume'] = 1;
@@ -505,21 +505,15 @@ function save(){
         );
     }
 
-    var loop_counter = 2;
-    do{
-        var id = [
-          'color',
-          'movement-keys',
-          'restart-key',
-        ][loop_counter];
-
-        if(document.getElementById(id).value === ['#009900', 'WASD', 'H',][loop_counter]){
+    var ids = {
+      'color': '#009900',
+      'movement-keys': 'WASD',
+      'restart-key': 'H',
+    };
+    for(var id in ids){
+        if(document.getElementById(id).value === ids[id]){
             window.localStorage.removeItem('Shooter-2D.htm-' + id);
-            settings[id] = [
-              '#009900',
-              'WASD',
-              'H',
-            ][loop_counter];
+            settings[id] = ids[id];
 
         }else{
             settings[id] = document.getElementById(id).value;
@@ -528,14 +522,12 @@ function save(){
               settings[id]
             );
         }
-    }while(loop_counter--);
+    }
 
-    // Save ms-per-frame setting.
     if(document.getElementById('ms-per-frame').value == 25
       || isNaN(document.getElementById('ms-per-frame').value)
       || document.getElementById('ms-per-frame').value < 1){
         window.localStorage.removeItem('Shooter-2D.htm-ms-per-frame');
-        document.getElementById('ms-per-frame').value = 25;
         settings['ms-per-frame'] = 25;
 
     }else{
@@ -546,12 +538,10 @@ function save(){
         );
     }
 
-    // Save weapon-reload setting.
     if(document.getElementById('weapon-reload').value == 50
       || isNaN(document.getElementById('weapon-reload').value)
       || document.getElementById('weapon-reload').value < 1){
         window.localStorage.removeItem('Shooter-2D.htm-weapon-reload');
-        document.getElementById('weapon-reload').value = 50;
         settings['weapon-reload'] = 50;
 
     }else{
@@ -562,12 +552,10 @@ function save(){
         );
     }
 
-    // Save zombie-amount setting.
     if(document.getElementById('zombie-amount').value == 25
       || isNaN(document.getElementById('zombie-amount').value)
       || document.getElementById('zombie-amount').value < 1){
         window.localStorage.removeItem('Shooter-2D.htm-zombie-amount');
-        document.getElementById('zombie-amount').value = 25;
         settings['zombie-amount'] = 25;
 
     }else{
@@ -578,7 +566,6 @@ function save(){
         );
     }
 
-    // Save zombie-respawn setting.
     if(!document.getElementById('zombie-respawn').checked){
         window.localStorage.removeItem('Shooter-2D.htm-zombie-respawn');
         settings['zombie-respawn'] = false;
@@ -636,7 +623,7 @@ function setmode(newmode, newgame){
         buffer = 0;
         canvas = 0;
 
-        document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><b>Shooter-2D.htm</b></div><hr><div class=c><b>Duel vs AI:</b><ul><li><a onclick=setmode(1,1)>Empty Square Arena</a><li><a onclick=setmode(2,1)>Final Destination</a></ul></div><hr><div class=c><input id=zombie-amount value='
+        document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><b>Duel vs AI:</b><ul><li><a onclick=setmode(1,1)>Empty Square Arena</a><li><a onclick=setmode(2,1)>Final Destination</a></ul></div><hr><div class=c><input id=zombie-amount value='
           + settings['zombie-amount'] + '><a onclick=setmode(3,1)>Zombie Surround</a><br><input '
           + (settings['zombie-respawn'] ? 'checked ' : '') + 'id=zombie-respawn type=checkbox>Respawn</div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input disabled style=border:0 value=ESC>Main Menu<br><input id=movement-keys maxlength=4 value='
           + settings['movement-keys'] + '>Move ↑←↓→<br><input id=restart-key maxlength=1 value='
@@ -770,18 +757,7 @@ window.onmousemove = function(e){
     }
 
     mouse_x = e.pageX;
-    if(mouse_x < 0){
-        mouse_x = 0;
-    }else if(mouse_x > width){
-        mouse_x = width;
-    }
-
     mouse_y = e.pageY;
-    if(mouse_y < 0){
-        mouse_y = 0;
-    }else if(mouse_y > height){
-        mouse_y = height;
-    }
 };
 
 window.onmouseup = function(e){
