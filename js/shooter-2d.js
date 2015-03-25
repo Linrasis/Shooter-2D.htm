@@ -493,7 +493,7 @@ function resize(){
 
 // Save settings into window.localStorage if they differ from default.
 function save(){
-    if(document.getElementById('audio-volume').value === 1){
+    if(document.getElementById('audio-volume').value == 1){
         window.localStorage.removeItem('Shooter-2D.htm-audio-volume');
         settings['audio-volume'] = 1;
 
