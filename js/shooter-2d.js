@@ -72,6 +72,7 @@ function draw(){
       x - player_x - 5,
       y - player_y - 5,
     ];
+
     // Draw bullets.
     for(var bullet in bullets){
         buffer.fillStyle = bullets[bullet][4] == 0
