@@ -663,27 +663,13 @@ var player_dy = 0;
 var player_x = 0;
 var player_y = 0;
 var settings = {
-  'audio-volume': window.localStorage.getItem('Shooter-2D.htm-audio-volume') === null
-    ? 1
-    : parseFloat(window.localStorage.getItem('Shooter-2D.htm-audio-volume')),
-  'color': window.localStorage.getItem('Shooter-2D.htm-color') === null
-    ? '#009900'
-    : window.localStorage.getItem('Shooter-2D.htm-color'),
-  'movement-keys': window.localStorage.getItem('Shooter-2D.htm-movement-keys') === null
-    ? 'WASD'
-    : window.localStorage.getItem('Shooter-2D.htm-movement-keys'),
-  'ms-per-frame': window.localStorage.getItem('Shooter-2D.htm-ms-per-frame') === null
-    ? 25
-    : parseInt(window.localStorage.getItem('Shooter-2D.htm-ms-per-frame')),
-  'restart-key': window.localStorage.getItem('Shooter-2D.htm-restart-key') === null
-    ? 'H'
-    : window.localStorage.getItem('Shooter-2D.htm-restart-key'),
-  'weapon-reload': window.localStorage.getItem('Shooter-2D.htm-weapon-reload') === null
-    ? 50
-    : parseInt(window.localStorage.getItem('Shooter-2D.htm-weapon-reload')),
-  'zombie-amount': window.localStorage.getItem('Shooter-2D.htm-zombie-amount') === null
-    ? 25
-    : parseFloat(window.localStorage.getItem('Shooter-2D.htm-zombie-amount')),
+  'audio-volume': parseFloat(window.localStorage.getItem('Shooter-2D.htm-audio-volume')) || 1,
+  'color': window.localStorage.getItem('Shooter-2D.htm-color') || '#009900',
+  'movement-keys': window.localStorage.getItem('Shooter-2D.htm-movement-keys') || 'WASD',
+  'ms-per-frame': parseInt(window.localStorage.getItem('Shooter-2D.htm-ms-per-frame')) || 25,
+  'restart-key': window.localStorage.getItem('Shooter-2D.htm-restart-key') || 'H',
+  'weapon-reload': parseInt(window.localStorage.getItem('Shooter-2D.htm-weapon-reload')) || 50,
+  'zombie-amount': parseFloat(window.localStorage.getItem('Shooter-2D.htm-zombie-amount')) || 25,
   'zombie-respawn': window.localStorage.getItem('Shooter-2D.htm-zombie-respawn') !== null,
 };
 var weapon_reload = 0;
