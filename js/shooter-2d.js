@@ -360,7 +360,10 @@ function logic(){
           || bullets[bullet][1] < -level_settings[3]
           || bullets[bullet][0] > level_settings[2]
           || bullets[bullet][1] > level_settings[3]){
-            delete bullets[bullet];
+            bullets.splice(
+              bullet,
+              1
+            );
             continue;
         }
 
@@ -375,7 +378,10 @@ function logic(){
                 continue;
             }
 
-            delete bullets[bullet];
+            bullets.splice(
+              bullet,
+              1
+            );
             hit_foreground = true;
             break;
         }
@@ -393,7 +399,10 @@ function logic(){
                     continue;
                 }
 
-                delete bullets[bullet];
+                bullets.splice(
+                  bullet,
+                  1
+                );
 
                 var enemy_x = 0;
                 var enemy_y = 0;
@@ -414,7 +423,10 @@ function logic(){
                     enemies[enemy][1] = enemy_y;
 
                 }else{
-                    delete enemies[enemy];
+                    enemies.splice(
+                      enemy,
+                      1
+                    );
                 }
 
                 hits += 1;
