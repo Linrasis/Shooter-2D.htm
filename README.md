@@ -6,8 +6,8 @@ A 2D topdown arena shooter. See how many times you can hit your opponent before 
 ---
 
 Action              | Key
---------------------|------
+--------------------|------------
 Move Player         | WASD
 Restart             | H
 Return to Main Menu | ESC
-Shoot               | Click
+Shoot               | Mouse Click
