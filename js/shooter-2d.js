@@ -97,33 +97,31 @@ function draw(){
     // Setup text display.
     buffer.fillStyle = '#fff';
     buffer.font = '23pt sans-serif';
-    buffer.textAlign = 'left';
 
     // Draw reload and hits.
     buffer.fillText(
       'Reload: ' + weapon_reload + '/' + settings['weapon-reload'],
       5,
-      29
+      25
     );
     buffer.fillText(
       'Hits: ' + hits,
       5,
-      64
+      50
     );
 
     if(!game_running){
         // Daw game over or win message,
         //   depending upon if enemies remain.
-        buffer.textAlign = 'center';
         buffer.fillText(
           settings['restart-key'] + ' = Restart',// restart key
-          x,
-          y / 2 + 42
+          5,
+          100
         );
         buffer.fillText(
           'ESC = Main Menu',
-          x,
-          y / 2 + 75
+          5,
+          125
         );
         buffer.fillStyle = enemies.length > 0
           ? '#f00'
@@ -133,8 +131,8 @@ function draw(){
           enemies.length > 0
             ? 'YOU ARE DEAD'
             : 'You Win!',
-          x,
-          y / 2
+          5,
+          170
         );
     }
 
