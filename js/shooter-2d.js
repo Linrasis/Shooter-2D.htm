@@ -674,7 +674,9 @@ var player_dy = 0;
 var player_x = 0;
 var player_y = 0;
 var settings = {
-  'audio-volume': parseFloat(window.localStorage.getItem('Shooter-2D.htm-audio-volume')) || 1,
+  'audio-volume': window.localStorage.getItem('Shooter-2D.htm-audio-volume') != null
+    ? parseFloat(window.localStorage.getItem('Shooter-2D.htm-audio-volume'))
+    : 1,
   'color': window.localStorage.getItem('Shooter-2D.htm-color') || '#009900',
   'movement-keys': window.localStorage.getItem('Shooter-2D.htm-movement-keys') || 'WASD',
   'ms-per-frame': parseInt(window.localStorage.getItem('Shooter-2D.htm-ms-per-frame')) || 25,
