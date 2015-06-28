@@ -45,13 +45,13 @@ function draw(){
     // Draw enemies.
     buffer.fillStyle = '#f66';
     for(var enemy in enemies){
-        if(enemies[enemy][0] + 15 + x - player_x > 0
-          && enemies[enemy][0] - 15 + x - player_x < width
-          && enemies[enemy][1] + 15 + y - player_y > 0
-          && enemies[enemy][1] - 15 + y - player_y < height){
+        if(enemies[enemy]['x'] + 15 + x - player_x > 0
+          && enemies[enemy]['x'] - 15 + x - player_x < width
+          && enemies[enemy]['y'] + 15 + y - player_y > 0
+          && enemies[enemy]['y'] - 15 + y - player_y < height){
             buffer.fillRect(
-              x - player_x + enemies[enemy][0] - 15,
-              y - player_y + enemies[enemy][1] - 15,
+              x - player_x + enemies[enemy]['x'] - 15,
+              y - player_y + enemies[enemy]['y'] - 15,
               30,
               30
             );
@@ -75,20 +75,20 @@ function draw(){
 
     // Draw bullets.
     for(var bullet in bullets){
-        buffer.fillStyle = bullets[bullet][4] == 0
+        buffer.fillStyle = bullets[bullet]['player'] == 0
           ? settings['color']
           : '#f66';
 
-        if(bullets[bullet][0] + 15 + temp_viewoffset[0] <= 0
-          || bullets[bullet][0] + x - player_x >= width
-          || bullets[bullet][1] + 15 + temp_viewoffset[1] <= 0
-          || bullets[bullet][1] + y - player_y >= height){
+        if(bullets[bullet]['x'] + 15 + temp_viewoffset[0] <= 0
+          || bullets[bullet]['x'] + x - player_x >= width
+          || bullets[bullet]['y'] + 15 + temp_viewoffset[1] <= 0
+          || bullets[bullet]['y'] + y - player_y >= height){
             continue;
         }
 
         buffer.fillRect(
-          Math.round(bullets[bullet][0] + temp_viewoffset[0]),
-          Math.round(bullets[bullet][1] + temp_viewoffset[1]),
+          Math.round(bullets[bullet]['x'] + temp_viewoffset[0]),
+          Math.round(bullets[bullet]['y'] + temp_viewoffset[1]),
           10,
           10
         );
@@ -197,20 +197,20 @@ function logic(){
               player_x + mouse_x - x,
               player_y + mouse_y - y
             );
-
+bullets
             // ...and add bullet with movement pattern, tied to player.
-            bullets.push([
-              player_x,
-              player_y,
-              (mouse_x > x ? j[0] : -j[0]),
-              (mouse_y > y ? j[1] : -j[1]),
-              0,
-            ]);
+            bullets.push({
+              'dx': (mouse_x > x ? j[0] : -j[0]),
+              'dy': (mouse_y > y ? j[1] : -j[1]),
+              'player': 0,
+              'x': player_x,
+              'y': player_y,
+            });
 
             // If level != Zombie Surround, update AI destinations.
             if(mode < 3){
-                enemies[0][2] = random_number(500) - 250;
-                enemies[0][3] = random_number(500) - 250;
+                enemies[0]['target-x'] = random_number(500) - 250;
+                enemies[0]['target-y'] = random_number(500) - 250;
             }
         }
 
@@ -227,20 +227,20 @@ function logic(){
 
             // Calculate bullet destination based on player position...
             var j = m(
-              enemies[0][0],
-              enemies[0][1],
+              enemies[0]['x'],
+              enemies[0]['y'],
               player_x,
               player_y
             );
 
             // ...and add bullet with movement pattern, tied to enemy.
-            bullets.push([
-              enemies[0][0],
-              enemies[0][1],
-              (enemies[0][0] > player_x ? -j[0] : j[0]),
-              (enemies[0][1] > player_y ? -j[1] : j[1]),
-              1,
-            ]);
+            bullets.push({
+              'dx': (enemies[0]['x'] > player_x ? -j[0] : j[0]),
+              'dy': (enemies[0]['y'] > player_y ? -j[1] : j[1]),
+              'player': 1,
+              'x': enemies[0]['x'],
+              'y': enemies[0]['y'],
+            });
         }
     }
 
@@ -291,59 +291,50 @@ function logic(){
 
     // Handle enemies.
     for(var enemy in enemies){
-        // If level == Zombie Surround...
-        if(mode === 3){
-            // ...calculate zombie movement based on player location...
-            var j = m(
-              enemies[enemy][0],
-              enemies[enemy][1],
-              player_x,
-              player_y
-            );
+        // If level == Zombie Surround,
+        //   update zombie target.
+        if(mode == 3){
+            enemies[enemy]['target-x'] = player_x;
+            enemies[enemy]['target-y'] = player_y;
+        }
 
-            // ...and move zombies towards player.
-            enemies[enemy][0] += player_x > enemies[enemy][0]
-              ? j[0]
-              : -j[0];
-            enemies[enemy][1] += player_y > enemies[enemy][1]
-              ? j[1]
-              : -j[1];
+        // Calculate enemy movement.
+        var j = m(
+          enemies[enemy]['x'],
+          enemies[enemy]['y'],
+          enemies[enemy]['target-x'],
+          enemies[enemy]['target-y']
+        );
 
-        // If level != Zombie Surround
-        }else{
-            // Calculate enemy movement based on destination...
-            var j = m(
-              enemies[enemy][0],
-              enemies[enemy][1],
-              enemies[enemy][2],
-              enemies[enemy][3]
-            );
+        // If level != Zombie Surround,
+        //   increase enemy speed and check for new target.
+        if(mode != 3){
             j[0] *= 2;
             j[1] *= 2;
 
-            // ... and move enemies towards destination.
-            enemies[enemy][0] += enemies[enemy][2] > enemies[enemy][0]
-              ? j[0]
-              : -j[0];
-            enemies[enemy][1] += enemies[enemy][3] > enemies[enemy][1]
-              ? j[1]
-              : -j[1];
-
             // Check if enemy AI should pick new destination.
-            if(enemies[enemy][2] > enemies[enemy][0] - 5
-              && enemies[enemy][2] < enemies[enemy][0] + 5
-              && enemies[enemy][3] > enemies[enemy][1] - 5
-              && enemies[enemy][3] < enemies[enemy][1] + 5){
-                enemies[enemy][2] = random_number(500) - 250;
-                enemies[enemy][3] = random_number(500) - 250;
+            if(enemies[enemy]['target-x'] > enemies[enemy]['x'] - 5
+              && enemies[enemy]['target-x'] < enemies[enemy]['x'] + 5
+              && enemies[enemy]['target-y'] > enemies[enemy]['y'] - 5
+              && enemies[enemy]['target-y'] < enemies[enemy]['y'] + 5){
+                enemies[enemy]['target-x'] = random_number(500) - 250;
+                enemies[enemy]['target-y'] = random_number(500) - 250;
             }
         }
 
+        // Move enemy towards target.
+        enemies[enemy]['x'] += enemies[enemy]['target-x'] > enemies[enemy]['x']
+          ? j[0]
+          : -j[0];
+        enemies[enemy]['y'] += enemies[enemy]['target-y'] > enemies[enemy]['y']
+          ? j[1]
+          : -j[1];
+
         // Check if player collides with enemy.
-        if(enemies[enemy][0] + 15 - player_x > -17
-          && enemies[enemy][0] - 15 - player_x < 17
-          && enemies[enemy][1] + 15 - player_y > -17
-          && enemies[enemy][1] - 15 - player_y < 17){
+        if(enemies[enemy]['x'] + 15 - player_x > -17
+          && enemies[enemy]['x'] - 15 - player_x < 17
+          && enemies[enemy]['y'] + 15 - player_y > -17
+          && enemies[enemy]['y'] - 15 - player_y < 17){
             game_running = false;
             return;
         }
@@ -351,13 +342,13 @@ function logic(){
 
     // Handle bullets.
     for(var bullet in bullets){
-        bullets[bullet][0] += 5 * bullets[bullet][2];
-        bullets[bullet][1] += 5 * bullets[bullet][3];
+        bullets[bullet]['x'] += 5 * bullets[bullet]['dx'];
+        bullets[bullet]['y'] += 5 * bullets[bullet]['dy'];
 
-        if(bullets[bullet][0] < -level_settings[2]
-          || bullets[bullet][1] < -level_settings[3]
-          || bullets[bullet][0] > level_settings[2]
-          || bullets[bullet][1] > level_settings[3]){
+        if(bullets[bullet]['x'] < -level_settings[2]
+          || bullets[bullet]['x'] > level_settings[2]
+          || bullets[bullet]['y'] < -level_settings[3]
+          || bullets[bullet]['y'] > level_settings[3]){
             bullets.splice(
               bullet,
               1
@@ -369,10 +360,10 @@ function logic(){
 
         for(var rect in foreground_rect){
             if(!foreground_rect[rect][5]
-              || bullets[bullet][0] <= foreground_rect[rect][0]
-              || bullets[bullet][0] >= foreground_rect[rect][0] + foreground_rect[rect][2]
-              || bullets[bullet][1] <= foreground_rect[rect][1]
-              || bullets[bullet][1] >= foreground_rect[rect][1] + foreground_rect[rect][3]){
+              || bullets[bullet]['x'] <= foreground_rect[rect][0]
+              || bullets[bullet]['x'] >= foreground_rect[rect][0] + foreground_rect[rect][2]
+              || bullets[bullet]['y'] <= foreground_rect[rect][1]
+              || bullets[bullet]['y'] >= foreground_rect[rect][1] + foreground_rect[rect][3]){
                 continue;
             }
 
@@ -389,11 +380,11 @@ function logic(){
         }
 
         for(var enemy in enemies){
-            if(!bullets[bullet][4]){
-                if(bullets[bullet][0] <= enemies[enemy][0] - 15
-                  || bullets[bullet][0] >= enemies[enemy][0] + 15
-                  || bullets[bullet][1] <= enemies[enemy][1] - 15
-                  || bullets[bullet][1] >= enemies[enemy][1] + 15){
+            if(bullets[bullet]['player'] === 0){
+                if(bullets[bullet]['x'] <= enemies[enemy]['x'] - 15
+                  || bullets[bullet]['x'] >= enemies[enemy]['x'] + 15
+                  || bullets[bullet]['y'] <= enemies[enemy]['y'] - 15
+                  || bullets[bullet]['y'] >= enemies[enemy]['y'] + 15){
                     continue;
                 }
 
@@ -402,13 +393,13 @@ function logic(){
                   1
                 );
 
-                var enemy_x = 0;
-                var enemy_y = 0;
-
                 // If mode != Zombie Surround or zombies should respawn,
                 //   pick new enemy location...
                 if(mode < 3
                   || settings['zombie-respawn']){
+                    var enemy_x = 0;
+                    var enemy_y = 0;
+
                     do{
                         enemy_x = random_number(level_settings[2] * 2) - level_settings[2];
                         enemy_y = random_number(level_settings[2] * 2) - level_settings[2];
@@ -417,8 +408,8 @@ function logic(){
                       && enemy_y > player_y - 50
                       && enemy_y < player_y + 50);
 
-                    enemies[enemy][0] = enemy_x;
-                    enemies[enemy][1] = enemy_y;
+                    enemies[enemy]['x'] = enemy_x;
+                    enemies[enemy]['y'] = enemy_y;
 
                 }else{
                     enemies.splice(
@@ -430,10 +421,10 @@ function logic(){
                 hits += 1;
                 break;
 
-            }else if(bullets[bullet][0] > player_x - 17
-              && bullets[bullet][0] < player_x + 17
-              && bullets[bullet][1] > player_y - 17
-              && bullets[bullet][1] < player_y + 17){
+            }else if(bullets[bullet]['x'] > player_x - 17
+              && bullets[bullet]['x'] < player_x + 17
+              && bullets[bullet]['y'] > player_y - 17
+              && bullets[bullet]['y'] < player_y + 17){
                 game_running = false;
                 break;
             }

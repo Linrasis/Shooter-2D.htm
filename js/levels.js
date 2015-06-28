@@ -23,14 +23,12 @@ function load_level(id){
         player_x = 125;
         player_y = 0;
 
-        enemies = [
-          [
-            -125,
-            0,
-            random_number(500) - 250,
-            random_number(500) - 250,
-          ],
-        ];
+        enemies.push({
+          'target-x': random_number(500) - 250,
+          'target-y': random_number(500) - 250,
+          'x': -125,
+          'y': 0,
+        });
 
         enemy_reload = 100;
         weapon_reload = settings['weapon-reload'];
@@ -51,14 +49,12 @@ function load_level(id){
         player_x = 125;
         player_y = 0;
 
-        enemies = [
-          [
-            -125,
-            0,
-            random_number(500) - 250,
-            random_number(500) - 250,
-          ],
-        ];
+        enemies.push({
+          'target-x': random_number(500) - 250,
+          'target-y': random_number(500) - 250,
+          'x': -125,
+          'y': 0,
+        });
 
         enemy_reload = 100;
         weapon_reload = settings['weapon-reload'];
@@ -94,12 +90,12 @@ function load_level(id){
               && zombie_y > -99
               && zombie_y < 99);
 
-            enemies.push([
-              zombie_x,
-              zombie_y,
-              zombie_x,
-              zombie_y,
-            ]);
+            enemies.push({
+              'target-x': player_x,
+              'target-y': player_y,
+              'x': zombie_x,
+              'y': zombie_y,
+            });
         }while(loop_counter--);
 
         enemy_reload = 100;
