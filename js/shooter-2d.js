@@ -8,37 +8,37 @@ function draw(){
 
     // Draw visible background stuffs.
     for(var rect in background_rect){
-        if(background_rect[rect][0] + background_rect[rect][2] + x - player_x <= 0
-          || background_rect[rect][0] + x - player_x >= width
-          || background_rect[rect][1] + background_rect[rect][3] + y - player_y <= 0
-          || background_rect[rect][1] + y - player_y >= height){
+        if(background_rect[rect]['x'] + background_rect[rect]['width'] + x - player_x <= 0
+          || background_rect[rect]['x'] + x - player_x >= width
+          || background_rect[rect]['y'] + background_rect[rect]['height'] + y - player_y <= 0
+          || background_rect[rect]['y'] + y - player_y >= height){
             continue;
         }
 
-        buffer.fillStyle = background_rect[rect][4];
+        buffer.fillStyle = background_rect[rect]['color'];
         buffer.fillRect(
-          x - player_x + background_rect[rect][0],
-          y - player_y + background_rect[rect][1],
-          background_rect[rect][2],
-          background_rect[rect][3]
+          x - player_x + background_rect[rect]['x'],
+          y - player_y + background_rect[rect]['y'],
+          background_rect[rect]['width'],
+          background_rect[rect]['height']
         );
     }
 
     // Draw visible foreground environment stuffs.
     for(rect in foreground_rect){
-        if(foreground_rect[rect][0] + foreground_rect[rect][2] + x - player_x <= 0
-          || foreground_rect[rect][0] + x - player_x >= width
-          || foreground_rect[rect][1] + foreground_rect[rect][3] + y - player_y <= 0
-          || foreground_rect[rect][1] + y - player_y >= height){
+        if(foreground_rect[rect]['x'] + foreground_rect[rect]['width'] + x - player_x <= 0
+          || foreground_rect[rect]['x'] + x - player_x >= width
+          || foreground_rect[rect]['y'] + foreground_rect[rect]['height'] + y - player_y <= 0
+          || foreground_rect[rect]['y'] + y - player_y >= height){
             continue;
         }
 
-        buffer.fillStyle = foreground_rect[rect][4];
+        buffer.fillStyle = foreground_rect[rect]['color'];
         buffer.fillRect(
-          x - player_x + foreground_rect[rect][0],
-          y - player_y + foreground_rect[rect][1],
-          foreground_rect[rect][2],
-          foreground_rect[rect][3]
+          x - player_x + foreground_rect[rect]['x'],
+          y - player_y + foreground_rect[rect]['y'],
+          foreground_rect[rect]['width'],
+          foreground_rect[rect]['height']
         );
     }
 
@@ -246,41 +246,41 @@ bullets
 
     // Check for player collision with foreground obstacles.
     for(var rect in foreground_rect){
-        if(player_x + player_dx - 17 > foreground_rect[rect][0] + foreground_rect[rect][2]
-          || player_x + player_dx + 17 < foreground_rect[rect][0]
-          || player_y + player_dy - 17 > foreground_rect[rect][1] + foreground_rect[rect][3]
-          || player_y + player_dy + 17 < foreground_rect[rect][1]){
+        if(player_x + player_dx - 17 > foreground_rect[rect]['x'] + foreground_rect[rect]['width']
+          || player_x + player_dx + 17 < foreground_rect[rect]['x']
+          || player_y + player_dy - 17 > foreground_rect[rect]['y'] + foreground_rect[rect]['height']
+          || player_y + player_dy + 17 < foreground_rect[rect]['y']){
             continue;
         }
 
-        if(player_y != foreground_rect[rect][1] - 18
-          && player_y != foreground_rect[rect][1] + foreground_rect[rect][3] + 18){
+        if(player_y != foreground_rect[rect]['y'] - 18
+          && player_y != foreground_rect[rect]['y'] + foreground_rect[rect]['height'] + 18){
             if(key_left
-              && player_y + player_dy + 17 > foreground_rect[rect][1]
-              && player_y + player_dy - 17 < foreground_rect[rect][1] + foreground_rect[rect][3]
-              && player_x + player_dx - 17 < foreground_rect[rect][0] + foreground_rect[rect][2]){
+              && player_y + player_dy + 17 > foreground_rect[rect]['y']
+              && player_y + player_dy - 17 < foreground_rect[rect]['y'] + foreground_rect[rect]['height']
+              && player_x + player_dx - 17 < foreground_rect[rect]['x'] + foreground_rect[rect]['width']){
                 player_dx = 0;
             }
 
             if(key_right
-              && player_y + player_dy + 17 > foreground_rect[rect][1]
-              && player_y + player_dy - 17 < foreground_rect[rect][1] + foreground_rect[rect][3]
-              && player_x + player_dx + 17 > foreground_rect[rect][0]){
+              && player_y + player_dy + 17 > foreground_rect[rect]['y']
+              && player_y + player_dy - 17 < foreground_rect[rect]['y'] + foreground_rect[rect]['height']
+              && player_x + player_dx + 17 > foreground_rect[rect]['x']){
                 player_dx = 0;
             }
         }
 
         if(key_down
-          && player_x + player_dx + 17 > foreground_rect[rect][0]
-          && player_x + player_dx - 17 < foreground_rect[rect][0] + foreground_rect[rect][2]
-          && player_y + player_dy + 17 > foreground_rect[rect][1]){
+          && player_x + player_dx + 17 > foreground_rect[rect]['x']
+          && player_x + player_dx - 17 < foreground_rect[rect]['x'] + foreground_rect[rect]['width']
+          && player_y + player_dy + 17 > foreground_rect[rect]['y']){
             player_dy = 0;
         }
 
         if(key_up
-          && player_x + player_dx + 17 > foreground_rect[rect][0]
-          && player_x + player_dx - 17 < foreground_rect[rect][0] + foreground_rect[rect][2]
-          && player_y + player_dy - 17 < foreground_rect[rect][1] + foreground_rect[rect][3]){
+          && player_x + player_dx + 17 > foreground_rect[rect]['x']
+          && player_x + player_dx - 17 < foreground_rect[rect]['x'] + foreground_rect[rect]['width']
+          && player_y + player_dy - 17 < foreground_rect[rect]['y'] + foreground_rect[rect]['height']){
             player_dy = 0;
         }
     }
@@ -359,11 +359,11 @@ bullets
         var hit_foreground = false;
 
         for(var rect in foreground_rect){
-            if(!foreground_rect[rect][5]
-              || bullets[bullet]['x'] <= foreground_rect[rect][0]
-              || bullets[bullet]['x'] >= foreground_rect[rect][0] + foreground_rect[rect][2]
-              || bullets[bullet]['y'] <= foreground_rect[rect][1]
-              || bullets[bullet]['y'] >= foreground_rect[rect][1] + foreground_rect[rect][3]){
+            if(!foreground_rect[rect]['collision']
+              || bullets[bullet]['x'] <= foreground_rect[rect]['x']
+              || bullets[bullet]['x'] >= foreground_rect[rect]['x'] + foreground_rect[rect]['width']
+              || bullets[bullet]['y'] <= foreground_rect[rect]['y']
+              || bullets[bullet]['y'] >= foreground_rect[rect]['y'] + foreground_rect[rect]['height']){
                 continue;
             }
 

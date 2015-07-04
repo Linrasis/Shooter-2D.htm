@@ -1,4 +1,5 @@
 function load_level(id){
+    background_rect.length = 0;
     foreground_rect.length = 0;
 
     // level: Empty Square Arena
@@ -11,13 +12,46 @@ function load_level(id){
         ];
 
         background_rect = [
-          [-50,   -50, 100, 100, '#000', 0],
-          [-250, -250, 500, 500, '#333'],
+          {
+            'color': '#000',
+            'height': 100,
+            'width': 100,
+            'x': -50,
+            'y': -50,
+          },
+          {
+            'color': '#333',
+            'height': 500,
+            'width': 500,
+            'x': -250,
+            'y': -250,
+          },
         ];
         foreground_rect = [
-          [-50, -200, 100, 100, '#777', 1],
-          [-32,  -32,  64,  64, '#000', 0],
-          [-50,  100, 100, 100, '#777', 1],
+          {
+            'collision': true,
+            'color': '#777',
+            'height': 100,
+            'width': 100,
+            'x': -50,
+            'y': -200,
+          },
+          {
+            'collision': false,
+            'color': '#000',
+            'height': 64,
+            'width': 64,
+            'x': -32,
+            'y': -32,
+          },
+          {
+            'collision': true,
+            'color': '#777',
+            'height': 100,
+            'width': 100,
+            'x': -50,
+            'y': 100,
+          },
         ];
 
         player_x = 125;
@@ -43,7 +77,13 @@ function load_level(id){
         ];
 
         background_rect = [
-          [-250, -250, 500, 500, '#333'],
+          {
+            'color': '#333',
+            'height': 500,
+            'width': 500,
+            'x': -250,
+            'y': -250,
+          },
         ];
 
         player_x = 125;
@@ -69,7 +109,13 @@ function load_level(id){
         ];
 
         background_rect = [
-          [-400, -400, 800, 800, '#333'],
+          {
+            'color': '#333',
+            'height': 800,
+            'width': 800,
+            'x': -400,
+            'y': -400,
+          },
         ];
 
         player_x = 0;
