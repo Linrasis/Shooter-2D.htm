@@ -1,3 +1,5 @@
+'use strict';
+
 function load_level(id){
     background_rect.length = 0;
     foreground_rect.length = 0;
