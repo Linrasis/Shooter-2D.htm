@@ -153,6 +153,14 @@ function draw(){
     animationFrame = window.requestAnimationFrame(draw);
 }
 
+function get_movement_speed(x0, y0, x1, y1){
+    var angle = Math.atan(Math.abs(y0 - y1) / Math.abs(x0 - x1));
+    return [
+      Math.cos(angle),
+      Math.sin(angle),
+    ];
+}
+
 function logic(){
     if(enemies.length <= 0){
         game_running = false;
@@ -193,7 +201,7 @@ function logic(){
             weapon_reload = 0;
 
             // ...calculate bullet movement...
-            var j = m(
+            var speeds = get_movement_speed(
               player_x,
               player_y,
               player_x + mouse_x - x,
@@ -202,8 +210,8 @@ function logic(){
 bullets
             // ...and add bullet with movement pattern, tied to player.
             bullets.push({
-              'dx': (mouse_x > x ? j[0] : -j[0]),
-              'dy': (mouse_y > y ? j[1] : -j[1]),
+              'dx': (mouse_x > x ? speeds[0] : -speeds[0]),
+              'dy': (mouse_y > y ? speeds[1] : -speeds[1]),
               'player': 0,
               'x': player_x,
               'y': player_y,
@@ -228,7 +236,7 @@ bullets
             enemy_reload = 0;
 
             // Calculate bullet destination based on player position...
-            var j = m(
+            var speeds = get_movement_speed(
               enemies[0]['x'],
               enemies[0]['y'],
               player_x,
@@ -237,8 +245,8 @@ bullets
 
             // ...and add bullet with movement pattern, tied to enemy.
             bullets.push({
-              'dx': (enemies[0]['x'] > player_x ? -j[0] : j[0]),
-              'dy': (enemies[0]['y'] > player_y ? -j[1] : j[1]),
+              'dx': (enemies[0]['x'] > player_x ? -speeds[0] : speeds[0]),
+              'dy': (enemies[0]['y'] > player_y ? -speeds[1] : speeds[1]),
               'player': 1,
               'x': enemies[0]['x'],
               'y': enemies[0]['y'],
@@ -301,7 +309,7 @@ bullets
         }
 
         // Calculate enemy movement.
-        var j = m(
+        var speeds = get_movement_speed(
           enemies[enemy]['x'],
           enemies[enemy]['y'],
           enemies[enemy]['target-x'],
@@ -311,8 +319,8 @@ bullets
         // If level != Zombie Surround,
         //   increase enemy speed and check for new target.
         if(mode != 3){
-            j[0] *= 2;
-            j[1] *= 2;
+            speeds[0] *= 2;
+            speeds[1] *= 2;
 
             // Check if enemy AI should pick new destination.
             if(enemies[enemy]['target-x'] > enemies[enemy]['x'] - 5
@@ -326,11 +334,11 @@ bullets
 
         // Move enemy towards target.
         enemies[enemy]['x'] += enemies[enemy]['target-x'] > enemies[enemy]['x']
-          ? j[0]
-          : -j[0];
+          ? speeds[0]
+          : -speeds[0];
         enemies[enemy]['y'] += enemies[enemy]['target-y'] > enemies[enemy]['y']
-          ? j[1]
-          : -j[1];
+          ? speeds[1]
+          : -speeds[1];
 
         // Check if player collides with enemy.
         if(enemies[enemy]['x'] + 15 - player_x > -17
@@ -431,21 +439,6 @@ bullets
                 break;
             }
         }
-    }
-}
-
-function m(x0,y0,x1,y1){
-    var j0 = Math.abs(x0 - x1);
-    var j1 = Math.abs(y0 - y1);
-
-    if(j0 > j1){
-        return [1, j1 / j0];
-
-    }else if(j1 > j0){
-        return [j0 / j1, 1];
-
-    }else{
-        return [.5, .5];
     }
 }
 
