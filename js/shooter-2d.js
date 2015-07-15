@@ -186,12 +186,24 @@ function logic(){
 
     if(key_down
       && player_y + 2 < level_settings[3]){
-        player_dy += 2;
+        if(player_dx != 0){
+            player_dx = player_dx / 2 * 1.41421;
+            player_dy += 1.41421;
+
+        }else{
+            player_dy += 2;
+        }
     }
 
     if(key_up
       && player_y - 2 > -level_settings[3]){
-        player_dy -= 2;
+        if(player_dx != 0){
+            player_dx = player_dx / 2 * 1.41421;
+            player_dy -= 1.41421;
+
+        }else{
+            player_dy -= 2;
+        }
     }
 
     // Check if player weapon can be fired, else update reload.
