@@ -170,8 +170,8 @@ function logic(){
         return;
     }
 
-    player_dx = 0;
-    player_dy = 0;
+    var player_dx = 0;
+    var player_dy = 0;
 
     // Add player key movments to dx and dy, if still within level boundaries.
     if(key_left
@@ -655,8 +655,6 @@ var mouse_lock_x = 0;
 var mouse_lock_y = 0;
 var mouse_x = 0;
 var mouse_y = 0;
-var player_dx = 0;
-var player_dy = 0;
 var player_x = 0;
 var player_y = 0;
 var settings = {
