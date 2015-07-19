@@ -56,8 +56,7 @@ function load_level(id){
           },
         ];
 
-        player_x = 125;
-        player_y = 0;
+        player['x'] = 125;
 
         enemies.push({
           'target-x': random_number(500) - 250,
@@ -65,9 +64,6 @@ function load_level(id){
           'x': -125,
           'y': 0,
         });
-
-        enemy_reload = 100;
-        weapon_reload = settings['weapon-reload'];
 
     // level: Final Destination
     }else if(id === 2){
@@ -88,8 +84,7 @@ function load_level(id){
           },
         ];
 
-        player_x = 125;
-        player_y = 0;
+        player['x'] = 125;
 
         enemies.push({
           'target-x': random_number(500) - 250,
@@ -97,9 +92,6 @@ function load_level(id){
           'x': -125,
           'y': 0,
         });
-
-        enemy_reload = 100;
-        weapon_reload = settings['weapon-reload'];
 
     // level: Zombie Surround
     }else if(id === 3){
@@ -120,9 +112,6 @@ function load_level(id){
           },
         ];
 
-        player_x = 0;
-        player_y = 0;
-
         var zombie_x = 0;
         var zombie_y = 0;
 
@@ -139,14 +128,11 @@ function load_level(id){
               && zombie_y < 99);
 
             enemies.push({
-              'target-x': player_x,
-              'target-y': player_y,
+              'target-x': player['x'],
+              'target-y': player['y'],
               'x': zombie_x,
               'y': zombie_y,
             });
         }while(loop_counter--);
-
-        enemy_reload = 100;
-        weapon_reload = settings['weapon-reload'];
     }
 }

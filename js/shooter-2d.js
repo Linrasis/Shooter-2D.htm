@@ -10,17 +10,17 @@ function draw(){
 
     // Draw visible background stuffs.
     for(var rect in background_rect){
-        if(background_rect[rect]['x'] + background_rect[rect]['width'] + x - player_x <= 0
-          || background_rect[rect]['x'] + x - player_x >= width
-          || background_rect[rect]['y'] + background_rect[rect]['height'] + y - player_y <= 0
-          || background_rect[rect]['y'] + y - player_y >= height){
+        if(background_rect[rect]['x'] + background_rect[rect]['width'] + x - player['x'] <= 0
+          || background_rect[rect]['x'] + x - player['x'] >= width
+          || background_rect[rect]['y'] + background_rect[rect]['height'] + y - player['y'] <= 0
+          || background_rect[rect]['y'] + y - player['y'] >= height){
             continue;
         }
 
         buffer.fillStyle = background_rect[rect]['color'];
         buffer.fillRect(
-          x - player_x + background_rect[rect]['x'],
-          y - player_y + background_rect[rect]['y'],
+          x - player['x'] + background_rect[rect]['x'],
+          y - player['y'] + background_rect[rect]['y'],
           background_rect[rect]['width'],
           background_rect[rect]['height']
         );
@@ -28,17 +28,17 @@ function draw(){
 
     // Draw visible foreground environment stuffs.
     for(rect in foreground_rect){
-        if(foreground_rect[rect]['x'] + foreground_rect[rect]['width'] + x - player_x <= 0
-          || foreground_rect[rect]['x'] + x - player_x >= width
-          || foreground_rect[rect]['y'] + foreground_rect[rect]['height'] + y - player_y <= 0
-          || foreground_rect[rect]['y'] + y - player_y >= height){
+        if(foreground_rect[rect]['x'] + foreground_rect[rect]['width'] + x - player['x'] <= 0
+          || foreground_rect[rect]['x'] + x - player['x'] >= width
+          || foreground_rect[rect]['y'] + foreground_rect[rect]['height'] + y - player['y'] <= 0
+          || foreground_rect[rect]['y'] + y - player['y'] >= height){
             continue;
         }
 
         buffer.fillStyle = foreground_rect[rect]['color'];
         buffer.fillRect(
-          x - player_x + foreground_rect[rect]['x'],
-          y - player_y + foreground_rect[rect]['y'],
+          x - player['x'] + foreground_rect[rect]['x'],
+          y - player['y'] + foreground_rect[rect]['y'],
           foreground_rect[rect]['width'],
           foreground_rect[rect]['height']
         );
@@ -47,13 +47,13 @@ function draw(){
     // Draw enemies.
     buffer.fillStyle = '#f66';
     for(var enemy in enemies){
-        if(enemies[enemy]['x'] + 15 + x - player_x > 0
-          && enemies[enemy]['x'] - 15 + x - player_x < width
-          && enemies[enemy]['y'] + 15 + y - player_y > 0
-          && enemies[enemy]['y'] - 15 + y - player_y < height){
+        if(enemies[enemy]['x'] + 15 + x - player['x'] > 0
+          && enemies[enemy]['x'] - 15 + x - player['x'] < width
+          && enemies[enemy]['y'] + 15 + y - player['y'] > 0
+          && enemies[enemy]['y'] - 15 + y - player['y'] < height){
             buffer.fillRect(
-              x - player_x + enemies[enemy]['x'] - 15,
-              y - player_y + enemies[enemy]['y'] - 15,
+              x - player['x'] + enemies[enemy]['x'] - 15,
+              y - player['y'] + enemies[enemy]['y'] - 15,
               30,
               30
             );
@@ -71,8 +71,8 @@ function draw(){
 
     // Get player position camera offset.
     var temp_viewoffset = [
-      x - player_x - 5,
-      y - player_y - 5,
+      x - player['x'] - 5,
+      y - player['y'] - 5,
     ];
 
     // Draw bullets.
@@ -82,9 +82,9 @@ function draw(){
           : '#f66';
 
         if(bullets[bullet]['x'] + 15 + temp_viewoffset[0] <= 0
-          || bullets[bullet]['x'] + x - player_x >= width
+          || bullets[bullet]['x'] + x - player['x'] >= width
           || bullets[bullet]['y'] + 15 + temp_viewoffset[1] <= 0
-          || bullets[bullet]['y'] + y - player_y >= height){
+          || bullets[bullet]['y'] + y - player['y'] >= height){
             continue;
         }
 
@@ -102,7 +102,7 @@ function draw(){
 
     // Draw reload and hits.
     buffer.fillText(
-      'Reload: ' + weapon_reload + '/' + settings['weapon-reload'],
+      'Reload: ' + player['reload'] + '/' + settings['weapon-reload'],
       5,
       25
     );
@@ -175,17 +175,17 @@ function logic(){
 
     // Add player key movments to dx and dy, if still within level boundaries.
     if(key_left
-      && player_x - 2 > -level_settings[2]){
+      && player['x'] - 2 > -level_settings[2]){
         player_dx -= 2;
     }
 
     if(key_right
-      && player_x + 2 < level_settings[2]){
+      && player['x'] + 2 < level_settings[2]){
         player_dx += 2;
     }
 
     if(key_down
-      && player_y + 2 < level_settings[3]){
+      && player['y'] + 2 < level_settings[3]){
         if(player_dx != 0){
             player_dx = player_dx / 2 * 1.41421;
             player_dy += 1.41421;
@@ -196,7 +196,7 @@ function logic(){
     }
 
     if(key_up
-      && player_y - 2 > -level_settings[3]){
+      && player['y'] - 2 > -level_settings[3]){
         if(player_dx != 0){
             player_dx = player_dx / 2 * 1.41421;
             player_dy -= 1.41421;
@@ -207,17 +207,17 @@ function logic(){
     }
 
     // Check if player weapon can be fired, else update reload.
-    if(weapon_reload >= settings['weapon-reload']){
+    if(player['reload'] >= settings['weapon-reload']){
         // If weapon being fired...
         if(mouse_lock_x > 0){
-            weapon_reload = 0;
+            player['reload'] = 0;
 
             // ...calculate bullet movement...
             var speeds = get_movement_speed(
-              player_x,
-              player_y,
-              player_x + mouse_x - x,
-              player_y + mouse_y - y
+              player['x'],
+              player['y'],
+              player['x'] + mouse_x - x,
+              player['y'] + mouse_y - y
             );
 bullets
             // ...and add bullet with movement pattern, tied to player.
@@ -225,8 +225,8 @@ bullets
               'dx': (mouse_x > x ? speeds[0] : -speeds[0]),
               'dy': (mouse_y > y ? speeds[1] : -speeds[1]),
               'player': 0,
-              'x': player_x,
-              'y': player_y,
+              'x': player['x'],
+              'y': player['y'],
             });
 
             // If level != Zombie Surround, update AI destinations.
@@ -237,7 +237,7 @@ bullets
         }
 
     }else{
-        weapon_reload += 1;
+        player['reload'] += 1;
     }
 
     // If level != Zombie Surround.
@@ -251,14 +251,14 @@ bullets
             var speeds = get_movement_speed(
               enemies[0]['x'],
               enemies[0]['y'],
-              player_x,
-              player_y
+              player['x'],
+              player['y']
             );
 
             // ...and add bullet with movement pattern, tied to enemy.
             bullets.push({
-              'dx': (enemies[0]['x'] > player_x ? -speeds[0] : speeds[0]),
-              'dy': (enemies[0]['y'] > player_y ? -speeds[1] : speeds[1]),
+              'dx': (enemies[0]['x'] > player['x'] ? -speeds[0] : speeds[0]),
+              'dy': (enemies[0]['y'] > player['y'] ? -speeds[1] : speeds[1]),
               'player': 1,
               'x': enemies[0]['x'],
               'y': enemies[0]['y'],
@@ -268,56 +268,56 @@ bullets
 
     // Check for player collision with foreground obstacles.
     for(var rect in foreground_rect){
-        if(player_x + player_dx - 17 > foreground_rect[rect]['x'] + foreground_rect[rect]['width']
-          || player_x + player_dx + 17 < foreground_rect[rect]['x']
-          || player_y + player_dy - 17 > foreground_rect[rect]['y'] + foreground_rect[rect]['height']
-          || player_y + player_dy + 17 < foreground_rect[rect]['y']){
+        if(player['x'] + player_dx - 17 > foreground_rect[rect]['x'] + foreground_rect[rect]['width']
+          || player['x'] + player_dx + 17 < foreground_rect[rect]['x']
+          || player['y'] + player_dy - 17 > foreground_rect[rect]['y'] + foreground_rect[rect]['height']
+          || player['y'] + player_dy + 17 < foreground_rect[rect]['y']){
             continue;
         }
 
-        if(player_y != foreground_rect[rect]['y'] - 18
-          && player_y != foreground_rect[rect]['y'] + foreground_rect[rect]['height'] + 18){
+        if(player['y'] != foreground_rect[rect]['y'] - 18
+          && player['y'] != foreground_rect[rect]['y'] + foreground_rect[rect]['height'] + 18){
             if(key_left
-              && player_y + player_dy + 17 > foreground_rect[rect]['y']
-              && player_y + player_dy - 17 < foreground_rect[rect]['y'] + foreground_rect[rect]['height']
-              && player_x + player_dx - 17 < foreground_rect[rect]['x'] + foreground_rect[rect]['width']){
+              && player['y'] + player_dy + 17 > foreground_rect[rect]['y']
+              && player['y'] + player_dy - 17 < foreground_rect[rect]['y'] + foreground_rect[rect]['height']
+              && player['x'] + player_dx - 17 < foreground_rect[rect]['x'] + foreground_rect[rect]['width']){
                 player_dx = 0;
             }
 
             if(key_right
-              && player_y + player_dy + 17 > foreground_rect[rect]['y']
-              && player_y + player_dy - 17 < foreground_rect[rect]['y'] + foreground_rect[rect]['height']
-              && player_x + player_dx + 17 > foreground_rect[rect]['x']){
+              && player['y'] + player_dy + 17 > foreground_rect[rect]['y']
+              && player['y'] + player_dy - 17 < foreground_rect[rect]['y'] + foreground_rect[rect]['height']
+              && player['x'] + player_dx + 17 > foreground_rect[rect]['x']){
                 player_dx = 0;
             }
         }
 
         if(key_down
-          && player_x + player_dx + 17 > foreground_rect[rect]['x']
-          && player_x + player_dx - 17 < foreground_rect[rect]['x'] + foreground_rect[rect]['width']
-          && player_y + player_dy + 17 > foreground_rect[rect]['y']){
+          && player['x'] + player_dx + 17 > foreground_rect[rect]['x']
+          && player['x'] + player_dx - 17 < foreground_rect[rect]['x'] + foreground_rect[rect]['width']
+          && player['y'] + player_dy + 17 > foreground_rect[rect]['y']){
             player_dy = 0;
         }
 
         if(key_up
-          && player_x + player_dx + 17 > foreground_rect[rect]['x']
-          && player_x + player_dx - 17 < foreground_rect[rect]['x'] + foreground_rect[rect]['width']
-          && player_y + player_dy - 17 < foreground_rect[rect]['y'] + foreground_rect[rect]['height']){
+          && player['x'] + player_dx + 17 > foreground_rect[rect]['x']
+          && player['x'] + player_dx - 17 < foreground_rect[rect]['x'] + foreground_rect[rect]['width']
+          && player['y'] + player_dy - 17 < foreground_rect[rect]['y'] + foreground_rect[rect]['height']){
             player_dy = 0;
         }
     }
 
     // Update actual player position.
-    player_x += player_dx;
-    player_y += player_dy;
+    player['x'] += player_dx;
+    player['y'] += player_dy;
 
     // Handle enemies.
     for(var enemy in enemies){
         // If level == Zombie Surround,
         //   update zombie target.
         if(mode == 3){
-            enemies[enemy]['target-x'] = player_x;
-            enemies[enemy]['target-y'] = player_y;
+            enemies[enemy]['target-x'] = player['x'];
+            enemies[enemy]['target-y'] = player['y'];
         }
 
         // Calculate enemy movement.
@@ -353,10 +353,10 @@ bullets
           : -speeds[1];
 
         // Check if player collides with enemy.
-        if(enemies[enemy]['x'] + 15 - player_x > -17
-          && enemies[enemy]['x'] - 15 - player_x < 17
-          && enemies[enemy]['y'] + 15 - player_y > -17
-          && enemies[enemy]['y'] - 15 - player_y < 17){
+        if(enemies[enemy]['x'] + 15 - player['x'] > -17
+          && enemies[enemy]['x'] - 15 - player['x'] < 17
+          && enemies[enemy]['y'] + 15 - player['y'] > -17
+          && enemies[enemy]['y'] - 15 - player['y'] < 17){
             game_running = false;
             return;
         }
@@ -425,10 +425,10 @@ bullets
                     do{
                         enemy_x = random_number(level_settings[2] * 2) - level_settings[2];
                         enemy_y = random_number(level_settings[2] * 2) - level_settings[2];
-                    }while(enemy_x > player_x - 50
-                      && enemy_x < player_x + 50
-                      && enemy_y > player_y - 50
-                      && enemy_y < player_y + 50);
+                    }while(enemy_x > player['x'] - 50
+                      && enemy_x < player['x'] + 50
+                      && enemy_y > player['y'] - 50
+                      && enemy_y < player['y'] + 50);
 
                     enemies[enemy]['x'] = enemy_x;
                     enemies[enemy]['y'] = enemy_y;
@@ -443,10 +443,10 @@ bullets
                 hits += 1;
                 break;
 
-            }else if(bullets[bullet]['x'] > player_x - 17
-              && bullets[bullet]['x'] < player_x + 17
-              && bullets[bullet]['y'] > player_y - 17
-              && bullets[bullet]['y'] < player_y + 17){
+            }else if(bullets[bullet]['x'] > player['x'] - 17
+              && bullets[bullet]['x'] < player['x'] + 17
+              && bullets[bullet]['y'] > player['y'] - 17
+              && bullets[bullet]['y'] < player['y'] + 17){
                 game_running = false;
                 break;
             }
@@ -604,11 +604,17 @@ function setmode(newmode, newgame){
             save();
         }
 
+        enemy_reload = 100;
         hits = 0;
         key_down = false;
         key_left = false;
         key_right = false;
         key_up = false;
+        player = {
+          'reload': settings['weapon-reload'],
+          'x': 0,
+          'y': 0,
+        };
 
         load_level(mode);
 
@@ -667,8 +673,7 @@ var mouse_lock_x = 0;
 var mouse_lock_y = 0;
 var mouse_x = 0;
 var mouse_y = 0;
-var player_x = 0;
-var player_y = 0;
+var player = {};
 var settings = {
   'audio-volume': window.localStorage.getItem('Shooter-2D.htm-audio-volume') != null
     ? parseFloat(window.localStorage.getItem('Shooter-2D.htm-audio-volume'))
@@ -681,7 +686,6 @@ var settings = {
   'zombie-amount': parseFloat(window.localStorage.getItem('Shooter-2D.htm-zombie-amount')) || 25,
   'zombie-respawn': window.localStorage.getItem('Shooter-2D.htm-zombie-respawn') !== null,
 };
-var weapon_reload = 0;
 var width = 0;
 var x = 0;
 var y = 0;
