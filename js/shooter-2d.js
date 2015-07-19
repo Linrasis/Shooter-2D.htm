@@ -113,17 +113,17 @@ function draw(){
     );
 
     if(!game_running){
-        // Daw game over or win message,
+        // Draw game over or win message,
         //   depending upon if enemies remain.
         buffer.fillText(
-          settings['restart-key'] + ' = Restart',// restart key
+          settings['restart-key'] + ' = Restart',
           5,
-          100
+          125
         );
         buffer.fillText(
           'ESC = Main Menu',
           5,
-          125
+          150
         );
         buffer.fillStyle = enemies.length > 0
           ? '#f00'
@@ -134,7 +134,7 @@ function draw(){
             ? 'YOU ARE DEAD'
             : 'You Win!',
           5,
-          170
+          100
         );
     }
 
