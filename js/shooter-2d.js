@@ -77,7 +77,7 @@ function draw(){
 
     // Draw bullets.
     for(var bullet in bullets){
-        buffer.fillStyle = bullets[bullet]['player'] == 0
+        buffer.fillStyle = bullets[bullet]['player'] === 0
           ? settings['color']
           : '#f66';
 
@@ -313,9 +313,9 @@ bullets
 
     // Handle enemies.
     for(var enemy in enemies){
-        // If level == Zombie Surround,
+        // If level === Zombie Surround,
         //   update zombie target.
-        if(mode == 3){
+        if(mode === 3){
             enemies[enemy]['target-x'] = player['x'];
             enemies[enemy]['target-y'] = player['y'];
         }
@@ -533,46 +533,25 @@ function save(){
         }
     }
 
-    if(document.getElementById('ms-per-frame').value == 25
-      || isNaN(document.getElementById('ms-per-frame').value)
-      || document.getElementById('ms-per-frame').value < 1){
-        window.localStorage.removeItem('Shooter-2D.htm-ms-per-frame');
-        settings['ms-per-frame'] = 25;
+    ids = {
+      'ms-per-frame': 25,
+      'weapon-reload': 50,
+      'zombie-amount': 25,
+    };
+    for(var id in ids){
+        if(document.getElementById(id).value == ids[id]
+          || isNaN(document.getElementById(id).value)
+          || document.getElementById(id).value < 1){
+            window.localStorage.removeItem('Shooter-2D.htm-' + id);
+            settings[id] = ids[id];
 
-    }else{
-        settings['ms-per-frame'] = parseInt(document.getElementById('ms-per-frame').value);
-        window.localStorage.setItem(
-          'Shooter-2D.htm-ms-per-frame',
-          settings['ms-per-frame']
-        );
-    }
-
-    if(document.getElementById('weapon-reload').value == 50
-      || isNaN(document.getElementById('weapon-reload').value)
-      || document.getElementById('weapon-reload').value < 1){
-        window.localStorage.removeItem('Shooter-2D.htm-weapon-reload');
-        settings['weapon-reload'] = 50;
-
-    }else{
-        settings['weapon-reload'] = parseInt(document.getElementById('weapon-reload').value);
-        window.localStorage.setItem(
-          'Shooter-2D.htm-weapon-reload',
-          settings['weapon-reload']
-        );
-    }
-
-    if(document.getElementById('zombie-amount').value == 25
-      || isNaN(document.getElementById('zombie-amount').value)
-      || document.getElementById('zombie-amount').value < 1){
-        window.localStorage.removeItem('Shooter-2D.htm-zombie-amount');
-        settings['zombie-amount'] = 25;
-
-    }else{
-        settings['zombie-amount'] = parseInt(document.getElementById('zombie-amount').value);
-        window.localStorage.setItem(
-          'Shooter-2D.htm-zombie-amount',
-          settings['zombie-amount']
-        );
+        }else{
+            settings[id] = parseInt(document.getElementById(id).value);
+            window.localStorage.setItem(
+              'Shooter-2D.htm-' + id,
+              settings[id]
+            );
+        }
     }
 
     if(!document.getElementById('zombie-respawn').checked){
