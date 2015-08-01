@@ -20,7 +20,7 @@ body{
     padding: 4px;
 }
 canvas{
-    cursor: pointer;
+    cursor: crosshair;
     left: 0;
     position: absolute;
     top: 0;
