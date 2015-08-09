@@ -275,8 +275,8 @@ bullets
             continue;
         }
 
-        if(player['y'] != foreground_rect[rect]['y'] - 18
-          && player['y'] != foreground_rect[rect]['y'] + foreground_rect[rect]['height'] + 18){
+        if(player['y'] > foreground_rect[rect]['y'] - 17
+          && player['y'] < foreground_rect[rect]['y'] + foreground_rect[rect]['height'] + 17){
             if(key_left
               && player['y'] + player_dy + 17 > foreground_rect[rect]['y']
               && player['y'] + player_dy - 17 < foreground_rect[rect]['y'] + foreground_rect[rect]['height']
