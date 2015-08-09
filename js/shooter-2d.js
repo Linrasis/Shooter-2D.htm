@@ -282,9 +282,8 @@ bullets
               && player['y'] + player_dy - 17 < foreground_rect[rect]['y'] + foreground_rect[rect]['height']
               && player['x'] + player_dx - 17 < foreground_rect[rect]['x'] + foreground_rect[rect]['width']){
                 player_dx = 0;
-            }
 
-            if(key_right
+            }else if(key_right
               && player['y'] + player_dy + 17 > foreground_rect[rect]['y']
               && player['y'] + player_dy - 17 < foreground_rect[rect]['y'] + foreground_rect[rect]['height']
               && player['x'] + player_dx + 17 > foreground_rect[rect]['x']){
@@ -297,9 +296,8 @@ bullets
           && player['x'] + player_dx - 17 < foreground_rect[rect]['x'] + foreground_rect[rect]['width']
           && player['y'] + player_dy + 17 > foreground_rect[rect]['y']){
             player_dy = 0;
-        }
 
-        if(key_up
+        }else if(key_up
           && player['x'] + player_dx + 17 > foreground_rect[rect]['x']
           && player['x'] + player_dx - 17 < foreground_rect[rect]['x'] + foreground_rect[rect]['width']
           && player['y'] + player_dy - 17 < foreground_rect[rect]['y'] + foreground_rect[rect]['height']){
