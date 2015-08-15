@@ -596,7 +596,8 @@ function setmode(newmode, newgame){
         load_level(mode);
 
         if(newgame){
-            document.getElementById('page').innerHTML = '<canvas id=canvas oncontextmenu="return false"></canvas><canvas id=buffer></canvas>';
+            document.getElementById('page').innerHTML =
+              '<canvas id=canvas oncontextmenu="return false"></canvas><canvas id=buffer></canvas>';
 
             var contextAttributes = {
               'alpha': false,
