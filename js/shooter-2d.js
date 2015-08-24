@@ -627,9 +627,9 @@ function setmode(newmode, newgame){
     buffer = 0;
     canvas = 0;
 
-    document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div><b>Duel vs AI:</b><ul><li><a onclick="setmode(1, true)">Empty Square Arena</a><li><a onclick="setmode(2, true)">Final Destination</a></ul></div><hr><div><input id=zombie-amount value='
+    document.getElementById('page').innerHTML = '<div><div><b>Duel vs AI:</b><ul><li><a onclick="setmode(1, true)">Empty Square Arena</a><li><a onclick="setmode(2, true)">Final Destination</a></ul></div><hr><div><input id=zombie-amount value='
       + settings['zombie-amount'] + '><a onclick="setmode(3, true)">Zombie Surround</a><br><input '
-      + (settings['zombie-respawn'] ? 'checked ' : '') + 'id=zombie-respawn type=checkbox>Respawn</div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div><input disabled value=ESC>Main Menu<br><input id=movement-keys maxlength=4 value='
+      + (settings['zombie-respawn'] ? 'checked ' : '') + 'id=zombie-respawn type=checkbox>Respawn</div></div><div class=right><div><input disabled value=ESC>Main Menu<br><input id=movement-keys maxlength=4 value='
       + settings['movement-keys'] + '>Move ↑←↓→<br><input id=restart-key maxlength=1 value='
       + settings['restart-key'] + '>Restart<br><input disabled value=Click>Shoot</div><hr><div><input id=audio-volume max=1 min=0 step=.01 type=range value='
       + settings['audio-volume'] + '>Audio<br><input id=color type=color value='
