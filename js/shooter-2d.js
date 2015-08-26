@@ -596,7 +596,7 @@ function setmode(newmode, newgame){
         load_level(mode);
 
         if(newgame){
-            document.getElementById('page').innerHTML =
+            document.body.innerHTML =
               '<canvas id=canvas oncontextmenu="return false"></canvas><canvas id=buffer></canvas>';
 
             var contextAttributes = {
@@ -627,7 +627,7 @@ function setmode(newmode, newgame){
     buffer = 0;
     canvas = 0;
 
-    document.getElementById('page').innerHTML = '<div><div><b>Duel vs AI:</b><ul><li><a onclick="setmode(1, true)">Empty Square Arena</a><li><a onclick="setmode(2, true)">Final Destination</a></ul></div><hr><div><input id=zombie-amount value='
+    document.body.innerHTML = '<div><div><b>Duel vs AI:</b><ul><li><a onclick="setmode(1, true)">Empty Square Arena</a><li><a onclick="setmode(2, true)">Final Destination</a></ul></div><hr><div><input id=zombie-amount value='
       + settings['zombie-amount'] + '><a onclick="setmode(3, true)">Zombie Surround</a><br><input '
       + (settings['zombie-respawn'] ? 'checked ' : '') + 'id=zombie-respawn type=checkbox>Respawn</div></div><div class=right><div><input disabled value=ESC>Main Menu<br><input id=movement-keys maxlength=4 value='
       + settings['movement-keys'] + '>Move ↑←↓→<br><input id=restart-key maxlength=1 value='
