@@ -446,7 +446,7 @@ bullets
               && bullets[bullet]['y'] > player['y'] - 17
               && bullets[bullet]['y'] < player['y'] + 17){
                 game_running = false;
-                break;
+                return;
             }
         }
     }
