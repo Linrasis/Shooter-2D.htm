@@ -8,6 +8,13 @@ function draw(){
       height
     );
 
+    // Save and translate buffer canvas.
+    buffer.save();
+    buffer.translate(
+      x,
+      y
+    );
+
     // Draw visible background stuffs.
     for(var rect in background_rect){
         if(background_rect[rect]['x'] + background_rect[rect]['width'] + x - player['x'] <= 0
@@ -19,8 +26,8 @@ function draw(){
 
         buffer.fillStyle = background_rect[rect]['color'];
         buffer.fillRect(
-          x - player['x'] + background_rect[rect]['x'],
-          y - player['y'] + background_rect[rect]['y'],
+          -player['x'] + background_rect[rect]['x'],
+          -player['y'] + background_rect[rect]['y'],
           background_rect[rect]['width'],
           background_rect[rect]['height']
         );
@@ -37,8 +44,8 @@ function draw(){
 
         buffer.fillStyle = foreground_rect[rect]['color'];
         buffer.fillRect(
-          x - player['x'] + foreground_rect[rect]['x'],
-          y - player['y'] + foreground_rect[rect]['y'],
+          -player['x'] + foreground_rect[rect]['x'],
+          -player['y'] + foreground_rect[rect]['y'],
           foreground_rect[rect]['width'],
           foreground_rect[rect]['height']
         );
@@ -52,8 +59,8 @@ function draw(){
           && enemies[enemy]['y'] + 15 + y - player['y'] > 0
           && enemies[enemy]['y'] - 15 + y - player['y'] < height){
             buffer.fillRect(
-              x - player['x'] + enemies[enemy]['x'] - 15,
-              y - player['y'] + enemies[enemy]['y'] - 15,
+              -player['x'] + enemies[enemy]['x'] - 15,
+              -player['y'] + enemies[enemy]['y'] - 15,
               30,
               30
             );
@@ -63,11 +70,14 @@ function draw(){
     // Draw player.
     buffer.fillStyle = settings['color'];
     buffer.fillRect(
-      x - 17,
-      y - 17,
+      -17,
+      -17,
       34,
       34
     );
+
+    // Restore buffer.
+    buffer.restore();
 
     // Get player position camera offset.
     var temp_viewoffset = [
