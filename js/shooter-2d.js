@@ -672,7 +672,7 @@ var mouse_x = 0;
 var mouse_y = 0;
 var player = {};
 var settings = {
-  'audio-volume': window.localStorage.getItem('Shooter-2D.htm-audio-volume') != null
+  'audio-volume': window.localStorage.getItem('Shooter-2D.htm-audio-volume') !== null
     ? parseFloat(window.localStorage.getItem('Shooter-2D.htm-audio-volume'))
     : 1,
   'color': window.localStorage.getItem('Shooter-2D.htm-color') || '#009900',
