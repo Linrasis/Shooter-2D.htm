@@ -641,7 +641,7 @@ function setmode(newmode, newgame){
       + settings['zombie-amount'] + '><a onclick="setmode(3, true)">Zombie Surround</a><br><input '
       + (settings['zombie-respawn'] ? 'checked ' : '') + 'id=zombie-respawn type=checkbox>Respawn</div></div><div class=right><div><input disabled value=ESC>Main Menu<br><input id=movement-keys maxlength=4 value='
       + settings['movement-keys'] + '>Move ↑←↓→<br><input id=restart-key maxlength=1 value='
-      + settings['restart-key'] + '>Restart<br><input disabled value=Click>Shoot</div><hr><div><input id=audio-volume max=1 min=0 step=.01 type=range value='
+      + settings['restart-key'] + '>Restart<br><input disabled value=Click>Shoot</div><hr><div><input id=audio-volume max=1 min=0 step=".01" type=range value='
       + settings['audio-volume'] + '>Audio<br><input id=color type=color value='
       + settings['color'] + '>Color<br><input id=ms-per-frame value='
       + settings['ms-per-frame'] + '>ms/Frame<br><input id=weapon-reload value='
