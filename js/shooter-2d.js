@@ -197,8 +197,8 @@ function logic(){
     if(key_down
       && player['y'] + 2 < level_settings[3]){
         if(player_dx != 0){
-            player_dx = player_dx / 2 * 1.41421;
-            player_dy += 1.41421;
+            player_dx = player_dx / 2 * Math.SQRT2;
+            player_dy += Math.SQRT2;
 
         }else{
             player_dy += 2;
@@ -208,8 +208,8 @@ function logic(){
     if(key_up
       && player['y'] - 2 > -level_settings[3]){
         if(player_dx != 0){
-            player_dx = player_dx / 2 * 1.41421;
-            player_dy -= 1.41421;
+            player_dx = player_dx / 2 * Math.SQRT2;
+            player_dy -= Math.SQRT2;
 
         }else{
             player_dy -= 2;
