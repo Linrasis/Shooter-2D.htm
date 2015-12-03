@@ -46,7 +46,8 @@ input[disabled]{
 }
 input[type=checkbox],
 input[type=color],
-input[type=range]{
+input[type=range],
+label{
     cursor: pointer;
 }
 .right{
