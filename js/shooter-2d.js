@@ -549,7 +549,7 @@ function save(){
       'zombie-amount': 25,
     };
     for(var id in ids){
-        var value = document.getElementById(id).value;
+        value = document.getElementById(id).value;
         if(value == ids[id]
           || isNaN(value)
           || value < 1){
