@@ -480,13 +480,18 @@ function reset(){
         return;
     }
 
-    document.getElementById('audio-volume').value = 1;
-    document.getElementById('color').value = '#009900';
-    document.getElementById('movement-keys').value = 'WASD';
-    document.getElementById('ms-per-frame').value = 25;
-    document.getElementById('restart-key').value = 'H';
-    document.getElementById('weapon-reload').value = 50;
-    document.getElementById('zombie-amount').value = 25;
+    var ids = {
+      'audio-volume': 1,
+      'color': '#009900',
+      'movement-keys': 'WASD',
+      'ms-per-frame': 25,
+      'restart-key': 'H',
+      'weapon-reload': 50,
+      'zombie-amount': 25,
+    };
+    for(var id in ids){
+        document.getElementById(id).value = ids[id];
+    }
     document.getElementById('zombie-respawn').checked = false;
 
     save();
