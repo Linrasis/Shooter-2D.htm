@@ -515,13 +515,11 @@ function resize(){
 
 // Save settings into window.localStorage if they differ from default.
 function save(){
-    var audio_volume = document.getElementById('audio-volume').value;
-    if(audio_volume == 1){
+    settings['audio-volume'] = parseFloat(document.getElementById('audio-volume').value);
+    if(settings['audio-volume'] == 1){
         window.localStorage.removeItem('Shooter-2D.htm-audio-volume');
-        settings['audio-volume'] = 1;
 
     }else{
-        settings['audio-volume'] = parseFloat(audio_volume);
         window.localStorage.setItem(
           'Shooter-2D.htm-audio-volume',
           settings['audio-volume']
@@ -570,16 +568,15 @@ function save(){
         }
     }
 
-    if(!document.getElementById('zombie-respawn').checked){
-        window.localStorage.removeItem('Shooter-2D.htm-zombie-respawn');
-        settings['zombie-respawn'] = false;
-
-    }else{
-        settings['zombie-respawn'] = true;
+    settings['zombie-respawn'] = document.getElementById('zombie-respawn').checked;
+    if(settings['zombie-respawn']){
         window.localStorage.setItem(
           'Shooter-2D.htm-zombie-respawn',
           1
         );
+
+    }else{
+        window.localStorage.removeItem('Shooter-2D.htm-zombie-respawn');
     }
 }
 
