@@ -535,12 +535,12 @@ function save(){
     };
     for(var id in ids){
         var value = document.getElementById(id).value;
+        settings[id] = value;
+
         if(value === ids[id]){
             window.localStorage.removeItem('Shooter-2D.htm-' + id);
-            settings[id] = ids[id];
 
         }else{
-            settings[id] = value;
             window.localStorage.setItem(
               'Shooter-2D.htm-' + id,
               settings[id]
@@ -555,14 +555,14 @@ function save(){
     };
     for(var id in ids){
         value = document.getElementById(id).value;
+        settings[id] = parseInt(value);
+
         if(value == ids[id]
           || isNaN(value)
           || value < 1){
             window.localStorage.removeItem('Shooter-2D.htm-' + id);
-            settings[id] = ids[id];
 
         }else{
-            settings[id] = parseInt(value);
             window.localStorage.setItem(
               'Shooter-2D.htm-' + id,
               settings[id]
