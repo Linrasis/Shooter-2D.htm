@@ -532,10 +532,9 @@ function save(){
       'restart-key': 'H',
     };
     for(var id in ids){
-        var value = document.getElementById(id).value;
-        settings[id] = value;
+        settings[id] = document.getElementById(id).value;
 
-        if(value === ids[id]){
+        if(settings[id] === ids[id]){
             window.localStorage.removeItem('Shooter-2D.htm-' + id);
 
         }else{
@@ -552,12 +551,11 @@ function save(){
       'zombie-amount': 25,
     };
     for(var id in ids){
-        value = document.getElementById(id).value;
-        settings[id] = parseInt(value);
+        settings[id] = document.getElementById(id).value;
 
-        if(value == ids[id]
-          || isNaN(value)
-          || value < 1){
+        if(settings[id] == ids[id]
+          || isNaN(settings[id])
+          || settings[id] < 1){
             window.localStorage.removeItem('Shooter-2D.htm-' + id);
 
         }else{
