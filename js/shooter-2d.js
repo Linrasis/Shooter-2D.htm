@@ -232,8 +232,8 @@ function logic(){
 bullets
             // ...and add bullet with movement pattern, tied to player.
             bullets.push({
-              'dx': (mouse_x > x ? speeds[0] : -speeds[0]),
-              'dy': (mouse_y > y ? speeds[1] : -speeds[1]),
+              'dx': mouse_x > x ? speeds[0] : -speeds[0],
+              'dy': mouse_y > y ? speeds[1] : -speeds[1],
               'player': 0,
               'x': player['x'],
               'y': player['y'],
@@ -267,8 +267,8 @@ bullets
 
             // ...and add bullet with movement pattern, tied to enemy.
             bullets.push({
-              'dx': (enemies[0]['x'] > player['x'] ? -speeds[0] : speeds[0]),
-              'dy': (enemies[0]['y'] > player['y'] ? -speeds[1] : speeds[1]),
+              'dx': enemies[0]['x'] > player['x'] ? -speeds[0] : speeds[0],
+              'dy': enemies[0]['y'] > player['y'] ? -speeds[1] : speeds[1],
               'player': 1,
               'x': enemies[0]['x'],
               'y': enemies[0]['y'],
