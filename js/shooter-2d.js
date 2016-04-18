@@ -462,15 +462,6 @@ bullets
     }
 }
 
-function play_audio(id){
-    if(settings['audio-volume'] <= 0){
-        return;
-    }
-
-    document.getElementById(id).currentTime = 0;
-    document.getElementById(id).play();
-}
-
 function random_number(i){
     return Math.floor(Math.random() * i);
 }
