@@ -671,9 +671,9 @@ var settings = {
     : 1,
   'color': window.localStorage.getItem('Shooter-2D.htm-color') || '#009900',
   'movement-keys': window.localStorage.getItem('Shooter-2D.htm-movement-keys') || 'WASD',
-  'ms-per-frame': parseInt(window.localStorage.getItem('Shooter-2D.htm-ms-per-frame')) || 25,
+  'ms-per-frame': parseInt(window.localStorage.getItem('Shooter-2D.htm-ms-per-frame'), 10) || 25,
   'restart-key': window.localStorage.getItem('Shooter-2D.htm-restart-key') || 'H',
-  'weapon-reload': parseInt(window.localStorage.getItem('Shooter-2D.htm-weapon-reload')) || 50,
+  'weapon-reload': parseInt(window.localStorage.getItem('Shooter-2D.htm-weapon-reload'), 10) || 50,
   'zombie-amount': parseFloat(window.localStorage.getItem('Shooter-2D.htm-zombie-amount')) || 25,
   'zombie-respawn': window.localStorage.getItem('Shooter-2D.htm-zombie-respawn') !== null,
 };
