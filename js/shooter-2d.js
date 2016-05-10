@@ -486,93 +486,6 @@ function random_number(i){
     return Math.floor(Math.random() * i);
 }
 
-function reset(){
-    if(!window.confirm('Reset settings?')){
-        return;
-    }
-
-    var ids = {
-      'audio-volume': 1,
-      'color': '#009900',
-      'movement-keys': 'WASD',
-      'ms-per-frame': 25,
-      'restart-key': 'H',
-      'weapon-reload': 50,
-      'zombie-amount': 25,
-    };
-    for(var id in ids){
-        document.getElementById(id).value = ids[id];
-    }
-    document.getElementById('zombie-respawn').checked = false;
-
-    save();
-}
-
-// Save settings into window.localStorage if they differ from default.
-function save(){
-    settings['audio-volume'] = parseFloat(document.getElementById('audio-volume').value);
-    if(settings['audio-volume'] === 1){
-        window.localStorage.removeItem('Shooter-2D.htm-audio-volume');
-
-    }else{
-        window.localStorage.setItem(
-          'Shooter-2D.htm-audio-volume',
-          settings['audio-volume']
-        );
-    }
-
-    var ids = {
-      'color': '#009900',
-      'movement-keys': 'WASD',
-      'restart-key': 'H',
-    };
-    for(var id in ids){
-        settings[id] = document.getElementById(id).value;
-
-        if(settings[id] === ids[id]){
-            window.localStorage.removeItem('Shooter-2D.htm-' + id);
-
-        }else{
-            window.localStorage.setItem(
-              'Shooter-2D.htm-' + id,
-              settings[id]
-            );
-        }
-    }
-
-    ids = {
-      'ms-per-frame': 25,
-      'weapon-reload': 50,
-      'zombie-amount': 25,
-    };
-    for(var id in ids){
-        settings[id] = document.getElementById(id).value;
-
-        if(settings[id] == ids[id]
-          || isNaN(settings[id])
-          || settings[id] < 1){
-            window.localStorage.removeItem('Shooter-2D.htm-' + id);
-
-        }else{
-            window.localStorage.setItem(
-              'Shooter-2D.htm-' + id,
-              settings[id]
-            );
-        }
-    }
-
-    settings['zombie-respawn'] = document.getElementById('zombie-respawn').checked;
-    if(settings['zombie-respawn']){
-        window.localStorage.setItem(
-          'Shooter-2D.htm-zombie-respawn',
-          1
-        );
-
-    }else{
-        window.localStorage.removeItem('Shooter-2D.htm-zombie-respawn');
-    }
-}
-
 function setmode_logic(newgame){
     bullets.length = 0;
     enemies = [];
@@ -628,18 +541,6 @@ var mouse_lock_y = 0;
 var mouse_x = 0;
 var mouse_y = 0;
 var player = {};
-var settings = {
-  'audio-volume': window.localStorage.getItem('Shooter-2D.htm-audio-volume') !== null
-    ? parseFloat(window.localStorage.getItem('Shooter-2D.htm-audio-volume'))
-    : 1,
-  'color': window.localStorage.getItem('Shooter-2D.htm-color') || '#009900',
-  'movement-keys': window.localStorage.getItem('Shooter-2D.htm-movement-keys') || 'WASD',
-  'ms-per-frame': parseInt(window.localStorage.getItem('Shooter-2D.htm-ms-per-frame'), 10) || 25,
-  'restart-key': window.localStorage.getItem('Shooter-2D.htm-restart-key') || 'H',
-  'weapon-reload': parseInt(window.localStorage.getItem('Shooter-2D.htm-weapon-reload'), 10) || 50,
-  'zombie-amount': parseFloat(window.localStorage.getItem('Shooter-2D.htm-zombie-amount')) || 25,
-  'zombie-respawn': window.localStorage.getItem('Shooter-2D.htm-zombie-respawn') !== null,
-};
 
 window.onkeydown = function(e){
     if(mode <= 0){
@@ -696,7 +597,22 @@ window.onkeyup = function(e){
     }
 };
 
-window.onload = init_canvas;
+window.onload = function(){
+    init_settings(
+      'Shooter-2D.htm-',
+      {
+        'audio-volume': 1,
+        'color': '#009900',
+        'movement-keys': 'WASD',
+        'ms-per-frame': 25,
+        'restart-key': 'H',
+        'weapon-reload': 50,
+        'zombie-amount': 25,
+        'zombie-respawn': false,
+      }
+    );
+    init_canvas();
+}
 
 window.onmousedown = function(e){
     if(mode <= 0){
