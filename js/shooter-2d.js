@@ -120,7 +120,7 @@ function draw_logic(){
 
     // Setup text display.
     buffer.fillStyle = '#fff';
-    buffer.font = '23pt sans-serif';
+    buffer.font = font;
 
     // Draw reload and hits.
     buffer.fillText(
@@ -150,7 +150,7 @@ function draw_logic(){
         buffer.fillStyle = enemies.length > 0
           ? '#f00'
           : '#0f0';
-        buffer.font = '42pt sans-serif';
+        buffer.font = '42pt monospace';
         buffer.fillText(
           enemies.length > 0
             ? 'YOU ARE DEAD'
