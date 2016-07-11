@@ -2,23 +2,23 @@
 
 function draw_logic(){
     // Save and translate buffer canvas.
-    buffer.save();
-    buffer.translate(
-      x,
-      y
+    canvas_buffer.save();
+    canvas_buffer.translate(
+      canvas_x,
+      canvas_y
     );
 
     // Draw visible background stuffs.
     for(var rect in background_rect){
-        if(background_rect[rect]['x'] + background_rect[rect]['width'] + x - player['x'] <= 0
-          || background_rect[rect]['x'] + x - player['x'] >= width
-          || background_rect[rect]['y'] + background_rect[rect]['height'] + y - player['y'] <= 0
-          || background_rect[rect]['y'] + y - player['y'] >= height){
+        if(background_rect[rect]['x'] + background_rect[rect]['width'] + canvas_x - player['x'] <= 0
+          || background_rect[rect]['x'] + canvas_x - player['x'] >= canvas_width
+          || background_rect[rect]['y'] + background_rect[rect]['height'] + canvas_y - player['y'] <= 0
+          || background_rect[rect]['y'] + canvas_y - player['y'] >= canvas_height){
             continue;
         }
 
-        buffer.fillStyle = background_rect[rect]['color'];
-        buffer.fillRect(
+        canvas_buffer.fillStyle = background_rect[rect]['color'];
+        canvas_buffer.fillRect(
           -player['x'] + background_rect[rect]['x'],
           -player['y'] + background_rect[rect]['y'],
           background_rect[rect]['width'],
@@ -28,15 +28,15 @@ function draw_logic(){
 
     // Draw visible foreground environment stuffs.
     for(rect in foreground_rect){
-        if(foreground_rect[rect]['x'] + foreground_rect[rect]['width'] + x - player['x'] <= 0
-          || foreground_rect[rect]['x'] + x - player['x'] >= width
-          || foreground_rect[rect]['y'] + foreground_rect[rect]['height'] + y - player['y'] <= 0
-          || foreground_rect[rect]['y'] + y - player['y'] >= height){
+        if(foreground_rect[rect]['x'] + foreground_rect[rect]['width'] + canvas_x - player['x'] <= 0
+          || foreground_rect[rect]['x'] + canvas_x - player['x'] >= canvas_width
+          || foreground_rect[rect]['y'] + foreground_rect[rect]['height'] + canvas_y - player['y'] <= 0
+          || foreground_rect[rect]['y'] + canvas_y - player['y'] >= canvas_height){
             continue;
         }
 
-        buffer.fillStyle = foreground_rect[rect]['color'];
-        buffer.fillRect(
+        canvas_buffer.fillStyle = foreground_rect[rect]['color'];
+        canvas_buffer.fillRect(
           -player['x'] + foreground_rect[rect]['x'],
           -player['y'] + foreground_rect[rect]['y'],
           foreground_rect[rect]['width'],
@@ -45,13 +45,13 @@ function draw_logic(){
     }
 
     // Draw enemies.
-    buffer.fillStyle = '#f66';
+    canvas_buffer.fillStyle = '#f66';
     for(var enemy in enemies){
-        if(enemies[enemy]['x'] + 15 + x - player['x'] > 0
-          && enemies[enemy]['x'] - 15 + x - player['x'] < width
-          && enemies[enemy]['y'] + 15 + y - player['y'] > 0
-          && enemies[enemy]['y'] - 15 + y - player['y'] < height){
-            buffer.fillRect(
+        if(enemies[enemy]['x'] + 15 + canvas_x - player['x'] > 0
+          && enemies[enemy]['x'] - 15 + canvas_x - player['x'] < canvas_width
+          && enemies[enemy]['y'] + 15 + canvas_y - player['y'] > 0
+          && enemies[enemy]['y'] - 15 + canvas_y - player['y'] < canvas_height){
+            canvas_buffer.fillRect(
               -player['x'] + enemies[enemy]['x'] - 15,
               -player['y'] + enemies[enemy]['y'] - 15,
               30,
@@ -61,8 +61,8 @@ function draw_logic(){
     }
 
     // Draw player and targeting direction.
-    buffer.fillStyle = settings_settings['color'];
-    buffer.fillRect(
+    canvas_buffer.fillStyle = settings_settings['color'];
+    canvas_buffer.fillRect(
       -17,
       -17,
       34,
@@ -71,46 +71,46 @@ function draw_logic(){
     var endpoint = get_fixed_length_line(
       0,
       0,
-      mouse_x - x,
-      mouse_y - y,
+      mouse_x - canvas_x,
+      mouse_y - canvas_y,
       25
     );
-    buffer.beginPath();
-    buffer.moveTo(
+    canvas_buffer.beginPath();
+    canvas_buffer.moveTo(
       0,
       0
     );
-    buffer.lineTo(
+    canvas_buffer.lineTo(
       endpoint['x'],
       endpoint['y']
     );
-    buffer.closePath();
-    buffer.strokeStyle = '#fff';
-    buffer.stroke();
+    canvas_buffer.closePath();
+    canvas_buffer.strokeStyle = '#fff';
+    canvas_buffer.stroke();
 
     // Restore buffer.
-    buffer.restore();
+    canvas_buffer.restore();
 
     // Get player position camera offset.
     var temp_viewoffset = [
-      x - player['x'] - 5,
-      y - player['y'] - 5,
+      canvas_x - player['x'] - 5,
+      canvas_y - player['y'] - 5,
     ];
 
     // Draw bullets.
     for(var bullet in bullets){
-        buffer.fillStyle = bullets[bullet]['player'] === 0
+        canvas_buffer.fillStyle = bullets[bullet]['player'] === 0
           ? settings_settings['color']
           : '#f66';
 
         if(bullets[bullet]['x'] + 15 + temp_viewoffset[0] <= 0
-          || bullets[bullet]['x'] + x - player['x'] >= width
+          || bullets[bullet]['x'] + canvas_x - player['x'] >= canvas_width
           || bullets[bullet]['y'] + 15 + temp_viewoffset[1] <= 0
-          || bullets[bullet]['y'] + y - player['y'] >= height){
+          || bullets[bullet]['y'] + canvas_y - player['y'] >= canvas_height){
             continue;
         }
 
-        buffer.fillRect(
+        canvas_buffer.fillRect(
           Math.round(bullets[bullet]['x'] + temp_viewoffset[0]),
           Math.round(bullets[bullet]['y'] + temp_viewoffset[1]),
           10,
@@ -119,16 +119,16 @@ function draw_logic(){
     }
 
     // Setup text display.
-    buffer.fillStyle = '#fff';
-    buffer.font = fonts['medium'];
+    canvas_buffer.fillStyle = '#fff';
+    canvas_buffer.font = canvas_fonts['medium'];
 
     // Draw reload and hits.
-    buffer.fillText(
+    canvas_buffer.fillText(
       'Reload: ' + player['reload'] + '/' + settings_settings['weapon-reload'],
       5,
       25
     );
-    buffer.fillText(
+    canvas_buffer.fillText(
       'Hits: ' + hits,
       5,
       50
@@ -137,21 +137,21 @@ function draw_logic(){
     if(!game_running){
         // Draw game over or win message,
         //   depending upon if enemies remain.
-        buffer.fillText(
+        canvas_buffer.fillText(
           settings_settings['restart-key'] + ' = Restart',
           5,
           125
         );
-        buffer.fillText(
+        canvas_buffer.fillText(
           'ESC = Main Menu',
           5,
           150
         );
-        buffer.fillStyle = enemies.length > 0
+        canvas_buffer.fillStyle = enemies.length > 0
           ? '#f00'
           : '#0f0';
-        buffer.font = fonts['big'];
-        buffer.fillText(
+        canvas_buffer.font = canvas_fonts['big'];
+        canvas_buffer.fillText(
           enemies.length > 0
             ? 'YOU ARE DEAD'
             : 'You Win!',
@@ -246,21 +246,21 @@ function logic(){
             var speeds = get_movement_speed(
               player['x'],
               player['y'],
-              player['x'] + mouse_x - x,
-              player['y'] + mouse_y - y
+              player['x'] + mouse_x - canvas_x,
+              player['y'] + mouse_y - canvas_y
             );
-bullets
+
             // ...and add bullet with movement pattern, tied to player.
             bullets.push({
-              'dx': mouse_x > x ? speeds[0] : -speeds[0],
-              'dy': mouse_y > y ? speeds[1] : -speeds[1],
+              'dx': mouse_x > canvas_x ? speeds[0] : -speeds[0],
+              'dy': mouse_y > canvas_y ? speeds[1] : -speeds[1],
               'player': 0,
               'x': player['x'],
               'y': player['y'],
             });
 
             // If level != Zombie Surround, update AI destinations.
-            if(mode < 3){
+            if(canvas_mode < 3){
                 enemies[0]['target-x'] = random_number(500) - 250;
                 enemies[0]['target-y'] = random_number(500) - 250;
             }
@@ -271,7 +271,7 @@ bullets
     }
 
     // If level != Zombie Surround.
-    if(mode < 3){
+    if(canvas_mode < 3){
         // Update reload and fire weapon if possible.
         enemy_reload += 1;
         if(enemy_reload > settings_settings['weapon-reload']){
@@ -343,7 +343,7 @@ bullets
     for(var enemy in enemies){
         // If level === Zombie Surround,
         //   update zombie target.
-        if(mode === 3){
+        if(canvas_mode === 3){
             enemies[enemy]['target-x'] = player['x'];
             enemies[enemy]['target-y'] = player['y'];
         }
@@ -358,7 +358,7 @@ bullets
 
         // If level != Zombie Surround,
         //   increase enemy speed and check for new target.
-        if(mode != 3){
+        if(canvas_mode != 3){
             speeds[0] *= 2;
             speeds[1] *= 2;
 
@@ -493,9 +493,9 @@ function setmode_logic(newgame){
     mouse_lock_x = -1;
 
     // Main menu mode.
-    if(mode === 0){
-        document.body.innerHTML = '<div><div><b>Duel vs AI:</b><ul><li><a onclick="setmode(1, true)">Empty Square Arena</a><li><a onclick="setmode(2, true)">Final Destination</a></ul></div><hr>'
-          + '<div><input id=zombie-amount><a onclick="setmode(3, true)">Zombie Surround</a><br>'
+    if(canvas_mode === 0){
+        document.body.innerHTML = '<div><div><b>Duel vs AI:</b><ul><li><a onclick="canvas_setmode(1, true)">Empty Square Arena</a><li><a onclick="canvas_setmode(2, true)">Final Destination</a></ul></div><hr>'
+          + '<div><input id=zombie-amount><a onclick="canvas_setmode(3, true)">Zombie Surround</a><br>'
           + '<label><input id=zombie-respawn type=checkbox>Respawn</label></div></div>'
           + '<div class=right><div><input disabled value=ESC>Main Menu<br>'
           + '<input id=movement-keys maxlength=4>Move ↑←↓→<br>'
@@ -547,7 +547,7 @@ var mouse_y = 0;
 var player = {};
 
 window.onkeydown = function(e){
-    if(mode <= 0){
+    if(canvas_mode <= 0){
         return;
     }
 
@@ -555,7 +555,7 @@ window.onkeydown = function(e){
 
     // ESC: return to main menu.
     if(key === 27){
-        setmode(
+        canvas_setmode(
           0,
           true
         );
@@ -577,8 +577,8 @@ window.onkeydown = function(e){
         key_up = true;
 
     }else if(key === settings_settings['restart-key']){
-        setmode(
-          mode,
+        canvas_setmode(
+          canvas_mode,
           false
         );
     }
@@ -615,11 +615,11 @@ window.onload = function(){
         'zombie-respawn': false,
       }
     );
-    init_canvas();
+    canvas_init();
 }
 
 window.onmousedown = function(e){
-    if(mode <= 0){
+    if(canvas_mode <= 0){
         return;
     }
 
@@ -629,7 +629,7 @@ window.onmousedown = function(e){
 };
 
 window.onmousemove = function(e){
-    if(mode <= 0){
+    if(canvas_mode <= 0){
         return;
     }
 
