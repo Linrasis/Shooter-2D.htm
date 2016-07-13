@@ -68,7 +68,7 @@ function draw_logic(){
       34,
       34
     );
-    var endpoint = get_fixed_length_line(
+    var endpoint = math_fixed_length_line(
       0,
       0,
       mouse_x - canvas_x,
@@ -161,36 +161,6 @@ function draw_logic(){
     }
 }
 
-function get_fixed_length_line(x0, y0, x1, y1, length){
-    var distance = Math.sqrt(
-      Math.pow(
-        x1 - x0,
-        2
-      ) + Math.pow(
-        y1 - y0,
-        2
-      )
-    );
-
-    x1 /= distance;
-    x1 *= length;
-    y1 /= distance;
-    y1 *= length;
-
-    return {
-      'x': x1,
-      'y': y1,
-    };
-}
-
-function get_movement_speed(x0, y0, x1, y1){
-    var angle = Math.atan(Math.abs(y0 - y1) / Math.abs(x0 - x1));
-    return [
-      Math.cos(angle),
-      Math.sin(angle),
-    ];
-}
-
 function logic(){
     if(enemies.length <= 0){
         game_running = false;
@@ -243,7 +213,7 @@ function logic(){
             player['reload'] = 0;
 
             // ...calculate bullet movement...
-            var speeds = get_movement_speed(
+            var speeds = math_movement_speed(
               player['x'],
               player['y'],
               player['x'] + mouse_x - canvas_x,
@@ -261,8 +231,8 @@ function logic(){
 
             // If level != Zombie Surround, update AI destinations.
             if(canvas_mode < 3){
-                enemies[0]['target-x'] = random_number(500) - 250;
-                enemies[0]['target-y'] = random_number(500) - 250;
+                enemies[0]['target-x'] = math_random_integer(500) - 250;
+                enemies[0]['target-y'] = math_random_integer(500) - 250;
             }
         }
 
@@ -278,7 +248,7 @@ function logic(){
             enemy_reload = 0;
 
             // Calculate bullet destination based on player position...
-            var speeds = get_movement_speed(
+            var speeds = math_movement_speed(
               enemies[0]['x'],
               enemies[0]['y'],
               player['x'],
@@ -349,7 +319,7 @@ function logic(){
         }
 
         // Calculate enemy movement.
-        var speeds = get_movement_speed(
+        var speeds = math_movement_speed(
           enemies[enemy]['x'],
           enemies[enemy]['y'],
           enemies[enemy]['target-x'],
@@ -367,8 +337,8 @@ function logic(){
               && enemies[enemy]['target-x'] < enemies[enemy]['x'] + 5
               && enemies[enemy]['target-y'] > enemies[enemy]['y'] - 5
               && enemies[enemy]['target-y'] < enemies[enemy]['y'] + 5){
-                enemies[enemy]['target-x'] = random_number(500) - 250;
-                enemies[enemy]['target-y'] = random_number(500) - 250;
+                enemies[enemy]['target-x'] = math_random_integer(500) - 250;
+                enemies[enemy]['target-y'] = math_random_integer(500) - 250;
             }
         }
 
@@ -451,8 +421,8 @@ function logic(){
                     var enemy_y = 0;
 
                     do{
-                        enemy_x = random_number(level_settings[2] * 2) - level_settings[2];
-                        enemy_y = random_number(level_settings[2] * 2) - level_settings[2];
+                        enemy_x = math_random_integer(level_settings[2] * 2) - level_settings[2];
+                        enemy_y = math_random_integer(level_settings[2] * 2) - level_settings[2];
                     }while(enemy_x > player['x'] - 50
                       && enemy_x < player['x'] + 50
                       && enemy_y > player['y'] - 50
@@ -480,10 +450,6 @@ function logic(){
             }
         }
     }
-}
-
-function random_number(i){
-    return Math.floor(Math.random() * i);
 }
 
 function setmode_logic(newgame){
