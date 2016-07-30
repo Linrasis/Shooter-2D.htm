@@ -166,7 +166,8 @@ function logic(){
         game_running = false;
     }
 
-    if(!game_running){
+    if(!game_running
+      || canvas_menu){
         return;
     }
 
@@ -463,7 +464,7 @@ function setmode_logic(newgame){
         document.body.innerHTML = '<div><div><b>Duel vs AI:</b><ul><li><a onclick="canvas_setmode(1, true)">Empty Square Arena</a><li><a onclick="canvas_setmode(2, true)">Final Destination</a></ul></div><hr>'
           + '<div><input id=zombie-amount><a onclick="canvas_setmode(3, true)">Zombie Surround</a><br>'
           + '<label><input id=zombie-respawn type=checkbox>Respawn</label></div></div>'
-          + '<div class=right><div><input disabled value=ESC>Main Menu<br>'
+          + '<div class=right><div><input disabled value=ESC>Menu<br>'
           + '<input id=movement-keys maxlength=4>Move ↑←↓→<br>'
           + '<input id=restart-key maxlength=1>Restart<br>'
           + '<input disabled value=Click>Shoot</div><hr>'
@@ -521,10 +522,7 @@ window.onkeydown = function(e){
 
     // ESC: return to main menu.
     if(key === 27){
-        canvas_setmode(
-          0,
-          true
-        );
+        canvas_menu_toggle();
         return;
     }
 
@@ -547,6 +545,9 @@ window.onkeydown = function(e){
           canvas_mode,
           false
         );
+
+    }else if(key === 'Q'){
+        canvas_menu_quit();
     }
 };
 
