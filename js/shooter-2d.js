@@ -416,7 +416,7 @@ function logic(){
 
                 // If mode != Zombie Surround or zombies should respawn,
                 //   pick new enemy location...
-                if(mode < 3
+                if(canvas_mode < 3
                   || settings_settings['zombie-respawn']){
                     var enemy_x = 0;
                     var enemy_y = 0;
