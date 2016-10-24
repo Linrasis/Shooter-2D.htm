@@ -75,18 +75,23 @@ function draw_logic(){
       mouse_y - canvas_y,
       25
     );
-    canvas_buffer.beginPath();
-    canvas_buffer.moveTo(
-      0,
-      0
+    canvas_draw_path(
+      [
+        {
+          'type': 'moveTo',
+          'x': 0,
+          'y': 0,
+        },
+        {
+          'x': endpoint['x'],
+          'y': endpoint['y'],
+        },
+      ],
+      {
+        'strokeStyle': '#fff',
+      },
+      'stroke'
     );
-    canvas_buffer.lineTo(
-      endpoint['x'],
-      endpoint['y']
-    );
-    canvas_buffer.closePath();
-    canvas_buffer.strokeStyle = '#fff';
-    canvas_buffer.stroke();
 
     // Restore buffer.
     canvas_buffer.restore();
