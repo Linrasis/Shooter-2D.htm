@@ -332,6 +332,14 @@ function logic(){
           enemies[enemy]['target-y']
         );
 
+        // Move enemy towards target.
+        enemies[enemy]['x'] += enemies[enemy]['target-x'] > enemies[enemy]['x']
+          ? speeds[0]
+          : -speeds[0];
+        enemies[enemy]['y'] += enemies[enemy]['target-y'] > enemies[enemy]['y']
+          ? speeds[1]
+          : -speeds[1];
+
         // If level != Zombie Surround,
         //   increase enemy speed and check for new target.
         if(canvas_mode != 3){
@@ -346,18 +354,9 @@ function logic(){
                 enemies[enemy]['target-x'] = random_integer(500) - 250;
                 enemies[enemy]['target-y'] = random_integer(500) - 250;
             }
-        }
 
-        // Move enemy towards target.
-        enemies[enemy]['x'] += enemies[enemy]['target-x'] > enemies[enemy]['x']
-          ? speeds[0]
-          : -speeds[0];
-        enemies[enemy]['y'] += enemies[enemy]['target-y'] > enemies[enemy]['y']
-          ? speeds[1]
-          : -speeds[1];
-
-        // Check if player collides with enemy.
-        if(enemies[enemy]['x'] + 15 - player['x'] > -17
+        // Check if player collides with zombie.
+        }else if(enemies[enemy]['x'] + 15 - player['x'] > -17
           && enemies[enemy]['x'] - 15 - player['x'] < 17
           && enemies[enemy]['y'] + 15 - player['y'] > -17
           && enemies[enemy]['y'] - 15 - player['y'] < 17){
