@@ -68,13 +68,13 @@ function draw_logic(){
       34,
       34
     );
-    var endpoint = math_fixed_length_line(
-      0,
-      0,
-      mouse_x - canvas_x,
-      mouse_y - canvas_y,
-      25
-    );
+    var endpoint = math_fixed_length_line({
+      'length': 25,
+      'x0': 0,
+      'x1': mouse_x - canvas_x,
+      'y0': 0,
+      'y1': mouse_y - canvas_y,
+    });
     canvas_draw_path(
       [
         {
@@ -219,12 +219,12 @@ function logic(){
             player['reload'] = 0;
 
             // ...calculate bullet movement...
-            var speeds = math_movement_speed(
-              player['x'],
-              player['y'],
-              player['x'] + mouse_x - canvas_x,
-              player['y'] + mouse_y - canvas_y
-            );
+            var speeds = math_movement_speed({
+              'x0': player['x'],
+              'x1': player['x'] + mouse_x - canvas_x,
+              'y0': player['y'],
+              'y1': player['y'] + mouse_y - canvas_y,
+            });
 
             // ...and add bullet with movement pattern, tied to player.
             bullets.push({
@@ -254,12 +254,12 @@ function logic(){
             enemy_reload = 0;
 
             // Calculate bullet destination based on player position...
-            var speeds = math_movement_speed(
-              enemies[0]['x'],
-              enemies[0]['y'],
-              player['x'],
-              player['y']
-            );
+            var speeds = math_movement_speed({
+              'x0': enemies[0]['x'],
+              'x1': player['x'],
+              'y0': enemies[0]['y'],
+              'y1': player['y'],
+            });
 
             // ...and add bullet with movement pattern, tied to enemy.
             bullets.push({
@@ -325,12 +325,12 @@ function logic(){
         }
 
         // Calculate enemy movement.
-        var speeds = math_movement_speed(
-          enemies[enemy]['x'],
-          enemies[enemy]['y'],
-          enemies[enemy]['target-x'],
-          enemies[enemy]['target-y']
-        );
+        var speeds = math_movement_speed({
+          'x0': enemies[enemy]['x'],
+          'x1': enemies[enemy]['target-x'],
+          'y0': enemies[enemy]['y'],
+          'y1': enemies[enemy]['target-y'],
+        });
 
         // Move enemy towards target.
         enemies[enemy]['x'] += enemies[enemy]['target-x'] > enemies[enemy]['x']
