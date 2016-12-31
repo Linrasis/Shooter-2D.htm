@@ -573,9 +573,9 @@ window.onkeyup = function(e){
 };
 
 window.onload = function(){
-    settings_init(
-      'Shooter-2D.htm-',
-      {
+    settings_init({
+      'prefix': 'Shooter-2D.htm-',
+      'settings': {
         'audio-volume': 1,
         'color': '#009900',
         'movement-keys': 'WASD',
@@ -584,8 +584,8 @@ window.onload = function(){
         'weapon-reload': 50,
         'zombie-amount': 25,
         'zombie-respawn': false,
-      }
-    );
+      },
+    });
     canvas_init();
 }
 
