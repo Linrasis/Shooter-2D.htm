@@ -59,8 +59,12 @@ function load_level(id){
         player['x'] = 125;
 
         enemies.push({
-          'target-x': random_integer(500) - 250,
-          'target-y': random_integer(500) - 250,
+          'target-x': random_integer({
+            'max': 500,
+          }) - 250,
+          'target-y': random_integer({
+            'max': 500,
+          }) - 250,
           'x': -125,
           'y': 0,
         });
@@ -87,8 +91,12 @@ function load_level(id){
         player['x'] = 125;
 
         enemies.push({
-          'target-x': random_integer(500) - 250,
-          'target-y': random_integer(500) - 250,
+          'target-x': random_integer({
+            'max': 500,
+          }) - 250,
+          'target-y': random_integer({
+            'max': 500,
+          }) - 250,
           'x': -125,
           'y': 0,
         });
@@ -120,8 +128,12 @@ function load_level(id){
         do{
             // Calculate new zombie location away from player starting point.
             do{
-                zombie_x = random_integer(level_settings[2] * 2) - level_settings[2];
-                zombie_y = random_integer(level_settings[3] * 2) - level_settings[3];
+                zombie_x = random_integer({
+                  'max': level_settings[2] * 2,
+                }) - level_settings[2];
+                zombie_y = random_integer({
+                  'max': level_settings[3] * 2,
+                }) - level_settings[3];
             }while(zombie_x > -99
               && zombie_x < 99
               && zombie_y > -99

@@ -237,8 +237,12 @@ function logic(){
 
             // If level != Zombie Surround, update AI destinations.
             if(canvas_mode < 3){
-                enemies[0]['target-x'] = random_integer(500) - 250;
-                enemies[0]['target-y'] = random_integer(500) - 250;
+                enemies[0]['target-x'] = random_integer({
+                  'max': 500,
+                }) - 250;
+                enemies[0]['target-y'] = random_integer({
+                  'max': 500,
+                }) - 250;
             }
         }
 
@@ -351,8 +355,12 @@ function logic(){
               && enemies[enemy]['target-x'] < enemies[enemy]['x'] + 5
               && enemies[enemy]['target-y'] > enemies[enemy]['y'] - 5
               && enemies[enemy]['target-y'] < enemies[enemy]['y'] + 5){
-                enemies[enemy]['target-x'] = random_integer(500) - 250;
-                enemies[enemy]['target-y'] = random_integer(500) - 250;
+                enemies[enemy]['target-x'] = random_integer({
+                  'max': 500,
+                }) - 250;
+                enemies[enemy]['target-y'] = random_integer({
+                  'max': 500,
+                }) - 250;
             }
 
         // Check if player collides with zombie.
@@ -426,8 +434,12 @@ function logic(){
                     var enemy_y = 0;
 
                     do{
-                        enemy_x = random_integer(level_settings[2] * 2) - level_settings[2];
-                        enemy_y = random_integer(level_settings[2] * 2) - level_settings[2];
+                        enemy_x = random_integer({
+                          'max': level_settings[2] * 2,
+                        }) - level_settings[2];
+                        enemy_y = random_integer({
+                          'max': level_settings[2] * 2,
+                        }) - level_settings[2];
                     }while(enemy_x > player['x'] - 50
                       && enemy_x < player['x'] + 50
                       && enemy_y > player['y'] - 50
