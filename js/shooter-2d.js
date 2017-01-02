@@ -75,8 +75,12 @@ function draw_logic(){
       'y0': 0,
       'y1': mouse_y - canvas_y,
     });
-    canvas_draw_path(
-      [
+    canvas_draw_path({
+      'properties': {
+        'strokeStyle': '#fff',
+      },
+      'style': 'stroke',
+      'vertices': [
         {
           'type': 'moveTo',
           'x': 0,
@@ -87,11 +91,7 @@ function draw_logic(){
           'y': endpoint['y'],
         },
       ],
-      {
-        'strokeStyle': '#fff',
-      },
-      'stroke'
-    );
+    });
 
     // Restore buffer.
     canvas_buffer.restore();
@@ -477,8 +477,8 @@ function setmode_logic(newgame){
 
     // Main menu mode.
     if(canvas_mode === 0){
-        document.body.innerHTML = '<div><div><b>Duel vs AI:</b><ul><li><a onclick="canvas_setmode(1, true)">Empty Square Arena</a><li><a onclick="canvas_setmode(2, true)">Final Destination</a></ul></div><hr>'
-          + '<div><input id=zombie-amount><a onclick="canvas_setmode(3, true)">Zombie Surround</a><br>'
+        document.body.innerHTML = '<div><div><b>Duel vs AI:</b><ul><li><a onclick=canvas_setmode({mode:1,newgame:true})>Empty Square Arena</a><li><a onclick=canvas_setmode({mode:2,newgame:true})>Final Destination</a></ul></div><hr>'
+          + '<div><input id=zombie-amount><a onclick=canvas_setmode({mode:3,newgame:true})>Zombie Surround</a><br>'
           + '<label><input id=zombie-respawn type=checkbox>Respawn</label></div></div>'
           + '<div class=right><div><input disabled value=ESC>Menu<br>'
           + '<input id=movement-keys maxlength=4>Move ↑←↓→<br>'
@@ -557,10 +557,9 @@ window.onkeydown = function(e){
         key_up = true;
 
     }else if(key === settings_settings['restart-key']){
-        canvas_setmode(
-          canvas_mode,
-          false
-        );
+        canvas_setmode({
+          'mode': canvas_mode,
+        });
 
     }else if(key === 'Q'){
         canvas_menu_quit();
