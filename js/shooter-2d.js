@@ -477,7 +477,7 @@ function setmode_logic(newgame){
 
     // Main menu mode.
     if(canvas_mode === 0){
-        document.body.innerHTML = '<div><div><b>Duel vs AI:</b><ul><li><a onclick=canvas_setmode({mode:1,newgame:true})>Empty Square Arena</a><li><a onclick=canvas_setmode({mode:2,newgame:true})>Final Destination</a></ul></div><hr>'
+        document.body.innerHTML = '<div><div>Duel vs AI:<ul><li><a onclick=canvas_setmode({mode:1,newgame:true})>Empty Square Arena</a><li><a onclick=canvas_setmode({mode:2,newgame:true})>Final Destination</a></ul></div><hr>'
           + '<div><input id=zombie-amount><a onclick=canvas_setmode({mode:3,newgame:true})>Zombie Surround</a><br>'
           + '<label><input id=zombie-respawn type=checkbox>Respawn</label></div></div>'
           + '<div class=right><div><input disabled value=ESC>Menu<br>'
