@@ -529,60 +529,6 @@ var mouse_x = 0;
 var mouse_y = 0;
 var player = {};
 
-window.onkeydown = function(e){
-    if(canvas_mode <= 0){
-        return;
-    }
-
-    var key = e.keyCode || e.which;
-
-    // ESC: return to main menu.
-    if(key === 27){
-        canvas_menu_toggle();
-        return;
-    }
-
-    key = String.fromCharCode(key);
-
-    if(key === settings_settings['movement-keys'][1]){
-        key_left = true;
-
-    }else if(key === settings_settings['movement-keys'][3]){
-        key_right = true;
-
-    }else if(key === settings_settings['movement-keys'][2]){
-        key_down = true;
-
-    }else if(key === settings_settings['movement-keys'][0]){
-        key_up = true;
-
-    }else if(key === settings_settings['restart-key']){
-        canvas_setmode({
-          'mode': canvas_mode,
-        });
-
-    }else if(key === 'Q'){
-        canvas_menu_quit();
-    }
-};
-
-window.onkeyup = function(e){
-    var key = String.fromCharCode(e.keyCode || e.which);
-
-    if(key === settings_settings['movement-keys'][1]){
-        key_left = false;
-
-    }else if(key === settings_settings['movement-keys'][3]){
-        key_right = false;
-
-    }else if(key === settings_settings['movement-keys'][2]){
-        key_down = false;
-
-    }else if(key === settings_settings['movement-keys'][0]){
-        key_up = false;
-    }
-};
-
 window.onload = function(){
     settings_init({
       'prefix': 'Shooter-2D.htm-',
@@ -598,27 +544,81 @@ window.onload = function(){
       },
     });
     canvas_init();
+
+    window.onkeydown = function(e){
+        if(canvas_mode <= 0){
+            return;
+        }
+
+        var key = e.keyCode || e.which;
+
+        // ESC: return to main menu.
+        if(key === 27){
+            canvas_menu_toggle();
+            return;
+        }
+
+        key = String.fromCharCode(key);
+
+        if(key === settings_settings['movement-keys'][1]){
+            key_left = true;
+
+        }else if(key === settings_settings['movement-keys'][3]){
+            key_right = true;
+
+        }else if(key === settings_settings['movement-keys'][2]){
+            key_down = true;
+
+        }else if(key === settings_settings['movement-keys'][0]){
+            key_up = true;
+
+        }else if(key === settings_settings['restart-key']){
+            canvas_setmode({
+              'mode': canvas_mode,
+            });
+
+        }else if(key === 'Q'){
+            canvas_menu_quit();
+        }
+    };
+
+    window.onkeyup = function(e){
+        var key = String.fromCharCode(e.keyCode || e.which);
+
+        if(key === settings_settings['movement-keys'][1]){
+            key_left = false;
+
+        }else if(key === settings_settings['movement-keys'][3]){
+            key_right = false;
+
+        }else if(key === settings_settings['movement-keys'][2]){
+            key_down = false;
+
+        }else if(key === settings_settings['movement-keys'][0]){
+            key_up = false;
+        }
+    };
+
+    window.onmousedown = function(e){
+        if(canvas_mode <= 0){
+            return;
+        }
+
+        e.preventDefault();
+        mouse_lock_x = mouse_x;
+        mouse_lock_y = mouse_y;
+    };
+
+    window.onmousemove = function(e){
+        if(canvas_mode <= 0){
+            return;
+        }
+
+        mouse_x = e.pageX;
+        mouse_y = e.pageY;
+    };
+
+    window.onmouseup = function(e){
+        mouse_lock_x = -1;
+    };
 }
-
-window.onmousedown = function(e){
-    if(canvas_mode <= 0){
-        return;
-    }
-
-    e.preventDefault();
-    mouse_lock_x = mouse_x;
-    mouse_lock_y = mouse_y;
-};
-
-window.onmousemove = function(e){
-    if(canvas_mode <= 0){
-        return;
-    }
-
-    mouse_x = e.pageX;
-    mouse_y = e.pageY;
-};
-
-window.onmouseup = function(e){
-    mouse_lock_x = -1;
-};
