@@ -61,7 +61,7 @@ function draw_logic(){
     }
 
     // Draw player and targeting direction.
-    canvas_buffer.fillStyle = settings_settings['color'];
+    canvas_buffer.fillStyle = storage_data['color'];
     canvas_buffer.fillRect(
       -17,
       -17,
@@ -105,7 +105,7 @@ function draw_logic(){
     // Draw bullets.
     for(var bullet in bullets){
         canvas_buffer.fillStyle = bullets[bullet]['player'] === 0
-          ? settings_settings['color']
+          ? storage_data['color']
           : '#f66';
 
         if(bullets[bullet]['x'] + 15 + temp_viewoffset[0] <= 0
@@ -129,7 +129,7 @@ function draw_logic(){
 
     // Draw reload and hits.
     canvas_buffer.fillText(
-      'Reload: ' + player['reload'] + '/' + settings_settings['weapon-reload'],
+      'Reload: ' + player['reload'] + '/' + storage_data['weapon-reload'],
       5,
       25
     );
@@ -143,7 +143,7 @@ function draw_logic(){
         // Draw game over or win message,
         //   depending upon if enemies remain.
         canvas_buffer.fillText(
-          settings_settings['restart-key'] + ' = Restart',
+          storage_data['restart-key'] + ' = Restart',
           5,
           125
         );
@@ -213,7 +213,7 @@ function logic(){
     }
 
     // Check if player weapon can be fired, else update reload.
-    if(player['reload'] >= settings_settings['weapon-reload']){
+    if(player['reload'] >= storage_data['weapon-reload']){
         // If weapon being fired...
         if(mouse_lock_x > 0){
             player['reload'] = 0;
@@ -254,7 +254,7 @@ function logic(){
     if(canvas_mode < 3){
         // Update reload and fire weapon if possible.
         enemy_reload += 1;
-        if(enemy_reload > settings_settings['weapon-reload']){
+        if(enemy_reload > storage_data['weapon-reload']){
             enemy_reload = 0;
 
             // Calculate bullet destination based on player position...
@@ -429,7 +429,7 @@ function logic(){
                 // If mode != Zombie Surround or zombies should respawn,
                 //   pick new enemy location...
                 if(canvas_mode < 3
-                  || settings_settings['zombie-respawn']){
+                  || storage_data['zombie-respawn']){
                     var enemy_x = 0;
                     var enemy_y = 0;
 
@@ -488,13 +488,13 @@ function setmode_logic(newgame){
           + '<input id=color type=color>Color<br>'
           + '<input id=ms-per-frame>ms/Frame<br>'
           + '<input id=weapon-reload>Weapon Reload<br>'
-          + '<a onclick=settings_reset()>Reset Settings</a></div></div>';
-        settings_update();
+          + '<a onclick=storage_reset()>Reset Settings</a></div></div>';
+        storage_update();
 
     // Game mode.
     }else{
         if(newgame){
-            settings_save();
+            storage_save();
         }
 
         enemy_reload = 100;
@@ -504,7 +504,7 @@ function setmode_logic(newgame){
         key_right = false;
         key_up = false;
         player = {
-          'reload': settings_settings['weapon-reload'],
+          'reload': storage_data['weapon-reload'],
           'x': 0,
           'y': 0,
         };
@@ -530,9 +530,8 @@ var mouse_y = 0;
 var player = {};
 
 window.onload = function(){
-    settings_init({
-      'prefix': 'Shooter-2D.htm-',
-      'settings': {
+    storage_init({
+      'data': {
         'audio-volume': 1,
         'color': '#009900',
         'movement-keys': 'WASD',
@@ -542,6 +541,7 @@ window.onload = function(){
         'zombie-amount': 25,
         'zombie-respawn': false,
       },
+      'prefix': 'Shooter-2D.htm-',
     });
     canvas_init();
 
@@ -560,19 +560,19 @@ window.onload = function(){
 
         key = String.fromCharCode(key);
 
-        if(key === settings_settings['movement-keys'][1]){
+        if(key === storage_data['movement-keys'][1]){
             key_left = true;
 
-        }else if(key === settings_settings['movement-keys'][3]){
+        }else if(key === storage_data['movement-keys'][3]){
             key_right = true;
 
-        }else if(key === settings_settings['movement-keys'][2]){
+        }else if(key === storage_data['movement-keys'][2]){
             key_down = true;
 
-        }else if(key === settings_settings['movement-keys'][0]){
+        }else if(key === storage_data['movement-keys'][0]){
             key_up = true;
 
-        }else if(key === settings_settings['restart-key']){
+        }else if(key === storage_data['restart-key']){
             canvas_setmode({
               'mode': canvas_mode,
             });
@@ -585,16 +585,16 @@ window.onload = function(){
     window.onkeyup = function(e){
         var key = String.fromCharCode(e.keyCode || e.which);
 
-        if(key === settings_settings['movement-keys'][1]){
+        if(key === storage_data['movement-keys'][1]){
             key_left = false;
 
-        }else if(key === settings_settings['movement-keys'][3]){
+        }else if(key === storage_data['movement-keys'][3]){
             key_right = false;
 
-        }else if(key === settings_settings['movement-keys'][2]){
+        }else if(key === storage_data['movement-keys'][2]){
             key_down = false;
 
-        }else if(key === settings_settings['movement-keys'][0]){
+        }else if(key === storage_data['movement-keys'][0]){
             key_up = false;
         }
     };

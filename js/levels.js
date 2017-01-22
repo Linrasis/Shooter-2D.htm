@@ -105,7 +105,7 @@ function load_level(id){
     }else if(id === 3){
         level_settings = [
           id - 1,
-          settings_settings['zombie-amount'],
+          storage_data['zombie-amount'],
           400,
           400,
         ];
