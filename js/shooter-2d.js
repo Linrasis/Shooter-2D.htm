@@ -47,26 +47,21 @@ function draw_logic(){
     // Draw enemies.
     canvas_buffer.fillStyle = '#f66';
     for(var enemy in enemies){
-        if(enemies[enemy]['x'] + 15 + canvas_x - player['x'] > 0
-          && enemies[enemy]['x'] - 15 + canvas_x - player['x'] < canvas_width
-          && enemies[enemy]['y'] + 15 + canvas_y - player['y'] > 0
-          && enemies[enemy]['y'] - 15 + canvas_y - player['y'] < canvas_height){
-            canvas_buffer.fillRect(
-              -player['x'] + enemies[enemy]['x'] - 15,
-              -player['y'] + enemies[enemy]['y'] - 15,
-              30,
-              30
-            );
-        }
+        canvas_buffer.fillRect(
+          -player['x'] + enemies[enemy]['x'] - width_half,
+          -player['y'] + enemies[enemy]['y'] - height_half,
+          storage_data['width'],
+          storage_data['height']
+        );
     }
 
     // Draw player and targeting direction.
     canvas_buffer.fillStyle = storage_data['color'];
     canvas_buffer.fillRect(
-      -17,
-      -17,
-      34,
-      34
+      -width_half,
+      -height_half,
+      storage_data['width'],
+      storage_data['height']
     );
     var endpoint = math_fixed_length_line({
       'length': 25,
@@ -104,17 +99,16 @@ function draw_logic(){
 
     // Draw bullets.
     for(var bullet in bullets){
-        canvas_buffer.fillStyle = bullets[bullet]['player'] === 0
-          ? storage_data['color']
-          : '#f66';
-
-        if(bullets[bullet]['x'] + 15 + temp_viewoffset[0] <= 0
+        if(bullets[bullet]['x'] + temp_viewoffset[0] <= 0
           || bullets[bullet]['x'] + canvas_x - player['x'] >= canvas_width
-          || bullets[bullet]['y'] + 15 + temp_viewoffset[1] <= 0
+          || bullets[bullet]['y'] + temp_viewoffset[1] <= 0
           || bullets[bullet]['y'] + canvas_y - player['y'] >= canvas_height){
             continue;
         }
 
+        canvas_buffer.fillStyle = bullets[bullet]['player'] === 0
+          ? storage_data['color']
+          : '#f66';
         canvas_buffer.fillRect(
           Math.round(bullets[bullet]['x'] + temp_viewoffset[0]),
           Math.round(bullets[bullet]['y'] + temp_viewoffset[1]),
@@ -181,34 +175,34 @@ function logic(){
 
     // Add player key movments to dx and dy, if still within level boundaries.
     if(key_left
-      && player['x'] - 2 > -level_settings[2]){
-        player_dx -= 2;
+      && player['x'] - storage_data['speed'] > -level_settings[2]){
+        player_dx -= storage_data['speed'];
     }
 
     if(key_right
-      && player['x'] + 2 < level_settings[2]){
-        player_dx += 2;
+      && player['x'] + storage_data['speed'] < level_settings[2]){
+        player_dx += storage_data['speed'];
     }
 
     if(key_down
-      && player['y'] + 2 < level_settings[3]){
+      && player['y'] + storage_data['speed'] < level_settings[3]){
         if(player_dx != 0){
-            player_dx = player_dx / 2 * Math.SQRT2;
-            player_dy += Math.SQRT2;
+            player_dx = player_dx / 2 * Math.sqrt(storage_data['speed']);
+            player_dy += Math.sqrt(storage_data['speed']);
 
         }else{
-            player_dy += 2;
+            player_dy += storage_data['speed'];
         }
     }
 
     if(key_up
-      && player['y'] - 2 > -level_settings[3]){
+      && player['y'] - storage_data['speed'] > -level_settings[3]){
         if(player_dx != 0){
-            player_dx = player_dx / 2 * Math.SQRT2;
-            player_dy -= Math.SQRT2;
+            player_dx = player_dx / 2 * Math.sqrt(storage_data['speed']);
+            player_dy -= Math.sqrt(storage_data['speed']);
 
         }else{
-            player_dy -= 2;
+            player_dy -= storage_data['speed'];
         }
     }
 
@@ -237,12 +231,7 @@ function logic(){
 
             // If level != Zombie Surround, update AI destinations.
             if(canvas_mode < 3){
-                enemies[0]['target-x'] = random_integer({
-                  'max': 500,
-                }) - 250;
-                enemies[0]['target-y'] = random_integer({
-                  'max': 500,
-                }) - 250;
+                set_destination(0);
             }
         }
 
@@ -278,39 +267,39 @@ function logic(){
 
     // Check for player collision with foreground obstacles.
     for(var rect in foreground_rect){
-        if(player['x'] + player_dx - 17 > foreground_rect[rect]['x'] + foreground_rect[rect]['width']
-          || player['x'] + player_dx + 17 < foreground_rect[rect]['x']
-          || player['y'] + player_dy - 17 > foreground_rect[rect]['y'] + foreground_rect[rect]['height']
-          || player['y'] + player_dy + 17 < foreground_rect[rect]['y']){
+        if(player['x'] + player_dx - width_half > foreground_rect[rect]['x'] + foreground_rect[rect]['width']
+          || player['x'] + player_dx + width_half < foreground_rect[rect]['x']
+          || player['y'] + player_dy - height_half > foreground_rect[rect]['y'] + foreground_rect[rect]['height']
+          || player['y'] + player_dy + height_half < foreground_rect[rect]['y']){
             continue;
         }
 
-        if(player['y'] > foreground_rect[rect]['y'] - 17
-          && player['y'] < foreground_rect[rect]['y'] + foreground_rect[rect]['height'] + 17){
+        if(player['y'] > foreground_rect[rect]['y'] - height_half
+          && player['y'] < foreground_rect[rect]['y'] + foreground_rect[rect]['height'] + height_half){
             if(key_left
-              && player['y'] + player_dy + 17 > foreground_rect[rect]['y']
-              && player['y'] + player_dy - 17 < foreground_rect[rect]['y'] + foreground_rect[rect]['height']
-              && player['x'] + player_dx - 17 < foreground_rect[rect]['x'] + foreground_rect[rect]['width']){
+              && player['y'] + player_dy + height_half > foreground_rect[rect]['y']
+              && player['y'] + player_dy - height_half < foreground_rect[rect]['y'] + foreground_rect[rect]['height']
+              && player['x'] + player_dx - width_half < foreground_rect[rect]['x'] + foreground_rect[rect]['width']){
                 player_dx = 0;
 
             }else if(key_right
-              && player['y'] + player_dy + 17 > foreground_rect[rect]['y']
-              && player['y'] + player_dy - 17 < foreground_rect[rect]['y'] + foreground_rect[rect]['height']
-              && player['x'] + player_dx + 17 > foreground_rect[rect]['x']){
+              && player['y'] + player_dy + height_half > foreground_rect[rect]['y']
+              && player['y'] + player_dy - height_half < foreground_rect[rect]['y'] + foreground_rect[rect]['height']
+              && player['x'] + player_dx + width_half > foreground_rect[rect]['x']){
                 player_dx = 0;
             }
         }
 
         if(key_down
-          && player['x'] + player_dx + 17 > foreground_rect[rect]['x']
-          && player['x'] + player_dx - 17 < foreground_rect[rect]['x'] + foreground_rect[rect]['width']
-          && player['y'] + player_dy + 17 > foreground_rect[rect]['y']){
+          && player['x'] + player_dx + width_half > foreground_rect[rect]['x']
+          && player['x'] + player_dx - width_half < foreground_rect[rect]['x'] + foreground_rect[rect]['width']
+          && player['y'] + player_dy + height_half > foreground_rect[rect]['y']){
             player_dy = 0;
 
         }else if(key_up
-          && player['x'] + player_dx + 17 > foreground_rect[rect]['x']
-          && player['x'] + player_dx - 17 < foreground_rect[rect]['x'] + foreground_rect[rect]['width']
-          && player['y'] + player_dy - 17 < foreground_rect[rect]['y'] + foreground_rect[rect]['height']){
+          && player['x'] + player_dx + width_half > foreground_rect[rect]['x']
+          && player['x'] + player_dx - width_half < foreground_rect[rect]['x'] + foreground_rect[rect]['width']
+          && player['y'] + player_dy - height_half < foreground_rect[rect]['y'] + foreground_rect[rect]['height']){
             player_dy = 0;
         }
     }
@@ -330,6 +319,7 @@ function logic(){
 
         // Calculate enemy movement.
         var speeds = math_movement_speed({
+          'multiplier': 2,
           'x0': enemies[enemy]['x'],
           'x1': enemies[enemy]['target-x'],
           'y0': enemies[enemy]['y'],
@@ -347,27 +337,23 @@ function logic(){
         // If level != Zombie Surround,
         //   increase enemy speed and check for new target.
         if(canvas_mode != 3){
-            speeds[0] *= 2;
-            speeds[1] *= 2;
+            speeds[0] *= storage_data['speed'];
+            speeds[1] *= storage_data['speed'];
 
             // Check if enemy AI should pick new destination.
-            if(enemies[enemy]['target-x'] > enemies[enemy]['x'] - 5
-              && enemies[enemy]['target-x'] < enemies[enemy]['x'] + 5
-              && enemies[enemy]['target-y'] > enemies[enemy]['y'] - 5
-              && enemies[enemy]['target-y'] < enemies[enemy]['y'] + 5){
-                enemies[enemy]['target-x'] = random_integer({
-                  'max': 500,
-                }) - 250;
-                enemies[enemy]['target-y'] = random_integer({
-                  'max': 500,
-                }) - 250;
+            var double_speed = storage_data['speed'] * 2;
+            if(enemies[enemy]['target-x'] > enemies[enemy]['x'] - double_speed
+              && enemies[enemy]['target-x'] < enemies[enemy]['x'] + double_speed
+              && enemies[enemy]['target-y'] > enemies[enemy]['y'] - double_speed
+              && enemies[enemy]['target-y'] < enemies[enemy]['y'] + double_speed){
+                set_destination(enemy);
             }
 
         // Check if player collides with zombie.
-        }else if(enemies[enemy]['x'] + 15 - player['x'] > -17
-          && enemies[enemy]['x'] - 15 - player['x'] < 17
-          && enemies[enemy]['y'] + 15 - player['y'] > -17
-          && enemies[enemy]['y'] - 15 - player['y'] < 17){
+        }else if(enemies[enemy]['x'] - player['x'] > -storage_data['width']
+          && enemies[enemy]['x'] - player['x'] < storage_data['width']
+          && enemies[enemy]['y'] - player['y'] > -storage_data['height']
+          && enemies[enemy]['y'] - player['y'] < storage_data['height']){
             game_running = false;
             return;
         }
@@ -375,8 +361,8 @@ function logic(){
 
     // Handle bullets.
     for(var bullet in bullets){
-        bullets[bullet]['x'] += 5 * bullets[bullet]['dx'];
-        bullets[bullet]['y'] += 5 * bullets[bullet]['dy'];
+        bullets[bullet]['x'] += bullets[bullet]['dx'] * 5;
+        bullets[bullet]['y'] += bullets[bullet]['dy'] * 5;
 
         if(bullets[bullet]['x'] < -level_settings[2]
           || bullets[bullet]['x'] > level_settings[2]
@@ -414,10 +400,10 @@ function logic(){
 
         for(var enemy in enemies){
             if(bullets[bullet]['player'] === 0){
-                if(bullets[bullet]['x'] <= enemies[enemy]['x'] - 15
-                  || bullets[bullet]['x'] >= enemies[enemy]['x'] + 15
-                  || bullets[bullet]['y'] <= enemies[enemy]['y'] - 15
-                  || bullets[bullet]['y'] >= enemies[enemy]['y'] + 15){
+                if(bullets[bullet]['x'] <= enemies[enemy]['x'] - width_half
+                  || bullets[bullet]['x'] >= enemies[enemy]['x'] + width_half
+                  || bullets[bullet]['y'] <= enemies[enemy]['y'] - height_half
+                  || bullets[bullet]['y'] >= enemies[enemy]['y'] + height_half){
                     continue;
                 }
 
@@ -458,15 +444,24 @@ function logic(){
                 hits += 1;
                 break;
 
-            }else if(bullets[bullet]['x'] > player['x'] - 17
-              && bullets[bullet]['x'] < player['x'] + 17
-              && bullets[bullet]['y'] > player['y'] - 17
-              && bullets[bullet]['y'] < player['y'] + 17){
+            }else if(bullets[bullet]['x'] > player['x'] - width_half
+              && bullets[bullet]['x'] < player['x'] + width_half
+              && bullets[bullet]['y'] > player['y'] - height_half
+              && bullets[bullet]['y'] < player['y'] + height_half){
                 game_running = false;
                 return;
             }
         }
     }
+}
+
+function set_destination(id){
+    enemies[id]['target-x'] = random_integer({
+      'max': level_settings[2],
+    }) - level_settings[2] / 2;
+    enemies[id]['target-y'] = random_integer({
+      'max': level_settings[3],
+    }) - level_settings[3] / 2;
 }
 
 function setmode_logic(newgame){
@@ -486,8 +481,11 @@ function setmode_logic(newgame){
           + '<input disabled value=Click>Shoot</div><hr>'
           + '<div><input id=audio-volume max=1 min=0 step=0.01 type=range>Audio<br>'
           + '<input id=color type=color>Color<br>'
+          + '<input id=height>Height<br>'
           + '<input id=ms-per-frame>ms/Frame<br>'
+          + '<input id=speed>Speed<br>'
           + '<input id=weapon-reload>Weapon Reload<br>'
+          + '<input id=width>Width<br>'
           + '<a onclick=storage_reset()>Reset Settings</a></div></div>';
         storage_update();
 
@@ -498,6 +496,7 @@ function setmode_logic(newgame){
         }
 
         enemy_reload = 100;
+        height_half = storage_data['height'] / 2;
         hits = 0;
         key_down = false;
         key_left = false;
@@ -508,6 +507,7 @@ function setmode_logic(newgame){
           'x': 0,
           'y': 0,
         };
+        width_half = storage_data['width'] / 2;
     }
 }
 
@@ -517,6 +517,7 @@ var enemies = [];
 var enemy_reload = 0;
 var foreground_rect = [];
 var game_running = true;
+var height_half = 0;
 var hits = 0;
 var key_down = false;
 var key_left = false;
@@ -528,16 +529,20 @@ var mouse_lock_y = 0;
 var mouse_x = 0;
 var mouse_y = 0;
 var player = {};
+var width_half = 0;
 
 window.onload = function(){
     storage_init({
       'data': {
         'audio-volume': 1,
         'color': '#009900',
+        'height': 34,
         'movement-keys': 'WASD',
         'ms-per-frame': 25,
         'restart-key': 'H',
+        'speed': 2,
         'weapon-reload': 50,
+        'width': 34,
         'zombie-amount': 25,
         'zombie-respawn': false,
       },
