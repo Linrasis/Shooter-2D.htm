@@ -213,7 +213,7 @@ function logic(){
             player['reload'] = 0;
 
             // ...calculate bullet movement...
-            var speeds = math_movement_speed({
+            var speeds = math_move_2d({
               'x0': player['x'],
               'x1': player['x'] + mouse_x - canvas_x,
               'y0': player['y'],
@@ -247,7 +247,7 @@ function logic(){
             enemy_reload = 0;
 
             // Calculate bullet destination based on player position...
-            var speeds = math_movement_speed({
+            var speeds = math_move_2d({
               'x0': enemies[0]['x'],
               'x1': player['x'],
               'y0': enemies[0]['y'],
@@ -318,7 +318,7 @@ function logic(){
         }
 
         // Calculate enemy movement.
-        var speeds = math_movement_speed({
+        var speeds = math_move_2d({
           'multiplier': 2,
           'x0': enemies[enemy]['x'],
           'x1': enemies[enemy]['target-x'],
