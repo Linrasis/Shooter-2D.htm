@@ -8,15 +8,8 @@ function draw_logic(){
       canvas_y
     );
 
-    // Draw visible background stuffs.
+    // Draw background environment.
     for(var rect in background_rect){
-        if(background_rect[rect]['x'] + background_rect[rect]['width'] + canvas_x - player['x'] <= 0
-          || background_rect[rect]['x'] + canvas_x - player['x'] >= canvas_width
-          || background_rect[rect]['y'] + background_rect[rect]['height'] + canvas_y - player['y'] <= 0
-          || background_rect[rect]['y'] + canvas_y - player['y'] >= canvas_height){
-            continue;
-        }
-
         canvas_buffer.fillStyle = background_rect[rect]['color'];
         canvas_buffer.fillRect(
           -player['x'] + background_rect[rect]['x'],
@@ -26,15 +19,8 @@ function draw_logic(){
         );
     }
 
-    // Draw visible foreground environment stuffs.
+    // Draw foreground environment.
     for(rect in foreground_rect){
-        if(foreground_rect[rect]['x'] + foreground_rect[rect]['width'] + canvas_x - player['x'] <= 0
-          || foreground_rect[rect]['x'] + canvas_x - player['x'] >= canvas_width
-          || foreground_rect[rect]['y'] + foreground_rect[rect]['height'] + canvas_y - player['y'] <= 0
-          || foreground_rect[rect]['y'] + canvas_y - player['y'] >= canvas_height){
-            continue;
-        }
-
         canvas_buffer.fillStyle = foreground_rect[rect]['color'];
         canvas_buffer.fillRect(
           -player['x'] + foreground_rect[rect]['x'],
@@ -99,13 +85,6 @@ function draw_logic(){
 
     // Draw bullets.
     for(var bullet in bullets){
-        if(bullets[bullet]['x'] + temp_viewoffset[0] <= 0
-          || bullets[bullet]['x'] + canvas_x - player['x'] >= canvas_width
-          || bullets[bullet]['y'] + temp_viewoffset[1] <= 0
-          || bullets[bullet]['y'] + canvas_y - player['y'] >= canvas_height){
-            continue;
-        }
-
         canvas_buffer.fillStyle = bullets[bullet]['player'] === 0
           ? storage_data['color']
           : '#f66';
