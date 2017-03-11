@@ -201,8 +201,8 @@ function logic(){
 
             // ...and add bullet with movement pattern, tied to player.
             bullets.push({
-              'dx': mouse_x > canvas_x ? speeds[0] : -speeds[0],
-              'dy': mouse_y > canvas_y ? speeds[1] : -speeds[1],
+              'dx': speeds['x'],
+              'dy': speeds['y'],
               'player': 0,
               'x': player['x'],
               'y': player['y'],
@@ -235,8 +235,8 @@ function logic(){
 
             // ...and add bullet with movement pattern, tied to enemy.
             bullets.push({
-              'dx': enemies[0]['x'] > player['x'] ? -speeds[0] : speeds[0],
-              'dy': enemies[0]['y'] > player['y'] ? -speeds[1] : speeds[1],
+              'dx': speeds['x'],
+              'dy': speeds['y'],
               'player': 1,
               'x': enemies[0]['x'],
               'y': enemies[0]['y'],
@@ -298,7 +298,7 @@ function logic(){
 
         // Calculate enemy movement.
         var speeds = math_move_2d({
-          'multiplier': 2,
+          'multiplier': storage_data['speed'],
           'x0': enemies[enemy]['x'],
           'x1': enemies[enemy]['target-x'],
           'y0': enemies[enemy]['y'],
@@ -306,19 +306,12 @@ function logic(){
         });
 
         // Move enemy towards target.
-        enemies[enemy]['x'] += enemies[enemy]['target-x'] > enemies[enemy]['x']
-          ? speeds[0]
-          : -speeds[0];
-        enemies[enemy]['y'] += enemies[enemy]['target-y'] > enemies[enemy]['y']
-          ? speeds[1]
-          : -speeds[1];
+        enemies[enemy]['x'] += speeds['x'];
+        enemies[enemy]['y'] += speeds['y']
 
         // If level != Zombie Surround,
         //   increase enemy speed and check for new target.
         if(canvas_mode != 3){
-            speeds[0] *= storage_data['speed'];
-            speeds[1] *= storage_data['speed'];
-
             // Check if enemy AI should pick new destination.
             var double_speed = storage_data['speed'] * 2;
             if(enemies[enemy]['target-x'] > enemies[enemy]['x'] - double_speed
